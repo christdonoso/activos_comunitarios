@@ -5,37 +5,21 @@
 
 {% block extra_head %}
 <style>
-    #map {
-        height: 100%;
-        width: 100%;
-        z-index: 1;
-    }
+    #map { height: 100%; width: 100%; z-index: 1; }
+    
+    /* Filtro para asegurar que el mapa ocupe todo el alto disponible */
+   /*  .map-container { height: calc(100vh - 64px); } /* Ajusta 64px al alto de tu navbar */
 
-    .map-overlay {
-        z-index: 1000 !important;
-        pointer-events: none;
-    }
+    .leaflet-popup-content-wrapper { padding: 0; overflow: hidden; border-radius: 0.75rem; }
+    .leaflet-popup-content { margin: 0; width: 280px !important; }
 
-    .map-overlay>* {
-        pointer-events: auto;
-    }
-
-    /* Estilo para que el popup de Leaflet se parezca a tu diseño */
-    .leaflet-popup-content-wrapper {
-        padding: 0;
-        overflow: hidden;
-        border-radius: 0.75rem;
-    }
-
-    .leaflet-popup-content {
-        margin: 0;
-        width: 300px !important;
-    }
+    /* Clase para mostrar el sidebar en móvil */
+    .sidebar-open { transform: translateX(0) !important; }
 </style>
 {% endblock %}
 
 {% block content %}
-<main class="flex flex-1 overflow-hidden relative">
+<div class="flex flex-1 relative overflow-hidden">
     <aside
         class="w-72 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 shadow-xl lg:translate-x-0 -translate-x-full transition-transform absolute lg:relative h-full">
         <div class="flex flex-col gap-6 p-6 overflow-y-auto">
@@ -118,7 +102,7 @@
         </div>
     </aside>
 
-    <div class="flex-1 relative bg-slate-200 overflow-hidden">
+    <div class="flex-1 relative bg-slate-200">
         <div id="map" class="absolute inset-0 z-0"></div>
 
         <div class="absolute inset-0 z-10 pointer-events-none p-6">
@@ -144,6 +128,6 @@
             </div>
         </div>
     </div>
-</main>
+</div>
 <script src="{% static 'js/map_init.js' %}"></script>
 {% endblock %}
