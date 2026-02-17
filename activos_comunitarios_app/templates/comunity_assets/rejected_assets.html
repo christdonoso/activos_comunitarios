@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Activos Rechazados - MAIS Chile{% endblock %}
+
+{% block content %}
+<main class="flex-1 px-10 py-8 max-w-[1400px] mx-auto w-full">
+
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all animate-in fade-in slide-in-from-top-4 
+            {% if message.tags == 'success' %}
+                bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400
+            {% elif message.tags == 'error' %}
+                bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400
+            {% else %}
+                bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-400
+            {% endif %}">
+
+            <div class="flex items-center">
+                <span class="material-symbols-outlined mr-3">
+                    {% if message.tags == 'success' %}check_circle
+                    {% elif message.tags == 'error' %}report
+                    {% else %}info{% endif %}
+                </span>
+                <p class="font-medium text-sm md:text-base">{{ message }}</p>
+            </div>
+
+            <button onclick="this.parentElement.remove()"
+                class="text-current opacity-50 hover:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-8">
+        <div class="flex flex-col gap-2">
+            <h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">
+                Historial de Rechazos
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl leading-normal">
+                Propuestas que no cumplieron con los criterios de validación MAIS. Estos activos no son visibles en el
+                mapa público.
+            </p>
+        </div>
+    </div>
+
+    <div
+        class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden mb-8">
+
+        <div class="flex border-b border-slate-200 dark:border-slate-800 px-6 gap-8">
+            <a class="flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-4 pt-5 px-2 hover:text-slate-700 dark:hover:text-slate-200"
+                href="{% url 'validate_assets' %}">
+                <span class="text-sm font-bold tracking-[0.015em]">Pendientes</span>
+            </a>
+            <a class="flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-4 pt-5 px-2 hover:text-slate-700 dark:hover:text-slate-200"
+                href="{% url 'approved_assets' %}">
+                <span class="text-sm font-bold tracking-[0.015em]">Aprobados</span>
+            </a>
+            <a class="flex items-center gap-2 border-b-2 border-primary text-primary pb-4 pt-5 px-2" href="#">
+                <span class="text-sm font-bold tracking-[0.015em]">Rechazados</span>
+                <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {{ rejected_assets.count }}
+                </span>
+            </a>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-slate-50/30 dark:bg-slate-900/30">
+
+            {% for asset in rejected_assets %}
+            <div
+                class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col group opacity-90 hover:opacity-100 transition-opacity">
+                <div class="h-32 w-full bg-slate-200 dark:bg-slate-700 relative overflow-hidden grayscale-[50%]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    <div class="absolute top-3 left-3 flex gap-2">
+                        <span
+                            class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Rechazado</span>
+                    </div>
+                    <img class="w-full h-full object-cover"
+                        src="https://ui-avatars.com/api/?name={{ asset.nombre }}&background=666&color=fff"
+                        alt="{{ asset.nombre }}">
+                </div>
+
+                <div class="p-5 flex-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-slate-600 dark:text-slate-400 font-bold text-lg leading-tight line-through">
+                            <a href="{% url 'asset_detail_validation' asset.id %}">{{ asset.nombre }}</a>
+                        </h3>
+                        <span class="text-xs text-slate-400">ID: #{{ asset.id }}</span>
+                    </div>
+
+                    <div
+                        class="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800/50 p-3 rounded-lg mb-4">
+                        <p class="text-[10px] uppercase font-bold text-red-600 dark:text-red-400 mb-1">Motivo del
+                            rechazo:</p>
+                        <p class="text-xs text-red-800 dark:text-red-300 italic">
+                            {% with ultimo_rechazo=asset.historial.first %}
+                                {% if ultimo_rechazo %}
+                                    "{{ ultimo_rechazo.observaciones }}"
+                                {% else %}
+                                    "Sin motivo especificado en el historial."
+                                {% endif %}
+                            {% endwith %}
+                        </p>
+                    </div>
+
+                    <div class="space-y-1 mb-4 text-slate-500">
+                        <p class="text-[10px]">
+                            Rechazado por:
+                            <span class="font-medium text-slate-700 dark:text-slate-300">
+                                {{ asset.historial.responsable.fullname|default:"Sistema" }}
+                            </span>
+                        </p>
+                        <p class="text-[10px]">
+                            Fecha de rechazo:
+                            <span class="font-medium">
+                                {{ asset.historial.first.fecha_movimiento|date:"d/m/Y H:i" }}
+                            </span>
+                        </p>
+                    </div>
+
+
+
+                    <div class="flex gap-2">
+                        <form action="{% url 'process_asset_action' %}" method="POST" class="w-full">
+                            {% csrf_token %}
+                            <input type="hidden" name="asset_id" value="{{ asset.id }}">
+                            <button name="action" value="revert_to_pending"
+                                class="w-full bg-slate-800 dark:bg-slate-700 text-white py-2 rounded-lg text-sm font-bold hover:bg-slate-900 transition-colors flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-sm">history</span>
+                                Re-evaluar Activo
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 text-center text-slate-500">
+                <span class="material-symbols-outlined text-6xl mb-4 opacity-20">delete_sweep</span>
+                <p>No hay activos en la papelera de rechazos.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</main>
+{% endblock %}

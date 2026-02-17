@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mapa de Activos - MAIS{% endblock %}
+
+{% block extra_head %}
+<style>
+    #map {
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+    }
+
+    .map-overlay {
+        z-index: 1000 !important;
+        pointer-events: none;
+    }
+
+    .map-overlay>* {
+        pointer-events: auto;
+    }
+
+    /* Estilo para que el popup de Leaflet se parezca a tu diseño */
+    .leaflet-popup-content-wrapper {
+        padding: 0;
+        overflow: hidden;
+        border-radius: 0.75rem;
+    }
+
+    .leaflet-popup-content {
+        margin: 0;
+        width: 300px !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="flex flex-1 overflow-hidden relative">
+    <aside
+        class="w-72 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 shadow-xl lg:translate-x-0 -translate-x-full transition-transform absolute lg:relative h-full">
+        <div class="flex flex-col gap-6 p-6 overflow-y-auto">
+            <div class="flex flex-col">
+                <h1 class="text-slate-900 dark:text-slate-50 text-base font-bold leading-normal">Asset Categories</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-sm font-normal">Filter map resources by type</p>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">park</span>
+                    <p class="text-sm font-medium">Espacio Público / Área Verde</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">groups</span>
+                    <p class="text-sm font-medium">Organización Social</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary border border-primary/20 w-full text-left">
+                    <span class="material-symbols-outlined fill-icon">medical_services</span>
+                    <p class="text-sm font-semibold flex-1">Salud</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">school</span>
+                    <p class="text-sm font-medium">Educación</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">sports_soccer</span>
+                    <p class="text-sm font-medium">Club Deportivo</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">theater_comedy</span>
+                    <p class="text-sm font-medium">Centro Cultural / Biblioteca</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">elderly</span>
+                    <p class="text-sm font-medium">Adulto Mayor</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">sentiment_satisfied</span>
+                    <p class="text-sm font-medium">Organización Juvenil</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">home_work</span>
+                    <p class="text-sm font-medium">Junta de Vecinos</p>
+                </button>
+
+                <button
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-full text-left transition-colors">
+                    <span class="material-symbols-outlined">account_balance</span>
+                    <p class="text-sm font-medium">Programa Municipal</p>
+                </button>
+            </div>
+
+            <div class="pt-6 border-t border-slate-200 dark:border-slate-800">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Saved Locations</h3>
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                        <span class="material-symbols-outlined text-sm">location_on</span>
+                        <span class="text-sm">Puente Alto Central</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="flex-1 relative bg-slate-200 overflow-hidden">
+        <div id="map" class="absolute inset-0 z-0"></div>
+
+        <div class="absolute inset-0 z-10 pointer-events-none p-6">
+
+            <div
+                class="flex flex-row items-center justify-center gap-4 w-full max-w-[700px] mx-auto pointer-events-auto">
+
+                <div
+                    class="flex-1 flex h-12 shadow-xl rounded-lg bg-white dark:bg-background-dark border border-slate-200 overflow-hidden">
+                    <div class="text-slate-400 flex items-center justify-center pl-4">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <input class="w-full border-none bg-transparent px-4 text-base focus:ring-0"
+                        placeholder="Search for community assets..." />
+                </div>
+
+                <button title="Propose Community Asset"
+                    class="flex items-center justify-center h-12 w-12 sm:w-auto sm:px-6 bg-primary text-white rounded-lg font-bold shadow-xl hover:bg-primary/90 transition-all gap-3 shrink-0">
+                    <span class="material-symbols-outlined text-2xl">add_location_alt</span>
+                    <span class="hidden sm:inline truncate uppercase tracking-wide text-xs">Propose Asset</span>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</main>
+<script src="{% static 'js/map_init.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de Usuario{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+
+<main class="max-w-[1280px] w-full mx-auto px-10 py-8">
+
+    <div class="mb-10">
+        <div class="flex items-center gap-2 text-primary mb-4">
+            <span class="material-symbols-outlined">edit_note</span>
+            <span class="font-bold uppercase tracking-widest text-sm">Modo Edición</span>
+        </div>
+        <h1 class="text-[#0d141b] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] mb-3">
+            Editar: {{ asset.nombre }}
+        </h1>
+        <p class="text-[#4c739a] text-lg font-normal max-w-2xl">
+            Actualiza la información del activo. Recuerda que al guardar, el estado podría volver a "Pendiente" según las reglas de validación.
+        </p>
+    </div>
+
+    <form method="POST" class="space-y-10" action="{% url 'edit_asset' asset.id %}">
+        {% csrf_token %}
+
+        <section class="bg-white dark:bg-background-dark p-8 rounded-xl shadow-sm border border-[#e7edf3] dark:border-slate-800">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">description</span>
+                Información del Activo
+            </h3>
+
+            <div class="grid grid-cols-1 gap-6">
+                <div class="flex flex-col">
+                    <label class="text-base font-semibold pb-2">Nombre del Activo <span class="text-red-500">*</span></label>
+                    <input name="nombre" value="{{ asset.nombre }}" class="form-input w-full rounded-lg border border-[#cfdbe7] dark:border-slate-700 bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base" required>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col">
+                        <label class="text-base font-semibold pb-2">Tipo de Activo</label>
+                        <select name="tipo_activo" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                            {% for val, label in asset.TIPO_ACTIVO_CHOICES %}
+                                <option value="{{ val }}" {% if asset.tipo_activo == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="text-base font-semibold pb-2">Categoría MAIS</label>
+                        <select name="categoria_mais" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                            {% for val, label in asset.CATEGORIA_MAIS_CHOICES %}
+                                <option value="{{ val }}" {% if asset.categoria_mais == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex flex-col">
+                        <label class="text-base font-semibold pb-2">Dirección</label>
+                        <input name="direccion" value="{{ asset.direccion|default:'' }}" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-base font-semibold pb-2">Región</label>
+                        <input name="region" value="{{ asset.region|default:'' }}" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-base font-semibold pb-2">Comuna</label>
+                        <input name="comuna" value="{{ asset.comuna|default:'' }}" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                    </div>
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="text-base font-semibold pb-2">Horario de Funcionamiento</label>
+                    <input name="horario" value="{{ asset.horario|default:'' }}" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="text-base font-semibold pb-2">Descripción</label>
+                    <textarea name="descripcion" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 min-h-[120px] p-4 text-base">{{ asset.descripcion }}</textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white dark:bg-background-dark p-8 rounded-xl shadow-sm border border-[#e7edf3] dark:border-slate-800">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                <div class="flex -space-x-2">
+                    <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full ring-2 ring-white dark:ring-slate-800">payments</span>
+                    <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full ring-2 ring-white dark:ring-slate-800">door_front</span>
+                </div>
+                Acceso y Financiamiento
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="flex flex-col">
+                        <label class="text-base font-semibold pb-2">Tipo de Financiamiento</label>
+                        <select name="tipo_financiamiento" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                            {% for val, label in asset.FINANCIAMIENTO_CHOICES %}
+                                <option value="{{ val }}" {% if asset.tipo_financiamiento == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="text-base font-semibold pb-2">Población Objetivo</label>
+                        <select name="poblacion_objetivo" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                            {% for val, label in asset.POBLACION_CHOICES %}
+                                <option value="{{ val }}" {% if asset.poblacion_objetivo == val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-lg">
+                        <input type="checkbox" name="requiere_inscripcion" id="requiere_inscripcion" {% if asset.requiere_inscripcion %}checked{% endif %} class="w-5 h-5 text-primary rounded border-gray-300">
+                        <label for="requiere_inscripcion" class="text-sm font-semibold text-blue-900 dark:text-blue-300 italic">¿Requiere inscripción previa o pertenecer a un sector?</label>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-900/40 p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                    <p class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Accesibilidad y Servicios</p>
+                    <div class="grid grid-cols-1 gap-4">
+                        {% with labels='{"accesibilidad_silla_ruedas":"Rampa / Acceso Silla de Ruedas", "baño_accesible":"Baño Adaptado", "accesibilidad_visual":"Señalética Braille o Sonora", "estacionamiento_general":"Estacionamiento General", "estacionamiento_discapacidad":"Estacionamiento Discapacidad"}' %}
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" name="accesibilidad_silla_ruedas" {% if asset.accesibilidad_silla_ruedas %}checked{% endif %} class="w-5 h-5 text-primary rounded border-gray-300">
+                            <span class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">Rampa / Acceso Silla de Ruedas</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" name="baño_accesible" {% if asset.baño_accesible %}checked{% endif %} class="w-5 h-5 text-primary rounded border-gray-300">
+                            <span class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">Baño Adaptado</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" name="accesibilidad_visual" {% if asset.accesibilidad_visual %}checked{% endif %} class="w-5 h-5 text-primary rounded border-gray-300">
+                            <span class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">Señalética Braille o Sonora</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" name="estacionamiento_general" {% if asset.estacionamiento_general %}checked{% endif %} class="w-5 h-5 text-primary rounded border-gray-300">
+                            <span class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">Estacionamiento General</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" name="estacionamiento_discapacidad" {% if asset.estacionamiento_discapacidad %}checked{% endif %} class="w-5 h-5 text-primary rounded border-gray-300">
+                            <span class="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">Estacionamiento Discapacidad</span>
+                        </label>
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white dark:bg-background-dark p-8 rounded-xl shadow-sm border border-[#e7edf3] dark:border-slate-800">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">contact_page</span>
+                Información de Contacto
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex flex-col">
+                    <label class="text-base font-semibold pb-2">Nombre de Responsable</label>
+                    <input name="contacto_nombre" value="{{ asset.contacto_nombre|default:'' }}" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-base font-semibold pb-2">Correo Electrónico</label>
+                    <input type="email" name="contacto_email" value="{{ asset.contacto_email|default:'' }}" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-base font-semibold pb-2">Teléfono de Contacto</label>
+                    <input type="text" name="contacto_fono" value="{{ asset.contacto_fono|default:'' }}" class="form-input w-full rounded-lg border border-[#cfdbe7] bg-slate-50 dark:bg-slate-900 h-14 p-4 text-base">
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white dark:bg-background-dark p-8 rounded-xl shadow-sm border border-[#e7edf3] dark:border-slate-800">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">location_on</span>
+                Ubicación del Activo
+            </h3>
+
+            <div class="relative mb-6">
+                <input id="address-search" class="w-full rounded-lg pl-12 pr-4 border border-[#cfdbe7] bg-slate-50 dark:bg-slate-800 h-14 text-base" placeholder="Buscar nueva dirección..." />
+            </div>
+
+            <div id="map" class="w-full h-[400px] rounded-lg border border-[#cfdbe7]"></div>
+
+            <input type="hidden" name="latitude" id="latitude" value="{{ asset.latitude|stringformat:'.6f' }}">
+            <input type="hidden" name="longitude" id="longitude" value="{{ asset.longitude|stringformat:'.6f' }}">
+        </section>
+
+        <div class="flex justify-end gap-4 pb-10">
+            <a href="{% url 'asset_detail' asset.id %}" class="px-8 h-14 rounded-lg border border-[#cfdbe7] font-bold flex items-center hover:bg-slate-100 transition-colors">
+                Cancelar
+            </a>
+            <button type="submit" class="px-10 h-14 rounded-lg bg-primary text-white font-bold shadow-lg hover:bg-primary/90 flex items-center gap-2 transition-all">
+                Guardar Cambios
+                <span class="material-symbols-outlined">save</span>
+            </button>
+        </div>
+    </form>
+</main>
+
+<script src="{% static 'js/add_assets.js' %}"></script>
+
+{% endblock %}

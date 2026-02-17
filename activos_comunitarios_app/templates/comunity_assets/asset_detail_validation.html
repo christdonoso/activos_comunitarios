@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% block title %}Detalle de Validación - MAIS Chile{% endblock %}
+
+{% block content %}
+<main class="flex-1 px-10 py-8 max-w-[1100px] mx-auto w-full">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <a href="{% url 'validate_assets' %}" 
+           class="text-sm text-slate-500 hover:text-primary font-medium flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Volver al Panel de Validación
+        </a>
+
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white mb-2">
+            {{ asset.nombre }}
+        </h1>
+
+        <p class="text-slate-500 dark:text-slate-400">
+            ID #{{ asset.id }} · {{ asset.get_tipo_activo_display|default:"Sin tipo definido" }}
+        </p>
+
+        <span class="inline-block mt-3 px-3 py-1 text-xs font-bold rounded-full
+            {% if asset.estado == 'pendiente' %}
+                bg-amber-100 text-amber-700
+            {% elif asset.estado == 'aprobado' %}
+                bg-emerald-100 text-emerald-700
+            {% else %}
+                bg-red-100 text-red-700
+            {% endif %}
+        ">
+            {{ asset.get_estado_display }}
+        </span>
+    </div>
+
+
+    <!-- Indicadores de Calidad -->
+    <div class="mb-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+        <h3 class="font-bold text-lg mb-4 text-slate-900 dark:text-white">
+            Indicadores Automáticos de Calidad
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
+            {% if not asset.descripcion %}
+                <div class="text-red-500 font-medium">⚠ Sin descripción</div>
+            {% endif %}
+
+            {% if asset.descripcion and asset.descripcion|length < 30 %}
+                <div class="text-amber-500 font-medium">⚠ Descripción demasiado corta</div>
+            {% endif %}
+
+            {% if not asset.direccion %}
+                <div class="text-red-500 font-medium">⚠ Sin dirección registrada</div>
+            {% endif %}
+
+            {% if not asset.comuna %}
+                <div class="text-red-500 font-medium">⚠ Sin comuna</div>
+            {% endif %}
+
+            {% if not asset.contacto_nombre %}
+                <div class="text-amber-500 font-medium">⚠ Sin nombre de contacto</div>
+            {% endif %}
+
+            {% if not asset.contacto_info %}
+                <div class="text-amber-500 font-medium">⚠ Sin información de contacto</div>
+            {% endif %}
+
+            {% if asset.descripcion and asset.direccion and asset.comuna and asset.latitude and asset.longitude %}
+                <div class="text-emerald-500 font-medium">✔ Información territorial básica completa</div>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+    <!-- Información General -->
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+
+        <!-- Información del Activo -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+            <h3 class="font-bold text-lg mb-4 text-slate-900 dark:text-white">
+                Información del Activo Comunitario
+            </h3>
+
+            <div class="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Tipo:</span>
+                    {{ asset.get_tipo_activo_display|default:"No especificado" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Categoría MAIS:</span>
+                    {{ asset.get_categoria_mais_display|default:"No definida" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Dirección:</span>
+                    {{ asset.direccion|default:"No registrada" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Comuna:</span>
+                    {{ asset.comuna|default:"No registrada" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Horario:</span>
+                    {{ asset.horario|default:"No registrado" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Descripción:</span>
+                    <p class="mt-1">{{ asset.descripcion|default:"No registrada" }}</p>
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Coordenadas:</span>
+                    {{ asset.latitude }}, {{ asset.longitude }}
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Información de Contacto y Metadatos -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+            <h3 class="font-bold text-lg mb-4 text-slate-900 dark:text-white">
+                Contacto y Metadatos
+            </h3>
+
+            <div class="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Nombre Contacto:</span>
+                    {{ asset.contacto_nombre|default:"No registrado" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Información Contacto:</span>
+                    {{ asset.contacto_info|default:"No registrada" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Creado por:</span>
+                    {{ asset.creado_por|default:"Usuario eliminado" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Fecha de creación:</span>
+                    {{ asset.fecha_creacion|date:"d/m/Y H:i" }}
+                </div>
+
+                <div>
+                    <span class="font-semibold text-slate-900 dark:text-white">Validado por:</span>
+                    {{ asset.aceptado_por|default:"Aún no validado" }}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Historial de Estados -->
+    <div class="mb-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+        <h3 class="font-bold text-lg mb-4 text-slate-900 dark:text-white">
+            Historial de Validación
+        </h3>
+
+        {% if asset.historial.all %}
+            <div class="space-y-4 text-sm">
+                {% for movimiento in asset.historial.all %}
+                    <div class="border-l-4 pl-4
+                        {% if movimiento.estado == 'aprobado' %}
+                            border-emerald-500
+                        {% elif movimiento.estado == 'rechazado' %}
+                            border-red-500
+                        {% else %}
+                            border-amber-500
+                        {% endif %}
+                    ">
+                        <p class="font-semibold text-slate-900 dark:text-white">
+                            {{ movimiento.get_estado_display }}
+                        </p>
+                        <p class="text-slate-500">
+                            {{ movimiento.fecha_movimiento|date:"d/m/Y H:i" }} · {{ movimiento.responsable }}
+                        </p>
+                        {% if movimiento.observaciones %}
+                            <p class="mt-2 text-slate-600 dark:text-slate-400">
+                                {{ movimiento.observaciones }}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-slate-500 text-sm">Sin movimientos registrados.</p>
+        {% endif %}
+    </div>
+
+
+    <!-- Mapa -->
+    {% if asset.latitude and asset.longitude %}
+    <div class="mb-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+        <h3 class="font-bold text-lg mb-4 text-slate-900 dark:text-white">
+            Ubicación Geográfica
+        </h3>
+        <div id="map" class="w-full h-80 rounded-lg"></div>
+    </div>
+    {% endif %}
+    <div class="flex justify-end mt-6">
+    <a href="{% url 'validate_assets' %}"
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl 
+       border border-slate-300 dark:border-slate-700
+       bg-white dark:bg-slate-900
+       text-slate-700 dark:text-slate-300 
+       font-bold text-sm 
+       hover:bg-slate-50 dark:hover:bg-slate-800
+       transition-colors">
+        
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
+        Volver al Panel
+    </a>
+</div>
+
+</main>
+
+
+{% if asset.latitude and asset.longitude %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    var map = L.map('map').setView([{{ asset.latitude }}, {{ asset.longitude }}], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    L.marker([{{ asset.latitude }}, {{ asset.longitude }}])
+        .addTo(map)
+        .bindPopup("{{ asset.nombre }}")
+        .openPopup();
+</script>
+{% endif %}
+
+{% endblock %}

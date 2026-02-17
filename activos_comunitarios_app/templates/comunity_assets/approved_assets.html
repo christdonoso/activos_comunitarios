@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Activos Aprobados - MAIS Chile{% endblock %}
+
+{% block content %}
+<main class="flex-1 px-10 py-8 max-w-[1400px] mx-auto w-full">
+
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all animate-in fade-in slide-in-from-top-4 
+            {% if message.tags == 'success' %}
+                bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400
+            {% elif message.tags == 'error' %}
+                bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400
+            {% else %}
+                bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-400
+            {% endif %}">
+            
+            <div class="flex items-center">
+                <span class="material-symbols-outlined mr-3">
+                    {% if message.tags == 'success' %}check_circle
+                    {% elif message.tags == 'error' %}report
+                    {% else %}info{% endif %}
+                </span>
+                <p class="font-medium text-sm md:text-base">{{ message }}</p>
+            </div>
+            
+            <button onclick="this.parentElement.remove()" class="text-current opacity-50 hover:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-8">
+        <div class="flex flex-col gap-2">
+            <h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">
+                Activos Validados
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl leading-normal">
+                Lista de activos comunitarios que han sido aprobados y son visibles actualmente en el mapa del modelo MAIS.
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden mb-8">
+        
+        <div class="flex border-b border-slate-200 dark:border-slate-800 px-6 gap-8">
+            <a class="flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-4 pt-5 px-2 hover:text-slate-700 dark:hover:text-slate-200" href="{% url 'validate_assets' %}">
+                <span class="text-sm font-bold tracking-[0.015em]">Pendientes</span>
+            </a>
+            <a class="flex items-center gap-2 border-b-2 border-primary text-primary pb-4 pt-5 px-2" href="{% url 'approved_assets' %}">
+                <span class="text-sm font-bold tracking-[0.015em]">Aprobados</span>
+                <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {{ total_count }}
+                </span>
+            </a>
+            <a class="flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-4 pt-5 px-2 hover:text-slate-700 dark:hover:text-slate-200" href="{% url 'rejected_assets' %}">
+                <span class="text-sm font-bold tracking-[0.015em]">Rechazados</span>
+            </a>
+        </div>
+
+        <div class="p-6 bg-slate-50/50 dark:bg-slate-900/50 flex flex-wrap gap-4 items-center border-b border-slate-200 dark:border-slate-800">
+            <div class="flex-1 min-w-[300px]">
+                <form method="GET" class="flex w-full flex-1 items-stretch rounded-lg h-11 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                    <div class="text-slate-400 flex items-center justify-center pl-4">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <input name="q" class="form-input flex w-full border-none bg-transparent focus:outline-0 focus:ring-0 text-slate-900 dark:text-white h-full placeholder:text-slate-400 px-3 text-sm" 
+                           placeholder="Buscar en aprobados..." value="{{ request.GET.q }}">
+                </form>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex h-11 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4">
+                    <span class="text-slate-700 dark:text-slate-300 text-sm font-medium">Exportar Listado</span>
+                    <span class="material-symbols-outlined text-slate-400 text-sm">download</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-slate-50/30 dark:bg-slate-900/30">
+            
+            {% for asset in approved_assets %}
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col group">
+                <div class="h-32 w-full bg-slate-200 dark:bg-slate-700 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="absolute top-3 left-3 flex gap-2">
+                        <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Aprobado</span>
+                        <span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded uppercase">
+                            {{ asset.categoria_mais }}
+                        </span>
+                    </div>
+                    <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name={{ asset.nombre }}&background=random" alt="{{ asset.nombre }}">
+                </div>
+                
+                <div class="p-5 flex-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-slate-900 dark:text-white font-bold text-lg leading-tight">{{ asset.nombre }}</h3>
+                        <span class="text-xs text-slate-400">ID: #{{ asset.id }}</span>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-sm">location_on</span>
+                            <span class="text-xs">{{ asset.direccion }}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-[10px] italic">
+                            <span class="material-symbols-outlined text-sm">verified_user</span>
+                            <span>Validado por: {{ asset.aceptado_por.usuario.fullname }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 mb-6">
+                        <span class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded">
+                            {{ asset.get_tipo_activo_display }}
+                        </span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <a href="{% url 'asset_detail' asset.id %}" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 py-2 rounded-lg text-sm font-bold text-center hover:bg-slate-200 transition-colors">Ver Detalles</a>
+                        
+                        <form action="{% url 'validate_assets' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="asset_id" value="{{ asset.id }}">
+                            <button name="action" value="reject" class="p-2 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-red-500 rounded-lg transition-colors" title="Revertir/Rechazar">
+                                <span class="material-symbols-outlined text-sm">undo</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 text-center text-slate-500">
+                <span class="material-symbols-outlined text-6xl mb-4 opacity-20">task_alt</span>
+                <p>No hay activos aprobados aún.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="px-6 py-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-slate-500 text-xs">
+            <span>Total: {{ total_count }} activos validados</span>
+        </div>
+    </div>
+</main>
+{% endblock %}

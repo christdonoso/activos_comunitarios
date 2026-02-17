@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de Usuario{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-8 py-10">
+    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 mb-8 shadow-sm">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="relative group">
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-32 border-4 border-white dark:border-slate-800 shadow-lg"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC4P3MNoxOcDc7LdIc47l9cl9fcpJPPUEGgHtkanLS3ITRLYAKGOKSwAM0QOLwRO-kMRdHj6VpnqvAI208dvsS-TgIlk-7-qIYUfGDXXUJJCQ62aPxWFT91chUP9hjRZLOg4BFGiP7qCSG6lB71LyqIWXhMUGGXymeAsL-S-y782Z-8JrZ66C5xSjrzHNvIOEfuGvQKUkL5BL_v8nDNzzrVMm1KNUEIlolwniZnATjGSVcX1TrB5aXNPSW7X5OVErYUoOVkK9xK2Ps");'>
+                </div>
+                <button
+                    class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition-transform hover:scale-110">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                </button>
+            </div>
+            <div class="flex-1 text-center md:text-left">
+                <div class="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+                    <h1 class="text-2xl font-bold text-[#0d141b] dark:text-white"> {{ usuario.fullname }}</h1>
+                    <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                        <span class="material-symbols-outlined text-[12px] mr-1">verified</span> {{ usuario.user_type }}  </span>
+                </div>
+                <p class="text-[#4c739a] dark:text-slate-400 font-medium">Community Leader - Región
+                    Metropolitana</p>
+                <div
+                    class="flex items-center justify-center md:justify-start gap-4 mt-3 text-sm text-[#4c739a] dark:text-slate-400">
+                    <span class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">calendar_today</span> Joined Jan
+                        2023
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">location_on</span> {{ usuario.region | title }}, CL
+                    </span>
+                </div>
+            </div>
+            <button
+                class="bg-slate-100 dark:bg-slate-800 text-[#0d141b] dark:text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                Cambiar Imagen
+            </button>
+        </div>
+    </div>
+    <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="px-8 py-6 border-b border-slate-200 dark:border-slate-800">
+            <h2 class="text-xl font-bold text-[#0d141b] dark:text-white">Personal Information</h2>
+            <p class="text-sm text-[#4c739a] dark:text-slate-400 mt-1">Manage your public profile
+                information and contact details.</p>
+        </div>
+        <div class="p-8">
+            <form method="POST" enctype="multipart/form-data" class="space-y-10">
+                {% csrf_token %}
+
+                <!-- ================= INFORMACIÓN PERSONAL ================= -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">
+                        Información personal
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                        <div class="md:col-span-1 lg:col-span-2 space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Nombre completo
+                            </label>
+                            <input name="fullname" type="text" value="{{ usuario.fullname | title }}"
+                                placeholder="Nombre y apellido"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all" />
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Tipo de usuario
+                            </label>
+                            <select name="user_type"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                                {% for value, label in usuario.USER_TYPE %}
+                                <option value="{{ value }}" {% if usuario.USER_TYPE %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2 lg:col-span-3">
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    Sexo
+                                </label>
+                                <select name="sexo"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                                    <option value="">Seleccionar</option>
+                                    <option value="F">Femenino</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="O">Otro</option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    RUT
+                                </label>
+                                <input name="rut" type="text" value="{{ usuario.rut }}" placeholder="12.345.678-9"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ================= CONTACTO ================= -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">
+                        Información de contacto
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- EMAIL -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Correo electrónico
+                            </label>
+                            <input name="email" type="email" value="{{ usuario.email }}" placeholder="correo@ejemplo.cl"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700
+                                    bg-white dark:bg-slate-800 dark:text-white focus:border-primary
+                                    focus:ring-primary/20 text-sm transition-all" />
+                        </div>
+
+                        <!-- PHONE -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Teléfono
+                            </label>
+                            <input name="phone" type="tel" value="{{ usuario.phone }}" placeholder="+56 9 1234 5678"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700
+                                    bg-white dark:bg-slate-800 dark:text-white focus:border-primary
+                                    focus:ring-primary/20 text-sm transition-all" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ================= UBICACIÓN ================= -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">
+                        Ubicación
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                        <!-- REGION -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Región
+                            </label>
+                            <input name="region" type="text" value="{{ usuario.region | title }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700
+                                    bg-white dark:bg-slate-800 dark:text-white focus:border-primary
+                                    focus:ring-primary/20 text-sm transition-all" />
+                        </div>
+
+                        <!-- COMUNA -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Comuna
+                            </label>
+                            <input name="city" type="text" value="{{ usuario.city | title }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700
+                                    bg-white dark:bg-slate-800 dark:text-white focus:border-primary
+                                    focus:ring-primary/20 text-sm transition-all" />
+                        </div>
+
+                        <!-- SECTOR (PEQUEÑO) -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Sector
+                            </label>
+                            <input name="sector" type="text" placeholder="Ej: Norte" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700
+                                    bg-white dark:bg-slate-800 dark:text-white focus:border-primary
+                                    focus:ring-primary/20 text-sm transition-all" />
+                        </div>
+
+                        <!-- DIRECCIÓN (FULL WIDTH) -->
+                        <div class="md:col-span-2 lg:col-span-3 space-y-2">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Dirección
+                            </label>
+                            <input name="address" type="text" value="{{ usuario.address }}"
+                                placeholder="Calle, número, referencia" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700
+                                    bg-white dark:bg-slate-800 dark:text-white focus:border-primary
+                                    focus:ring-primary/20 text-sm transition-all" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ================= ACTIONS ================= -->
+                <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4">
+                    <button type="reset"
+                        class="px-6 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:text-slate-700">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="bg-primary hover:bg-blue-600 text-white px-10 py-3
+                            rounded-xl font-bold text-sm shadow-md transition-all active:scale-95">
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div
+            class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div
+                class="size-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-2xl">explore</span>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Assets Mapped</p>
+                <p class="text-2xl font-bold text-[#0d141b] dark:text-white">24</p>
+            </div>
+        </div>
+        <div
+            class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div
+                class="size-12 rounded-xl bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600">
+                <span class="material-symbols-outlined text-2xl">verified</span>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Validated</p>
+                <p class="text-2xl font-bold text-[#0d141b] dark:text-white">18</p>
+            </div>
+        </div>
+        <div
+            class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div
+                class="size-12 rounded-xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600">
+                <span class="material-symbols-outlined text-2xl">stars</span>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Impact Score</p>
+                <p class="text-2xl font-bold text-[#0d141b] dark:text-white">850</p>
+            </div>
+        </div>
+
+        añadir feature de geolocalizacion para la direccion
+    </div>
+</div>
+{% endblock %}

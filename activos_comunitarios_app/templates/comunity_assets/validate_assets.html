@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard de Validación - MAIS Chile{% endblock %}
+
+{% block content %}
+<main class="flex-1 px-10 py-8 max-w-[1400px] mx-auto w-full">
+
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all animate-in fade-in slide-in-from-top-4 
+            {% if message.tags == 'success' %}
+                bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400
+            {% elif message.tags == 'error' %}
+                bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400
+            {% else %}
+                bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-400
+            {% endif %}">
+            
+            <div class="flex items-center">
+                <span class="material-symbols-outlined mr-3">
+                    {% if message.tags == 'success' %}check_circle
+                    {% elif message.tags == 'error' %}report
+                    {% else %}info{% endif %}
+                </span>
+                <p class="font-medium text-sm md:text-base">{{ message }}</p>
+            </div>
+            
+            <button onclick="this.parentElement.remove()" class="text-current opacity-50 hover:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="flex flex-wrap justify-between items-end gap-3 mb-8">
+        <div class="flex flex-col gap-2">
+            <h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">
+                Panel de Validación Oficial
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-base font-normal max-w-2xl leading-normal">
+                Revisa, valida o rechaza los assets comunitarios enviados. Tu validación asegura la precisión de los datos para la planificación regional del modelo MAIS.
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden mb-8">
+        
+        <div class="flex border-b border-slate-200 dark:border-slate-800 px-6 gap-8">
+            <a class="flex items-center gap-2 border-b-2 border-primary text-primary pb-4 pt-5 px-2" href="{% url 'validate_assets' %}">
+                <span class="text-sm font-bold tracking-[0.015em]">Pendientes</span>
+                <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {{ assets_pendientes.count }}
+                </span>
+            </a>
+            <a href="{% url 'approved_assets' %}" class="flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-4 pt-5 px-2 hover:text-slate-700 dark:hover:text-slate-200" href="#">
+                <span class="text-sm font-bold tracking-[0.015em]">Aprobados</span>
+            </a>
+            <a class="flex items-center gap-2 border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-4 pt-5 px-2 hover:text-slate-700 dark:hover:text-slate-200" href="{% url 'rejected_assets' %}">
+                <span class="text-sm font-bold tracking-[0.015em]">Rechazados</span>
+            </a>
+        </div>
+
+        <div class="p-6 bg-slate-50/50 dark:bg-slate-900/50 flex flex-wrap gap-4 items-center border-b border-slate-200 dark:border-slate-800">
+            <div class="flex-1 min-w-[300px]">
+                <form method="GET" class="flex w-full flex-1 items-stretch rounded-lg h-11 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                    <div class="text-slate-400 flex items-center justify-center pl-4">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <input name="q" class="form-input flex w-full border-none bg-transparent focus:outline-0 focus:ring-0 text-slate-900 dark:text-white h-full placeholder:text-slate-400 px-3 text-sm" 
+                           placeholder="Buscar por nombre, organización o ID..." value="{{ request.GET.q }}">
+                </form>
+            </div>
+            <div class="flex gap-2">
+                <button class="flex h-11 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 hover:bg-slate-50 transition-colors">
+                    <span class="text-slate-700 dark:text-slate-300 text-sm font-medium">Tipo de asset</span>
+                    <span class="material-symbols-outlined text-slate-400">filter_list</span>
+                </button>
+                <button class="flex h-11 shrink-0 items-center justify-center rounded-lg bg-primary text-white px-4 font-bold text-sm hover:bg-primary/90 shadow-sm transition-colors">
+                    Aprobación Masiva
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-slate-50/30 dark:bg-slate-900/30">
+            
+            {% for asset in assets_pendientes %}
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden flex flex-col hover:shadow-md transition-shadow group">
+                <div class="h-32 w-full bg-slate-200 dark:bg-slate-700 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="absolute top-3 left-3">
+                        <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide">
+                            {{ asset.categoria_mais }}
+                        </span>
+                    </div>
+                    <img class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name={{ asset.nombre }}&background=random" alt="{{ asset.nombre }}">
+                </div>
+                
+                <div class="p-5 flex-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-slate-900 dark:text-white font-bold text-lg leading-tight group-hover:text-primary transition-colors">
+                            <a href="{% url 'asset_detail_validation' asset.id %}">{{ asset.nombre }}</a>
+                        </h3>
+                        <span class="text-xs text-slate-400 font-medium">ID: #{{ asset.id }}</span>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-sm">location_on</span>
+                            <span class="text-xs">{{ asset.direccion }}, {{ asset.comuna }}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-sm">person</span>
+                            <span class="text-xs">Contacto: {{ asset.contacto_nombre }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 mb-6">
+                        <span class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded">
+                            {{ asset.get_tipo_asset_display }}
+                        </span>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <form action="{% url 'process_asset_action' %}" method="POST" class="flex-1">
+                            {% csrf_token %}
+                            <input type="hidden" name="asset_id" value="{{ asset.id }}">
+                            <button name="action" value="approve" class="w-full bg-primary text-white py-2 rounded-lg text-sm font-bold hover:bg-blue-600 transition-colors">Aprobar</button>
+                        </form>
+                        <button onclick="openRejectModal('{{ asset.id }}', '{{ asset.nombre }}')" class="flex-1 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 py-2 rounded-lg text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                            Rechazar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 text-center">
+                <span class="material-symbols-outlined text-6xl text-slate-300 mb-4">inventory</span>
+                <p class="text-slate-500">No hay assets pendientes de validación.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="px-6 py-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-slate-500 dark:text-slate-400 text-xs">
+            <span>Mostrando {{ assets_pendientes.count }} de {{ total_count }} validaciones pendientes</span>
+            <div class="flex gap-2">
+                <button class="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50">Anterior</button>
+                <button class="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50">Siguiente</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="reject-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl p-8 border border-slate-200 dark:border-slate-800">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-black text-slate-900 dark:text-white">Rechazar Propuesta</h3>
+            <button onclick="closeRejectModal()" class="text-slate-400 hover:text-slate-600">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form method="POST" action="{% url 'process_asset_action' %}">
+            {% csrf_token %}
+            <input type="hidden" name="asset_id" id="modal-asset-id">
+            <p class="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
+                Por favor, indica el motivo por el cual <span id="modal-asset-nombre" class="font-bold text-slate-900 dark:text-white"></span> no cumple con los criterios MAIS.
+            </p>
+            <div class="mb-6">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Motivo del Rechazo</label>
+                <textarea name="motivo" required class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm min-h-[120px]" placeholder="Ej: La dirección es incorrecta o el recinto ya no opera..."></textarea>
+            </div>
+            <div class="flex gap-3">
+                <button type="button" onclick="closeRejectModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 py-3 rounded-xl font-bold">Cancelar</button>
+                <button type="submit" name="action" value="reject" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600 transition-colors shadow-lg">Confirmar Rechazo</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openRejectModal(id, nombre) {
+        document.getElementById('modal-asset-id').value = id;
+        document.getElementById('modal-asset-nombre').innerText = '"' + nombre + '"';
+        document.getElementById('reject-modal').classList.remove('hidden');
+    }
+    function closeRejectModal() {
+        document.getElementById('reject-modal').classList.add('hidden');
+    }
+</script>
+{% endblock %}
