@@ -49,7 +49,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'apps.users',
     'apps.comunity_assets',
-    'apps.assets_display'
+    'apps.assets_display',
+    'apps.validate_assets'
 ]
 
 INSTALLED_APPS = DJAGNGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

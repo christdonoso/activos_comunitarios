@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.users.urls')),
     path('comunity_assets/', include('apps.comunity_assets.urls')),
+    path('validate_assets/', include('apps.validate_assets.urls')),
     path('assets_display/', include('apps.assets_display.urls')),
 
     path('accounts/', include('django.contrib.auth.urls')),
