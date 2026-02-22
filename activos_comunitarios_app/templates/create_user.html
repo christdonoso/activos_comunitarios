@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo Usuario{% endblock %}
+
+{% block content %}
+
+
+
+<div class="max-w-6xl mx-auto px-8 py-10">
+
+    {% if messages %}
+    <div class="mb-6 space-y-2">
+        {% for message in messages %}
+        <div
+            class="flex items-center p-4 rounded-xl border {% if message.tags == 'error' %}bg-red-50 border-red-200 text-red-700{% else %}bg-green-50 border-green-200 text-green-700{% endif %}">
+            <span class="material-symbols-outlined mr-2">{% if message.tags == 'error' %}error{% else %}check_circle{% endif %}</span>
+            <span class="text-sm font-medium">{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-[#0d141b] dark:text-white">Registrar Nuevo Usuario</h1>
+        <p class="text-[#4c739a] dark:text-slate-400">Completa los datos para dar de alta a un colaborador, admin o
+            profesional.</p>
+    </div>
+
+    <form method="POST" class="space-y-8">
+        {% csrf_token %}
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Credenciales de Acceso</h3>
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Nombre de Usuario
+                        (Login)</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-3 text-slate-400">person</span>
+                        <input name="username" type="text" required value="{{ request.POST.username|default:'' }}"
+                            class="w-full px-4 py-3 pl-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Contraseña</label>
+                        <div class="relative">
+                            <input id="password" name="password" type="password" required
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                            <span id="pass-icon"
+                                class="material-symbols-outlined absolute right-3 top-3 text-slate-300 transition-colors">lock</span>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Confirmar
+                            Contraseña</label>
+                        <div class="relative">
+                            <input id="confirm_password" type="password" required
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                            <span id="match-icon"
+                                class="material-symbols-outlined absolute right-3 top-3 text-slate-300 transition-colors">check_circle</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-x-8 gap-y-2 pt-2 border-t border-slate-50 dark:border-slate-800">
+                    <p id="req-length" class="text-xs text-slate-400 flex items-center gap-2 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">circle</span> Mínimo 8 caracteres
+                    </p>
+                    <p id="req-match" class="text-xs text-slate-400 flex items-center gap-2 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">circle</span> Las contraseñas coinciden
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Información Personal</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Nombre Completo</label>
+                    <input name="fullname" type="text" required value="{{ request.POST.fullname|default:'' }}"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">RUT</label>
+                    <div class="relative">
+                        <input id="rut" name="rut" type="text" placeholder="12.345.678-9"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                        <span id="rut-icon"
+                            class="material-symbols-outlined absolute right-3 top-3 text-slate-300 transition-colors">fingerprint</span>
+                    </div>
+                    <p id="rut-error" class="text-[10px] text-red-500 hidden font-bold mt-1">
+                        <span class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[12px]">cancel</span>
+                            RUT inválido o formato incorrecto
+                        </span>
+                    </p>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tipo de Usuario</label>
+                    <select name="user_type"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                        {% for value, label in user_types %}
+                        <option value="{{ value }}" {% if request.POST.user_type|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Email</label>
+                    <input name="email" type="email" required value="{{ request.POST.email|default:'' }}"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Teléfono</label>
+                    <input name="phone" type="tel" value="{{ request.POST.phone|default:'' }}"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                </div>
+            </div>
+        </div>
+
+   <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Ubicación y Geolocalización</h3>
+    <div class="space-y-6">
+        <div class="space-y-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Buscar Dirección</label>
+            <div class="relative">
+                <div class="flex gap-2">
+                    <div class="relative flex-1">
+                        <span class="material-symbols-outlined absolute left-3 top-3 text-slate-400">location_on</span>
+                        <input id="address_input" name="address" type="text"
+                            value="{{ request.POST.address|default:'' }}"
+                            class="w-full px-4 py-3 pl-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
+                        
+                        <div id="search-loader" class="absolute right-3 top-3 hidden">
+                            <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <button type="button" onclick="buscarDireccion()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-xl transition-all flex items-center shadow-md active:scale-95">
+                        <span class="material-symbols-outlined">search</span>
+                    </button>
+                </div>
+                <div id="results"
+                    class="absolute z-[1000] left-0 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl mt-1 hidden max-h-60 overflow-y-auto">
+                </div>
+            </div>
+        </div>
+
+        <div id="map" class="w-full h-80 rounded-xl border border-slate-200 dark:border-slate-700 z-10 shadow-inner"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Región</label>
+                <input id="region" name="region" type="text" readonly value="{{ request.POST.region|default:'' }}"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:text-white text-sm outline-none">
+            </div>
+            <div class="space-y-2">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ciudad/Comuna</label>
+                <input id="city" name="city" type="text" readonly value="{{ request.POST.city|default:'' }}"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:text-white text-sm outline-none">
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="flex justify-end gap-4 pt-4">
+            <a href="{% url 'profile' %}"
+                class="px-8 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:text-slate-700 transition-colors">Cancelar</a>
+            <button type="submit"
+                class="bg-primary hover:bg-blue-600 text-white px-12 py-3 rounded-xl font-bold text-sm shadow-lg transition-all active:scale-95">
+                Crear Usuario
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    // 1. Inicialización de Mapa
+    var map = L.map('map').setView([-33.4489, -70.6693], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    var marker = L.marker([-33.4489, -70.6693], { draggable: true }).addTo(map);
+
+    // 2. Elementos del DOM
+    const rutInput = document.getElementById('rut');
+    const password = document.getElementById('password');
+    const confirm_password = document.getElementById('confirm_password');
+    const btnSubmit = document.querySelector('button[type="submit"]');
+    const allInputs = document.querySelectorAll('input[required], select[name="user_type"]');
+
+    // 3. Función Maestra de Validación
+    function validarFormulario() {
+        // Validar RUT
+        const isRutValid = rutInput.getAttribute('data-valid') === 'true';
+
+        // Validar Contraseñas
+        const passVal = password.value;
+        const confVal = confirm_password.value;
+        const isPassLengthValid = passVal.length >= 8;
+        const doPassMatch = passVal === confVal && confVal !== "";
+
+        // Actualizar UI de contraseñas (Requisitos visuales)
+        actualizarUIPasswords(isPassLengthValid, doPassMatch);
+
+        // Validar Campos Requeridos
+        let allFieldsFilled = true;
+        allInputs.forEach(input => {
+            if (!input.value.trim()) allFieldsFilled = false;
+        });
+
+        // Lógica del Botón
+        if (isRutValid && isPassLengthValid && doPassMatch && allFieldsFilled) {
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
+            btnSubmit.classList.add('hover:bg-blue-600', 'shadow-lg');
+        } else {
+            btnSubmit.disabled = true;
+            btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+            btnSubmit.classList.remove('hover:bg-blue-600', 'shadow-lg');
+        }
+    }
+
+    // 4. Funciones Auxiliares UI
+    function actualizarUIPasswords(lengthValid, matchValid) {
+        const reqLength = document.getElementById('req-length');
+        const reqMatch = document.getElementById('req-match');
+        const matchIcon = document.getElementById('match-icon');
+
+        // UI Longitud
+        if (lengthValid) {
+            reqLength.classList.replace('text-slate-400', 'text-green-500');
+            reqLength.querySelector('span').innerText = 'check_circle';
+        } else {
+            reqLength.classList.replace('text-green-500', 'text-slate-400');
+            reqLength.querySelector('span').innerText = 'circle';
+        }
+
+        // UI Coincidencia
+        if (confirm_password.value.length > 0) {
+            if (matchValid) {
+                reqMatch.classList.replace('text-slate-400', 'text-green-500');
+                reqMatch.classList.replace('text-red-500', 'text-green-500');
+                reqMatch.querySelector('span').innerText = 'check_circle';
+                matchIcon.classList.replace('text-slate-300', 'text-green-500');
+                matchIcon.classList.replace('text-red-500', 'text-green-500');
+            } else {
+                reqMatch.classList.replace('text-green-500', 'text-red-500');
+                reqMatch.classList.replace('text-slate-400', 'text-red-500');
+                reqMatch.querySelector('span').innerText = 'cancel';
+                matchIcon.classList.replace('text-green-500', 'text-red-500');
+                matchIcon.classList.replace('text-slate-300', 'text-red-500');
+            }
+        }
+    }
+
+    // 5. Lógica de RUT
+    function checkRut(rutCompleto) {
+        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rutCompleto)) return false;
+        let tmp = rutCompleto.split('-');
+        let digv = tmp[1].toLowerCase();
+        let rut = tmp[0];
+        let m = 0, s = 1;
+        for (; rut; rut = Math.floor(rut / 10))
+            s = (s + rut % 10 * (9 - m++ % 6)) % 11;
+        let dvEsperado = s ? s - 1 : 'k';
+        return dvEsperado.toString() === digv;
+    }
+
+    // --- EVENT LISTENERS ---
+
+    // Listener para RUT
+    rutInput.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\./g, '').replace('-', '');
+        if (value.length > 1) value = value.slice(0, -1) + '-' + value.slice(-1);
+        e.target.value = value;
+
+        const rutError = document.getElementById('rut-error');
+        const rutIcon = document.getElementById('rut-icon');
+
+        if (value.length > 7 && checkRut(value)) {
+            rutInput.setAttribute('data-valid', 'true');
+            rutError.classList.add('hidden');
+            rutIcon.style.color = '#22c55e'; // green-500
+        } else {
+            rutInput.setAttribute('data-valid', 'false');
+            if (value.length > 0) {
+                rutError.classList.remove('hidden');
+                rutIcon.style.color = '#ef4444'; // red-500
+            }
+        }
+        validarFormulario();
+    });
+
+    // Listener para todos los inputs (Delegación de eventos)
+    document.addEventListener('input', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+            validarFormulario();
+        }
+    });
+
+    // Funciones de Mapa (Buscar/Seleccionar) - Mantener igual
+    async function buscarDireccion() {
+        const query = document.getElementById('address_input').value;
+        const loader = document.getElementById('search-loader');
+        const resultsContainer = document.getElementById('results');
+        if (query.length < 4) return;
+        loader.classList.remove('hidden');
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&countrycodes=cl&addressdetails=1&limit=5`);
+            const data = await response.json();
+            resultsContainer.innerHTML = '';
+            if (data.length === 0) {
+                resultsContainer.innerHTML = '<div class="p-3 text-sm text-slate-500">No hay resultados</div>';
+            } else {
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'p-3 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer text-sm dark:text-white border-b border-slate-100 dark:border-slate-700 truncate';
+                    div.innerText = item.display_name;
+                    div.onclick = () => seleccionarDireccion(item);
+                    resultsContainer.appendChild(div);
+                });
+            }
+            resultsContainer.classList.remove('hidden');
+        } catch (e) { console.error(e); }
+        finally { loader.classList.add('hidden'); }
+    }
+
+    function seleccionarDireccion(item) {
+        document.getElementById('results').classList.add('hidden');
+        document.getElementById('address_input').value = item.display_name;
+        const newPos = new L.LatLng(item.lat, item.lon);
+        marker.setLatLng(newPos);
+        map.setView(newPos, 16);
+        document.getElementById('region').value = item.address.state || item.address.region || '';
+        document.getElementById('city').value = item.address.city || item.address.town || item.address.suburb || '';
+        validarFormulario();
+    }
+
+    marker.on('dragend', async function (e) {
+        const pos = marker.getLatLng();
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.lat}&lon=${pos.lon}&addressdetails=1`);
+        const data = await response.json();
+        if (data.address) {
+            document.getElementById('address_input').value = data.display_name;
+            document.getElementById('region').value = data.address.state || '';
+            document.getElementById('city').value = data.address.city || data.address.town || '';
+            validarFormulario();
+        }
+    });
+
+    // Inicialización
+    window.onload = () => {
+        btnSubmit.disabled = true;
+        btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+    };
+</script>
+{% endblock %}
