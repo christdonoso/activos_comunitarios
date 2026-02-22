@@ -1,7 +1,7 @@
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden"
     onclick="document.getElementById('sidebar').classList.add('-translate-x-full')"></div>
-<aside id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col h-full transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out shrink-0">
+<aside id="sidebar" class=" fixed top-0 left-0 h-screen w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-50
+">
     <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3">
         <div class="size-9 bg-primary rounded-lg flex items-center justify-center text-white">
             <span class="material-symbols-outlined text-2xl">health_and_safety</span>
@@ -11,64 +11,125 @@
             <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Gestión Comunitaria</p>
         </div>
     </div>
-    <div class="flex-1 overflow-y-auto py-6 flex flex-col gap-6">
+    <div class="flex-1 overflow-y-auto py-6 flex flex-col gap-6 min-h-0">
+        <!-- CTA BUTTON -->
+        <div class="px-4 mb-3">
+
+            <a href="{% url 'add_assets' %}"
+                class="flex items-center justify-center gap-2 bg-primary text-white py-2.5 rounded-lg hover:bg-primary/90 transition">
+
+                <span class="material-symbols-outlined text-sm">
+                    add
+                </span>
+
+                Nuevo Activo
+
+            </a>
+
+        </div>
+
+        {% with current=request.resolver_match.url_name %}
+
+        <!-- ===================== -->
+        <!-- MENU ADMINISTRADOR -->
+        <!-- ===================== -->
         <div class="px-4">
-            <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Main Menu</p>
+            <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                Menu Administrador
+            </p>
+
             <nav class="space-y-1">
-                <a href="" class="flex items-center gap-3 px-4 py-2.5 rounded-lg
-          hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 transition-colors">
+
+                <a href="" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'dashboard' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
                     <span class="material-symbols-outlined">dashboard</span>
                     <p class="text-sm font-medium">Dashboard</p>
                 </a>
-                <a href="{% url 'add_assets' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg
-          hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 transition-colors">
+
+                <a href="{% url 'add_assets' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'add_assets' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
                     <span class="material-symbols-outlined">add_location_alt</span>
                     <p class="text-sm font-medium">Agregar Activo</p>
                 </a>
-                <a href="{% url 'display_assets' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg
-          hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 transition-colors">
+
+                <a href="{% url 'display_assets' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'display_assets' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
                     <span class="material-symbols-outlined">map</span>
                     <p class="text-sm font-medium">Mapa Interactivo</p>
                 </a>
-                <a href="{% url 'validate_assets' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg
-          hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 transition-colors">
+
+                <a href="{% url 'validate_assets' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'validate_assets' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
                     <span class="material-symbols-outlined">approval</span>
                     <p class="text-sm font-medium">Validar Activo Comunitario</p>
                 </a>
-                <div
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-[#4c739a] dark:text-slate-400 transition-colors">
-                    <span class="material-symbols-outlined">analytics</span>
-                    <p class="text-sm font-medium">Reports</p>
-                </div>
+
             </nav>
         </div>
+
+        <!-- ===================== -->
+        <!-- MENU REPORTES -->
+        <!-- ===================== -->
         <div class="px-4">
-            <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Account Settings
+            <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                Menu de Reportes
             </p>
+
             <nav class="space-y-1">
-                <a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg
-          hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 transition-colors">
+
+                <a href="" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'reports' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
+                    <span class="material-symbols-outlined">analytics</span>
+                    <p class="text-sm font-medium">Reportes</p>
+                </a>
+
+            </nav>
+        </div>
+
+        <!-- ===================== -->
+        <!-- OPCIONES CUENTA -->
+        <!-- ===================== -->
+        <div class="px-4">
+            <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                Opciones de tu Cuenta
+            </p>
+
+            <nav class="space-y-1">
+
+                <a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'profile' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
                     <span class="material-symbols-outlined">person</span>
                     <p class="text-sm font-medium">Informacion Personal</p>
                 </a>
-                <div
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-[#4c739a] dark:text-slate-400 transition-colors">
+
+                <a href="" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'contributions' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
                     <span class="material-symbols-outlined">history</span>
                     <p class="text-sm font-medium">My Contributions</p>
-                </div>
-                <div
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-[#4c739a] dark:text-slate-400 transition-colors">
-                    <span class="material-symbols-outlined">shield_lock</span>
-                    <p class="text-sm font-medium">Security</p>
-                </div>
-                <div
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer text-[#4c739a] dark:text-slate-400 transition-colors">
+                </a>
+
+                <a href="" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'notifications' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
                     <span class="material-symbols-outlined">notifications</span>
                     <p class="text-sm font-medium">Notifications</p>
-                </div>
+                </a>
+
             </nav>
         </div>
+
+        {% endwith %}
+
     </div>
+
+
     <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
         <div
             class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 cursor-pointer transition-colors mb-4">

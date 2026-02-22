@@ -1,9 +1,7 @@
-/**
- * map_init.js
- * Inicialización de Leaflet para MAIS Community Assets
- */
+// 1. Configuración Inicial Global
+var map = L.map('map').setView([-33.04, -71.4], 12);
+var markersLayer = L.layerGroup().addTo(map);
 
-var map = L.map('map').setView([0, 0], 2);
 const categoryIcons = {
     'espacio_publico': 'park',
     'organizacion_social': 'groups',
@@ -19,56 +17,58 @@ const categoryIcons = {
     'otro': 'location_on'
 };
 
-
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 20,
     attribution: '&copy; OpenStreetMap'
 }).addTo(map);
 
-// 2. IMPORTANTE: Crear la capa de marcadores GLOBALMENTE
-var markersLayer = L.layerGroup().addTo(map);
+// --- FUNCIONES DE UTILIDAD (Fuera para que sean accesibles) ---
 
-// 3. Geolocation
-navigator.geolocation.getCurrentPosition(
-    function (position) {
-        var currentLat = position.coords.latitude;
-        var currentLng = position.coords.longitude;
-        map.setView([currentLat, currentLng], 15);
-        L.marker([currentLat, currentLng]).addTo(map).bindPopup("Tu ubicación");
-    },
-    function (error) {
-        console.warn("No se pudo obtener la ubicación");
-        // Si falla, centrar en una ubicación por defecto (ej: Quilpué/Villa Alemana)
-        map.setView([-33.04, -71.4], 12);
-    }
-);
-
-async function loadAssets() {
-    try {
-        // Tip: Usa la URL relativa para evitar problemas de CORS o cambios de IP
-        const response = await fetch('/assets_display/get_all_valid_assets', {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        });
-
-        if (!response.ok) throw new Error('Error al obtener activos');
-        const data = await response.json();
-        
-        console.log("Datos recibidos:", data.assets); // Para depurar en consola F12
-        renderMarkers(data.assets);
-
-    } catch (error) {
-        console.error('Error:', error);
+function showLoader() {
+    const loader = document.getElementById('map-loader');
+    if (loader) {
+        loader.classList.remove('hidden');
+        loader.classList.add('flex');
     }
 }
 
+function hideLoader() {
+    const loader = document.getElementById('map-loader');
+    if (loader) {
+        loader.classList.add('hidden');
+        loader.classList.remove('flex');
+    }
+}
 
-// Modifica tu función renderMarkers para usar esto:
+async function loadAssets(category = null) {
+    showLoader();
+    try {
+        let url = '/assets_display/get_all_valid_assets';
+        if (category) {
+            url = `/assets_display/get_assets_by_category?category=${category}`;
+        }
+
+        const response = await fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        
+        if (!response.ok) throw new Error("Error en servidor");
+        
+        const data = await response.json();
+        renderMarkers(data.assets);
+    } catch (error) {
+        console.error("Error cargando activos:", error);
+    } finally {
+        // Un pequeño delay opcional para que el spinner no parpadee demasiado rápido
+        setTimeout(hideLoader, 300);
+    }
+}
+
 function renderMarkers(assets) {
-    markersLayer.clearLayers(); 
+    markersLayer.clearLayers(); // Limpia los puntos anteriores
 
     assets.forEach(asset => {
-        const iconName = categoryIcons[asset.category] || 'location_on'; // asset.category debe venir de Django
+        const iconName = categoryIcons[asset.category] || 'location_on';
         
         const customIcon = L.divIcon({
             className: 'custom-marker',
@@ -84,19 +84,48 @@ function renderMarkers(assets) {
 
         L.marker([asset.lat, asset.lng], { icon: customIcon })
             .addTo(markersLayer)
-            .bindPopup(`<a href="/comunity_assets/asset_detail/${asset.asset_id}">
-                            <b>${asset.name}</b>
-                        </a>
-                        <p>
-                            ${asset.description}
-                        </p>
-                `);
+            .bindPopup(`
+                <div class="p-2">
+                    <a href="/comunity_assets/asset_detail/${asset.asset_id}" class="text-primary font-bold hover:underline">
+                        ${asset.name}
+                    </a>
+                    <p class="text-sm text-gray-600 mt-1">${asset.description}</p>
+                </div>
+            `);
     });
 }
 
-// Ejecutar carga y corregir tamaño de mapa
+// --- INICIALIZACIÓN AL CARGAR EL DOM ---
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Geolocation
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            var currentLat = position.coords.latitude;
+            var currentLng = position.coords.longitude;
+            map.setView([currentLat, currentLng], 15);
+            L.marker([currentLat, currentLng]).addTo(map).bindPopup("Tu ubicación");
+        }
+    );
+
+    // Eventos de Filtro
+    document.querySelectorAll('.category-filter').forEach(button => {
+        button.addEventListener('click', () => {
+            const category = button.dataset.category;
+
+            // Feedback visual de botón seleccionado
+            document.querySelectorAll('.category-filter').forEach(b => {
+                b.classList.remove('bg-primary/10', 'text-primary', 'ring-2', 'ring-primary/20');
+            });
+            button.classList.add('bg-primary/10', 'text-primary');
+
+            loadAssets(category);
+        });
+    });
+
+    // Carga inicial (Todos los activos)
     loadAssets();
-    // Esto arregla problemas de visualización en contenedores dinámicos
+
+    // Fix para problemas de renderizado de Leaflet en contenedores dinámicos
     setTimeout(() => { map.invalidateSize(); }, 200);
 });
