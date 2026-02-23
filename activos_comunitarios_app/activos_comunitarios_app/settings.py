@@ -50,7 +50,8 @@ LOCAL_APPS = [
     'apps.users',
     'apps.comunity_assets',
     'apps.assets_display',
-    'apps.validate_assets'
+    'apps.validate_assets',
+    'apps.home'
 ]
 
 INSTALLED_APPS = DJAGNGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

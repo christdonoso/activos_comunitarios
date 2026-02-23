@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MAIS Chile - Modelo de Atención Integral de Salud</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 selection:bg-primary/30">
+    <!-- Header / Navigation -->
+    <header
+        class="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-background-dark/80">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+            <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white">
+                    <span class="material-symbols-outlined text-2xl">health_and_safety</span>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">MAIS <span
+                        class="text-primary">Chile</span></h1>
+            </div>
+            <nav class="hidden md:flex md:items-center md:gap-8">
+                <a class="text-sm font-semibold text-slate-700 hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors"
+                    href="#">Home</a>
+                <a class="text-sm font-semibold text-slate-700 hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors"
+                    href="#">About MAIS</a>
+                <a class="text-sm font-semibold text-slate-700 hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors"
+                    href="#">Community Map</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button
+                    class="hidden rounded-lg bg-primary px-6 py-2 text-sm font-bold text-white transition-all hover:bg-primary/90 hover:shadow-lg active:scale-95 sm:block">
+                    Login
+                </button>
+                <div
+                    class="h-10 w-10 overflow-hidden rounded-full border-2 border-primary/20 bg-slate-200 transition-transform hover:scale-105">
+                    <img class="h-full w-full object-cover" data-alt="Profile photo of a user"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxfMY11-EZg6BBGcqZ8zppY50i_SGCXEBH2tkJGOqa14P-FG5MWHogHLFkkvmWxL7lT17uIHUWxhBhPTiUefhT0Qp15exGp8O-EOxoV0-9NOKWQpMz2ofiQTzRxAlFNgD_9P6RbHvtlMsNiH5H3NsoCu4QCAuz-pLPqQIruDrkEDspF53Dq99y9gLcOxpC6eJtPnJXvwblMfGjYmiqwwmR8oX8RQDlRGB3f9zCucjwWRubHHb_rBdSo1iCLc9m9UDBBVvtjrI05k4" />
+                </div>
+                <button class="md:hidden">
+                    <span class="material-symbols-outlined text-slate-700 dark:text-slate-300">menu</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden bg-white px-6 py-16 dark:bg-background-dark lg:px-10 lg:py-24">
+            <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
+                <div class="flex flex-col gap-6 lg:max-w-xl">
+                    <div
+                        class="inline-flex w-fit items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+                            <span class="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+                        </span>
+                        Nuevo Modelo de Salud
+                    </div>
+                    <h2
+                        class="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl">
+                        ¿Qué es el MAIS?
+                    </h2>
+                    <p class="text-xl font-medium text-primary">Más que salud, es bienestar para ti y tu comunidad.</p>
+                    <p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                        El Modelo de Atención Integral de Salud Familiar y Comunitaria (MAIS) es nuestra forma de
+                        cuidarte.
+                        Ponemos a las personas en el centro, reconociéndote como un actor activo en tu propio bienestar.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <button
+                            class="rounded-lg bg-primary px-8 py-4 text-base font-bold text-white shadow-xl transition-all hover:bg-primary/90 hover:-translate-y-1 active:scale-95">
+                            Conoce Más
+                        </button>
+                        <button
+                            class="rounded-lg border-2 border-slate-200 bg-transparent px-8 py-4 text-base font-bold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800/50">
+                            Ver Mapa Social
+                        </button>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/5 blur-3xl"></div>
+                    <div class="relative overflow-hidden rounded-2xl shadow-2xl">
+                        <img class="aspect-[4/3] w-full object-cover transition-transform duration-700 hover:scale-105"
+                            data-alt="Warm photo of health team talking to a community member"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0jUqAr1Hs7eQZYhtjXQDrGw410y6H7052fU7eO2vLVI1_WdMPUiAH1i9PpzvCZr5J4UugFSsxKxTJfIZkdbN4RUORptw_2wgOugoHpMM_9BaWZ7puOUbgGrsQT8k4fuF4TZ6yZPCeNdGmEs45qQADjKBUzhBn6xIZ8o3YDqn1V3ulrZB-fIq69zsfniY3jSF7L0v1eCw8g9I00OWqlfGZXDsTX2kD9291KcpNu7amMhKaMZbGH20K1wBUvgy9FkQxhOKCyEPMH5M" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- The 3 Pillars -->
+        <section class="bg-background-light px-6 py-20 dark:bg-background-dark/50 lg:px-10">
+            <div class="mx-auto max-w-7xl">
+                <div class="mb-16 text-center">
+                    <h3 class="mb-4 text-3xl font-bold text-slate-900 dark:text-white lg:text-4xl">Los 3 Pilares del
+                        MAIS</h3>
+                    <div class="mx-auto h-1.5 w-24 rounded-full bg-primary"></div>
+                </div>
+                <div class="grid gap-8 md:grid-cols-3">
+                    <!-- Pillar 1 -->
+                    <div
+                        class="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/50 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                        <div
+                            class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                            <span class="material-symbols-outlined text-3xl">person_heart</span>
+                        </div>
+                        <h4 class="mb-3 text-xl font-bold text-slate-900 dark:text-white">Atención Centrada en las
+                            Personas</h4>
+                        <p class="text-slate-600 dark:text-slate-400">Relación de confianza y colaboración mutua entre
+                            el equipo de salud y la comunidad.</p>
+                        <div
+                            class="mt-6 flex items-center text-sm font-bold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                            Leer más <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                        </div>
+                    </div>
+                    <!-- Pillar 2 -->
+                    <div
+                        class="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/50 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                        <div
+                            class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                            <span class="material-symbols-outlined text-3xl">all_inclusive</span>
+                        </div>
+                        <h4 class="mb-3 text-xl font-bold text-slate-900 dark:text-white">Integralidad</h4>
+                        <p class="text-slate-600 dark:text-slate-400">Te cuidamos en todas tus dimensiones: biológica,
+                            psicológica y social de forma conjunta.</p>
+                        <div
+                            class="mt-6 flex items-center text-sm font-bold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                            Leer más <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                        </div>
+                    </div>
+                    <!-- Pillar 3 -->
+                    <div
+                        class="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/50 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                        <div
+                            class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                            <span class="material-symbols-outlined text-3xl">directions_run</span>
+                        </div>
+                        <h4 class="mb-3 text-xl font-bold text-slate-900 dark:text-white">Continuidad del Cuidado</h4>
+                        <p class="text-slate-600 dark:text-slate-400">Acompañamiento constante y seguimiento
+                            personalizado durante todas las etapas de tu vida.</p>
+                        <div
+                            class="mt-6 flex items-center text-sm font-bold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                            Leer más <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- User Benefits -->
+        <section class="bg-emerald-50/50 px-6 py-20 dark:bg-emerald-950/10 lg:px-10">
+            <div class="mx-auto max-w-7xl">
+                <div class="flex flex-col gap-12 lg:flex-row lg:items-center">
+                    <div class="lg:w-1/2">
+                        <h3 class="mb-6 text-3xl font-bold text-slate-900 dark:text-white lg:text-4xl">¿Cómo te
+                            beneficia en tu día a día?</h3>
+                        <p class="mb-10 text-lg text-slate-600 dark:text-slate-400">
+                            Nuestro modelo está diseñado para integrarse naturalmente en tu vida cotidiana, brindando
+                            soluciones reales y accesibles.
+                        </p>
+                        <ul class="grid gap-6 sm:grid-cols-2">
+                            <li class="flex items-start gap-4">
+                                <div
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                                    <span class="material-symbols-outlined">assignment_turned_in</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 dark:text-white">Planes de Cuidado</h5>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Diseñados a tu medida y
+                                        necesidades.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                                    <span class="material-symbols-outlined">family_restroom</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 dark:text-white">Enfoque Familiar</h5>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Cuidamos de ti y de todo tu
+                                        entorno.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                                    <span class="material-symbols-outlined">school</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 dark:text-white">Consejería y Educación</h5>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Herramientas para tu
+                                        autocuidado diario.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                                    <span class="material-symbols-outlined">location_city</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 dark:text-white">Atención en tu comunidad</h5>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Más cerca de donde vives y
+                                        trabajas.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="lg:w-1/2">
+                        <div
+                            class="rounded-2xl border-4 border-white bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900">
+                            <img class="h-full w-full rounded-xl object-cover"
+                                data-alt="Doctors working together in a modern clinic"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuANIsVYhfnPU08_hPiz_RvHad8hJI06UJJBVKp-6yLRw0uBKh7oB76NkbJW9c4Bj4yyqEPKxVS_Zp-rCS6xM-Z16rKJDwW7AGmoxbACYaVV3eQYe09UCWsdk1-HAYAcpk2JHMFwZbS9YVdx2xk0vG9QJi0IB-Ie6sNUf34lIE_yk6z32VUGLF84WPf-7kKNMeMDQ9vInO2P-ZikZW4RaxnP2V5sj5kTYbU1Hhg-RtWnuVzQarGDCeljTTzmyE5FLgP-uMmkGEZH9oo" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Commitment & Quality -->
+        <section class="bg-white px-6 py-20 dark:bg-background-dark lg:px-10">
+            <div class="mx-auto max-w-7xl">
+                <div class="grid gap-12 md:grid-cols-2">
+                    <div class="flex items-center gap-8 rounded-2xl bg-slate-50 p-8 dark:bg-slate-900/50">
+                        <div
+                            class="hidden h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary sm:flex">
+                            <span class="material-symbols-outlined text-4xl">groups</span>
+                        </div>
+                        <div>
+                            <h4 class="mb-2 text-2xl font-bold text-slate-900 dark:text-white">Participación Social</h4>
+                            <p class="text-lg font-medium text-primary">Tu voz es la clave.</p>
+                            <p class="mt-2 text-slate-600 dark:text-slate-400">Fomentamos espacios donde la comunidad
+                                decide y colabora en las políticas de salud local.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-8 rounded-2xl bg-slate-50 p-8 dark:bg-slate-900/50">
+                        <div
+                            class="hidden h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary sm:flex">
+                            <span class="material-symbols-outlined text-4xl">verified_user</span>
+                        </div>
+                        <div>
+                            <h4 class="mb-2 text-2xl font-bold text-slate-900 dark:text-white">Certificación de
+                                Excelencia</h4>
+                            <p class="text-lg font-medium text-primary">Calidad Garantizada por el MINSAL.</p>
+                            <p class="mt-2 text-slate-600 dark:text-slate-400">Nuestros centros cumplen con los más
+                                altos estándares de calidad exigidos por el Ministerio de Salud.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer
+        class="border-t border-slate-200 bg-white px-6 py-12 dark:border-slate-800 dark:bg-background-dark lg:px-10">
+        <div class="mx-auto max-w-7xl">
+            <div class="flex flex-col items-center justify-between gap-10 md:flex-row">
+                <div class="flex flex-col gap-4 text-center md:text-left">
+                    <div class="flex items-center justify-center gap-3 md:justify-start">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-white">
+                            <span class="material-symbols-outlined text-lg">health_and_safety</span>
+                        </div>
+                        <h2 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">MAIS Chile</h2>
+                    </div>
+                    <p class="max-w-xs text-sm text-slate-500 dark:text-slate-400">
+                        Comprometidos con el bienestar integral de todas las familias y comunidades de nuestro país.
+                    </p>
+                </div>
+                <div class="flex flex-col items-center gap-6">
+                    <div class="flex gap-6">
+                        <a class="text-slate-400 hover:text-primary transition-colors" href="#"><span
+                                class="material-symbols-outlined">share</span></a>
+                        <a class="text-slate-400 hover:text-primary transition-colors" href="#"><span
+                                class="material-symbols-outlined">public</span></a>
+                        <a class="text-slate-400 hover:text-primary transition-colors" href="#"><span
+                                class="material-symbols-outlined">mail</span></a>
+                    </div>
+                    <div
+                        class="flex flex-wrap justify-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
+                        <a class="hover:text-primary" href="#">Privacidad</a>
+                        <a class="hover:text-primary" href="#">Términos</a>
+                        <a class="hover:text-primary" href="#">Contacto</a>
+                        <a class="hover:text-primary" href="#">Transparencia</a>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-4">
+                    <div class="flex items-center gap-4 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+                        <div class="h-12 w-12 grayscale opacity-80">
+                            <img class="h-full w-full object-contain"
+                                data-alt="Official government seal for health certification"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy4Vxa8zU_COxHIxdlAeosMbvqqJKHWuYLSc76uCQIhLpM_B5C23J8HMcLUNRYXaImze9936b4CZzF9AreQtivFi3_1W29sCOle8SoCzG2v4xTKI6EZerFf3eB1wPyloRbTMtrnUODkHW3Y5aVZWORW6DdPVoZRmYKU4JZA7Md-pbvJTHPdlrDoLjQwMTqdBGPvYBXgRhK7O61Ly1M18ZtTIjt3B6PDwKuoUNIyR92i3CArc5Vx2VrP90gGYXf6U3MYDf7EA8PcoU" />
+                        </div>
+                        <div class="text-xs">
+                            <p class="font-bold text-primary uppercase">Calidad Certificada</p>
+                            <p class="text-slate-500">Ministerio de Salud</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-slate-100 pt-8 text-center text-xs text-slate-400 dark:border-slate-800">
+                <p>© 2024 MAIS Chile - Programa de Salud Familiar y Comunitaria. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

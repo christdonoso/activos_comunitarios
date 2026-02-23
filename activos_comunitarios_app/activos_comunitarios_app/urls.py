@@ -22,7 +22,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('apps.users.urls')),
+    path('', include('apps.home.urls')),
+    path('users/', include('apps.users.urls')),
     path('comunity_assets/', include('apps.comunity_assets.urls')),
     path('validate_assets/', include('apps.validate_assets.urls')),
     path('assets_display/', include('apps.assets_display.urls')),
