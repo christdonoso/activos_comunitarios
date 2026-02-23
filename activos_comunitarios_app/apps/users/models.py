@@ -15,6 +15,7 @@ class Usuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     fullname = models.CharField(max_length=50)
     rut = models.CharField(max_length=50)
+    sexo = models.CharField(max_length=1, choices=[('F', 'Femenino'), ('M', 'Masculino'), ('O', 'Otro')], null=True, blank=True)
     phone = models.CharField(max_length=50)
     #profile_image = models.ImageField(null=True, blank=True, upload_to='images/')
     email = models.EmailField(max_length=50)

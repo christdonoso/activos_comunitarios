@@ -3,6 +3,33 @@
 {% block content %}
 
 <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+
+    <div class="max-w-7xl mx-auto px-8 pt-4">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="flex items-center p-4 mb-4 text-sm rounded-xl border transition-all animate-in fade-in slide-in-from-top-4
+                    {% if message.tags == 'success' %}
+                        bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800
+                    {% elif message.tags == 'error' %}
+                        bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800
+                    {% else %}
+                        bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800
+                    {% endif %}">
+    
+            <span class="material-symbols-outlined mr-2 text-[20px]">
+                {% if message.tags == 'success' %}check_circle
+                {% elif message.tags == 'error' %}error
+                {% else %}info{% endif %}
+            </span>
+            <span class="font-bold">{{ message }}</span>
+    
+            <button type="button" onclick="this.parentElement.remove()" class="ml-auto hover:opacity-70">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
     <div class="max-w-7xl mx-auto p-8">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
@@ -17,7 +44,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div
+                class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-slate-500 text-sm font-medium">Usuarios Totales</span>
                     <span class="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
@@ -28,7 +56,8 @@
                     <span class="text-3xl font-bold">{{ stats.total }}</span>
                 </div>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div
+                class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-slate-500 text-sm font-medium">Usuarios Activos</span>
                     <span class="size-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
@@ -39,7 +68,8 @@
                     <span class="text-3xl font-bold">{{ stats.activos }}</span>
                 </div>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div
+                class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-slate-500 text-sm font-medium">Administradores</span>
                     <span class="size-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
@@ -52,9 +82,11 @@
             </div>
         </div>
 
-        <form method="GET" action="{% url 'manage_users' %}" class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-center">
+        <form method="GET" action="{% url 'manage_users' %}"
+            class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-center">
             <div class="relative w-full md:w-96">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
                 <input name="search" value="{{ request.GET.search }}"
                     class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg focus:ring-2 focus:ring-primary text-sm"
                     placeholder="Buscar por nombre, RUT o email..." type="text" />
@@ -65,7 +97,7 @@
                     class="form-select bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm min-w-[160px] focus:ring-2 focus:ring-primary">
                     <option value="">Todos los Roles</option>
                     {% for val, label in user_types %}
-                        <option value="{{ val }}" {% if request.GET.type == val %}selected{% endif %}>{{ label }}</option>
+                    <option value="{{ val }}" {% if request.GET.type == val %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
                 <button type="submit" class="p-2 text-primary hover:bg-slate-100 rounded-lg transition-colors">
@@ -74,11 +106,13 @@
             </div>
         </form>
 
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+                        <tr
+                            class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-bold uppercase tracking-wider">
                             <th class="px-6 py-4">Usuario / RUT</th>
                             <th class="px-6 py-4">Email</th>
                             <th class="px-6 py-4">Rol</th>
@@ -92,7 +126,8 @@
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="size-9 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">
+                                    <div
+                                        class="size-9 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">
                                         {{ usuario.fullname|slice:":2"|upper }}
                                     </div>
                                     <div>
@@ -116,48 +151,52 @@
                             </td>
                             <td class="px-6 py-4">
                                 {% if usuario.user.is_active %}
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                                <span
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
                                     <span class="size-1.5 rounded-full bg-emerald-500"></span> Activo
                                 </span>
                                 {% else %}
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                                <span
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
                                     <span class="size-1.5 rounded-full bg-red-500"></span> Inactivo
                                 </span>
                                 {% endif %}
                             </td>
-<td class="px-6 py-4 text-right relative">
-    <div class="inline-block text-left action-menu-container">
-        <button type="button" 
-            class="action-menu-btn p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors focus:outline-none">
-            <span class="material-symbols-outlined pointer-events-none">more_vert</span>
-        </button>
+                            <td class="px-6 py-4 text-right relative">
+                                <div class="inline-block text-left action-menu-container">
+                                    <button type="button"
+                                        class="action-menu-btn p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors focus:outline-none">
+                                        <span class="material-symbols-outlined pointer-events-none">more_vert</span>
+                                    </button>
 
-        <div class="action-menu-content hidden absolute right-6 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-2 z-[100] transform origin-top-right">
-            <a href="{% url 'edit_user' usuario.user.id %}" 
-               class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">edit</span>
-                <span>Editar Perfil</span>
-            </a>
-            
-            <a href="#" 
-               class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">lock_reset</span>
-                <span>Reset Pass</span>
-            </a>
+                                    <div
+                                        class="action-menu-content hidden fixed w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-2 z-[999]">
+                           
+                                        <a href="{% url 'edit_user' usuario.user.id %}"
+                                            class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            <span>Editar Perfil</span>
+                                        </a>
 
-            <hr class="my-1 border-slate-100 dark:border-slate-700">
+                                        <a href="#"
+                                            class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">lock_reset</span>
+                                            <span>Reset Pass</span>
+                                        </a>
 
-            <button onclick="toggleUserStatus({{ usuario.user.id }})" 
-                class="w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors
+                                        <hr class="my-1 border-slate-100 dark:border-slate-700">
+
+                                        <button onclick="toggleUserStatus({{ usuario.user.id }})"
+                                            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors
                 {% if usuario.user.is_active %}text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20{% else %}text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20{% endif %}">
-                <span class="material-symbols-outlined text-[18px]">
-                    {% if usuario.user.is_active %}person_off{% else %}person_check{% endif %}
-                </span>
-                <span>{% if usuario.user.is_active %}Desactivar{% else %}Activar{% endif %}</span>
-            </button>
-        </div>
-    </div>
-</td>
+                                            <span class="material-symbols-outlined text-[18px]">
+                                                {% if usuario.user.is_active %}person_off{% else %}person_check{% endif %}
+                                            </span>
+                                            <span>{% if usuario.user.is_active %}Desactivar{% else %}Activar{% endif %}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         {% empty %}
                         <tr>
@@ -176,26 +215,54 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const buttons = document.querySelectorAll('.action-menu-btn');
-        
+
         buttons.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                // Evitamos que el evento suba al document
                 e.stopPropagation();
-                
-                // Buscamos el menú hermano del botón presionado
                 const menu = btn.nextElementSibling;
-                
-                // Cerramos todos los menús abiertos primero
+
+                // Cerrar otros menús abiertos
                 document.querySelectorAll('.action-menu-content').forEach(m => {
                     if (m !== menu) m.classList.add('hidden');
                 });
+
+                const isHidden = menu.classList.contains('hidden');
                 
-                // Toggle del menú actual
-                menu.classList.toggle('hidden');
+                if (isHidden) {
+                    menu.classList.remove('hidden');
+                    
+                    // 1. Obtener coordenadas del botón respecto a la ventana actual
+                    const rect = btn.getBoundingClientRect();
+                    const menuWidth = menu.offsetWidth;
+                    const menuHeight = menu.offsetHeight;
+
+                    // 2. Calcular posición vertical (debajo del botón)
+                    let top = rect.bottom + 8; 
+                    
+                    // Si no cabe abajo, mostrarlo arriba del botón
+                    if (top + menuHeight > window.innerHeight) {
+                        top = rect.top - menuHeight - 8;
+                    }
+
+                    // 3. Calcular posición horizontal (alineado a la derecha del botón)
+                    let left = rect.right - menuWidth;
+
+                    // Si se sale por la izquierda de la pantalla, alinear a la izquierda del botón
+                    if (left < 10) {
+                        left = rect.left;
+                    }
+
+                    // 4. Aplicar estilos (Usamos coordenadas fijas sin window.scrollY)
+                    menu.style.top = `${top}px`;
+                    menu.style.left = `${left}px`;
+                    menu.style.margin = '0'; // Reset de márgenes de Tailwind
+                } else {
+                    menu.classList.add('hidden');
+                }
             });
         });
-        
-        // Cerrar menús al hacer clic fuera
+
+        // Cerrar al hacer click fuera
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.action-menu-container')) {
                 document.querySelectorAll('.action-menu-content').forEach(m => {
@@ -203,6 +270,16 @@
                 });
             }
         });
+
+        // Cerrar al redimensionar o hacer scroll (para evitar que el menú flote en el aire)
+        window.addEventListener('resize', closeAllMenus);
+        window.addEventListener('scroll', closeAllMenus, true);
+
+        function closeAllMenus() {
+            document.querySelectorAll('.action-menu-content').forEach(m => {
+                m.classList.add('hidden');
+            });
+        }
     });
 </script>
 {% endblock %}

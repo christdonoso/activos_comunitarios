@@ -95,13 +95,30 @@ def create_user(request):
 
 
 def edit_user(request, id):
-    if request.method == 'GET':
-        usuario = get
-        return render(request, 'profile.html', context={'usuario':usuario})
-    else:
-        usuario = Usuario.filter_usuario(request)
+
+    usuario = get_object_or_404(Usuario, id=id)
+    
+    if request.method == 'POST':
+
+        data = request.POST.copy()
+        for junk in ['csrfmiddlewaretoken']:
+            data.pop(junk, None)
+
+        for k,v in data.items():
+            setattr(usuario,k, v)
         
-        return render(request, 'profile.html', context={'usuario':usuario})
+        usuario.user.email = request.POST.get('email')
+        
+        usuario.user.save()
+        usuario.save()
+        
+        messages.success(request, f"Usuario {usuario.fullname} actualizado correctamente.")
+        return redirect('manage_users')
+
+    return render(request, 'edit_user.html', {
+        'usuario': usuario,
+        'user_types': Usuario.USER_TYPE 
+    })
 
 
 def manage_users(request):
