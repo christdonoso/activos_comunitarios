@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction, IntegrityError
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -94,8 +94,14 @@ def create_user(request):
     return render(request, 'create_user.html', context)
 
 
-def edit_user(request):
-    ...
+def edit_user(request, id):
+    if request.method == 'GET':
+        usuario = get
+        return render(request, 'profile.html', context={'usuario':usuario})
+    else:
+        usuario = Usuario.filter_usuario(request)
+        
+        return render(request, 'profile.html', context={'usuario':usuario})
 
 
 def manage_users(request):
