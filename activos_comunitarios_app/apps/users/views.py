@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db import transaction, IntegrityError
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib import messages
 
@@ -91,3 +92,38 @@ def create_user(request):
         'user_types': Usuario.USER_TYPE
     }
     return render(request, 'create_user.html', context)
+
+
+def edit_user(request):
+    ...
+
+
+def manage_users(request):
+    # 1. Capturar parámetros de búsqueda y filtro
+    search_query = request.GET.get('search', '')
+    type_filter = request.GET.get('type', '')
+    
+    # 2. Queryset base con 'select_related' para optimizar la DB
+    usuarios_qs = Usuario.objects.select_related('user').all()
+
+    # 3. Aplicar filtros lógicos
+    if search_query:
+        usuarios_qs = usuarios_qs.filter(
+            Q(fullname__icontains=search_query) | 
+            Q(rut__icontains=search_query) |
+            Q(user__username__icontains=search_query)
+        )
+    
+    if type_filter:
+        usuarios_qs = usuarios_qs.filter(user_type=type_filter)
+
+    context = {
+        'usuarios': usuarios_qs,
+        'user_types': Usuario.USER_TYPE,
+        'stats': {
+            'total': Usuario.objects.count(),
+            'activos': User.objects.filter(is_active=True).count(),
+            'admins': Usuario.objects.filter(user_type='ADMIN').count(), # Ajusta según tus tipos
+        }
+    }
+    return render(request, 'manage_users.html', context)
