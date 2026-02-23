@@ -150,3 +150,22 @@ def manage_users(request):
         }
     }
     return render(request, 'manage_users.html', context)
+
+
+def toggle_user_status(request, user_id):
+
+    target_user = get_object_or_404(User, id=user_id)
+    
+    # Evitar que un admin se desactive a sí mismo
+    if request.user.id == target_user.id:
+        messages.error(request, "No puedes desactivar tu propia cuenta.")
+        return redirect('manage_users')
+
+    # Cambiamos el estado
+    target_user.is_active = not target_user.is_active
+    target_user.save()
+
+    status_text = "activado" if target_user.is_active else "desactivado"
+    messages.success(request, f"El usuario {target_user.usuario.fullname} ha sido {status_text}.")
+    
+    return redirect('manage_users')

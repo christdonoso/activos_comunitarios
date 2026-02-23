@@ -179,16 +179,18 @@
                                         </a>
 
                                         <a href="#"
-                                            class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                                            class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors cursor-not-allowed 
+                                                text-slate-400 dark:text-slate-600 pointer-events-none select-none">
                                             <span class="material-symbols-outlined text-[18px]">lock_reset</span>
-                                            <span>Reset Pass</span>
+                                            <span>Reset Pass (Desactivado)</span>
                                         </a>
 
                                         <hr class="my-1 border-slate-100 dark:border-slate-700">
 
-                                        <button onclick="toggleUserStatus({{ usuario.user.id }})"
+                                        <button type="button" 
+                                            onclick="openToggleModal('{{ usuario.user.id }}', '{{ usuario.fullname }}', {{ usuario.user.is_active|yesno:'true,false' }})"
                                             class="w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors
-                {% if usuario.user.is_active %}text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20{% else %}text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20{% endif %}">
+                                            {% if usuario.user.is_active %}text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20{% else %}text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20{% endif %}">
                                             <span class="material-symbols-outlined text-[18px]">
                                                 {% if usuario.user.is_active %}person_off{% else %}person_check{% endif %}
                                             </span>
@@ -281,5 +283,69 @@
             });
         }
     });
+
+    function openToggleModal(userId, fullname, isActive) {
+    const modal = document.getElementById('confirmModal');
+    const title = document.getElementById('modalTitle');
+    const message = document.getElementById('modalMessage');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const iconContainer = document.getElementById('modalIconContainer');
+    const icon = document.getElementById('modalIcon');
+
+    // Configurar contenido según el estado
+    if (isActive) {
+        title.innerText = "Desactivar Usuario";
+        message.innerHTML = `¿Estás seguro de que deseas desactivar a <strong>${fullname}</strong>? El usuario no podrá acceder al sistema.`;
+        confirmBtn.className = "px-5 py-2.5 rounded-lg font-bold text-white bg-red-600 hover:bg-red-700 shadow-md transition-all active:scale-95";
+        iconContainer.className = "size-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center";
+        icon.innerText = "person_off";
+    } else {
+        title.innerText = "Activar Usuario";
+        message.innerHTML = `¿Deseas activar nuevamente a <strong>${fullname}</strong>? Se restaurará su acceso al sistema.`;
+        confirmBtn.className = "px-5 py-2.5 rounded-lg font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-md transition-all active:scale-95";
+        iconContainer.className = "size-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center";
+        icon.innerText = "person_check";
+    }
+
+    // Configurar la URL de redirección final (Django URL)
+    confirmBtn.href = `/toggle-status/${userId}/`;
+
+    // Mostrar modal
+    modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('confirmModal').classList.add('hidden');
+    }
+    
 </script>
+
+<div id="confirmModal" class="hidden fixed inset-0 z-[1000] overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"></div>
+    
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-8 text-left shadow-2xl transition-all w-full max-w-md border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-4 mb-4">
+                <div id="modalIconContainer" class="size-12 rounded-full flex items-center justify-center">
+                    <span id="modalIcon" class="material-symbols-outlined text-2xl">warning</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="modalTitle">¿Confirmar acción?</h3>
+            </div>
+            
+            <p class="text-slate-500 dark:text-slate-400 mb-8" id="modalMessage">
+                ¿Estás seguro de que deseas cambiar el estado de este usuario?
+            </p>
+            
+            <div class="flex justify-end gap-3">
+                <button onclick="closeModal()" class="px-5 py-2.5 rounded-lg font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    Cancelar
+                </button>
+                <a id="confirmBtn" href="#" class="px-5 py-2.5 rounded-lg font-bold text-white transition-all shadow-md active:scale-95">
+                    Confirmar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

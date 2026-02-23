@@ -23,5 +23,6 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('create_user', views.create_user, name='create_user'),
     path('edit_user/<int:id>', views.edit_user, name='edit_user'), 
-    path('manage_users', views.manage_users, name='manage_users')
+    path('manage_users', views.manage_users, name='manage_users'),
+    path('toggle-status/<int:user_id>/', views.toggle_user_status, name='toggle_user_status'),
 ]
