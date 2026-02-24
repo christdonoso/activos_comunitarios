@@ -14,11 +14,11 @@ from utilities import tools
 def profile(request):
     if request.method == 'GET':
         usuario = Usuario.get_usuario(request)
-        return render(request, 'profile.html', context={'usuario':usuario})
+        return render(request, 'user/profile.html', context={'usuario':usuario})
     else:
         usuario = Usuario.filter_usuario(request)
         
-        return render(request, 'profile.html', context={'usuario':usuario})
+        return render(request, 'user/profile.html', context={'usuario':usuario})
     
 
 def create_user(request):
@@ -35,19 +35,15 @@ def create_user(request):
                 with transaction.atomic():
                     # --- VALIDACIONES DE SERVIDOR ---
                     
-                    # 1. Validar RUT (Algoritmo)
                     if not tools.validar_rut_chileno(rut):
                         raise ValueError("El RUT ingresado no es válido.")
 
-                    # 2. Validar Unicidad de RUT (En el modelo Usuario)
                     if Usuario.objects.filter(rut=rut).exists():
                         raise ValueError("Este RUT ya se encuentra registrado.")
 
-                    # 3. Validar Unicidad de Username
                     if User.objects.filter(username=username).exists():
                         raise ValueError("El nombre de usuario ya está en uso.")
 
-                    # 4. Validar Unicidad de Email
                     if User.objects.filter(email=email).exists():
                         raise ValueError("Este correo electrónico ya está registrado.")
 
@@ -80,15 +76,13 @@ def create_user(request):
                 messages.error(request, "Error de integridad: Posible dato duplicado.")
 
             except Exception as e:
-                # Errores inesperados
                 messages.error(request, "Ocurrió un error inesperado al procesar el registro.")
                 print(f"Error: {e}") 
 
-    # Si es GET o hubo error, volvemos al formulario
     context = {
         'user_types': Usuario.USER_TYPE
     }
-    return render(request, 'create_user.html', context)
+    return render(request, 'user/create_user.html', context)
 
 
 def edit_user(request, id):
@@ -110,9 +104,9 @@ def edit_user(request, id):
         usuario.save()
         
         messages.success(request, f"Usuario {usuario.fullname} actualizado correctamente.")
-        return redirect('manage_users')
+        return redirect('user/manage_users')
 
-    return render(request, 'edit_user.html', {
+    return render(request, 'user/edit_user.html', context={
         'usuario': usuario,
         'user_types': Usuario.USER_TYPE 
     })
@@ -146,7 +140,7 @@ def manage_users(request):
             'admins': Usuario.objects.filter(user_type='ADMIN').count(), # Ajusta según tus tipos
         }
     }
-    return render(request, 'manage_users.html', context)
+    return render(request, 'user/manage_users.html', context)
 
 
 def toggle_user_status(request, user_id):

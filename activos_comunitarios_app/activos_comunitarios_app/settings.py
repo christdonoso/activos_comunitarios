@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    'apps.api',
     'apps.users',
     'apps.comunity_assets',
     'apps.assets_display',
