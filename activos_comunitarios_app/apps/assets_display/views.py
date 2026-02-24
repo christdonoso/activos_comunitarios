@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 
 def display_assets(request):
-    return render(request,'display_assets.html')
+    return render(request,'comunity_assets/display_assets.html')
 
 
 def users_assets_view(request):
