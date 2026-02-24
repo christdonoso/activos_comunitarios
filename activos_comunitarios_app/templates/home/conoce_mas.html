@@ -1,0 +1,258 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <main>
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-32 bg-primary/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h1 class="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl mb-6">
+                        La profundidad del modelo MAIS
+                    </h1>
+                    <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-10">
+                        Más que un programa administrativo, el Modelo de Atención Integral de Salud es un vínculo humano
+                        y continuo. Transformamos la atención técnica en una relación de confianza centrada en el
+                        bienestar integral de las personas y sus familias.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-bold rounded-lg text-white bg-primary hover:bg-primary/90 shadow-lg transition-all"
+                            href="#pilares">
+                            Conoce los Pilares
+                        </a>
+                        <a class="inline-flex items-center justify-center px-6 py-3 border border-slate-300 dark:border-slate-700 text-base font-bold rounded-lg text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+                            href="#practica">
+                            Ver el Modelo en Práctica
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative element -->
+            <div class="absolute -bottom-12 -right-12 size-64 bg-primary/10 rounded-full blur-3xl"></div>
+            <div class="absolute -top-12 -left-12 size-64 bg-primary/5 rounded-full blur-3xl"></div>
+        </section>
+        <!-- Sección Pilares -->
+        <section class="py-20 bg-white dark:bg-background-dark" id="pilares">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-16 text-center">
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">Principios Irrenunciables
+                    </h2>
+                    <p class="mt-4 text-slate-500 dark:text-slate-400">Los cimientos éticos y operativos de nuestra
+                        atención.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Pillar 1 -->
+                    <div
+                        class="group flex flex-col p-8 bg-background-light dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 hover:scale-105 transition-all shadow-sm hover:shadow-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <span
+                                class="material-symbols-outlined text-4xl text-primary p-3 bg-primary/10 rounded-lg">family_restroom</span>
+                            <span
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/30 uppercase tracking-wider">Principio
+                                Irrenunciable</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Centrado en la persona y su
+                            familia</h3>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Respetamos la dignidad y autonomía de cada usuario, integrando a su entorno familiar como
+                            parte activa del proceso de salud.
+                        </p>
+                    </div>
+                    <!-- Pillar 2 -->
+                    <div
+                        class="group flex flex-col p-8 bg-background-light dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 hover:scale-105 transition-all shadow-sm hover:shadow-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <span
+                                class="material-symbols-outlined text-4xl text-primary p-3 bg-primary/10 rounded-lg">health_and_safety</span>
+                            <span
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/30 uppercase tracking-wider">Principio
+                                Irrenunciable</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Integralidad del Cuidado</h3>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Abordamos la salud desde una visión biopsicosocial y cultural, entendiendo que el bienestar
+                            depende de múltiples dimensiones humanas.
+                        </p>
+                    </div>
+                    <!-- Pillar 3 -->
+                    <div
+                        class="group flex flex-col p-8 bg-background-light dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 hover:scale-105 transition-all shadow-sm hover:shadow-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <span
+                                class="material-symbols-outlined text-4xl text-primary p-3 bg-primary/10 rounded-lg">chronic</span>
+                            <span
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/30 uppercase tracking-wider">Principio
+                                Irrenunciable</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Continuidad del Cuidado</h3>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Acompañamiento permanente en todo el ciclo vital, asegurando que el vínculo entre el equipo
+                            de salud y la persona no se rompa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Sección Conceptos Clave -->
+        <section class="py-20 bg-background-light dark:bg-background-dark/50" id="conceptos">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Conceptos Clave del Modelo</h2>
+                    <p class="mt-4 text-slate-600 dark:text-slate-400">Elementos fundamentales para una salud pública
+                        moderna y eficiente.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div
+                        class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all hover:shadow-md">
+                        <div
+                            class="size-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">handshake</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-2">Corresponsabilidad</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Compromiso compartido entre el equipo de
+                            salud, la persona y su comunidad.</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all hover:shadow-md">
+                        <div
+                            class="size-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
+                            <span
+                                class="material-symbols-outlined text-emerald-600 dark:text-emerald-400">psychology</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-2">Enfoque Biopsicosocial</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Atención que integra aspectos biológicos,
+                            psicológicos y del entorno cultural.</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all hover:shadow-md">
+                        <div
+                            class="size-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-amber-600 dark:text-amber-400">groups</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-2">Toma de Decisiones (TDC)</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Proceso deliberativo entre profesional y
+                            paciente para elegir la mejor opción clínica.</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all hover:shadow-md">
+                        <div
+                            class="size-12 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-rose-600 dark:text-rose-400">diversity_3</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-2">Activos Comunitarios</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Identificación y uso de recursos del
+                            barrio para fortalecer la salud local.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Sección Acciones (El MAIS en la práctica) -->
+        <section class="py-20 bg-white dark:bg-background-dark" id="practica">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col lg:flex-row gap-16 items-center">
+                    <div class="w-full lg:w-1/2">
+                        <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">El MAIS en la práctica
+                            clínica</h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                            Bajamos la teoría a acciones concretas que impactan la vida diaria de nuestros usuarios en
+                            los CESFAM y CECOSF del país.
+                        </p>
+                        <ul class="space-y-6">
+                            <li class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span
+                                        class="material-symbols-outlined text-primary text-xl">assignment_turned_in</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 dark:text-white">Planes de Cuidado Integral</h5>
+                                    <p class="text-sm text-slate-500">Hoja de ruta personalizada para cada usuario según
+                                        sus necesidades específicas.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary text-xl">forum</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 dark:text-white">Consejería Familiar</h5>
+                                    <p class="text-sm text-slate-500">Espacios de escucha y guía para abordar
+                                        problemáticas del núcleo familiar.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary text-xl">home_health</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-slate-900 dark:text-white">Visita Domiciliaria Integral
+                                        (VDI)</h5>
+                                    <p class="text-sm text-slate-500">Llevamos el cuidado al hogar de quienes más lo
+                                        necesitan.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="w-full lg:w-1/2">
+                        <div class="relative p-8 bg-slate-900 rounded-2xl overflow-hidden shadow-2xl">
+                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                <span class="material-symbols-outlined text-9xl text-white">map</span>
+                            </div>
+                            <h4 class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Destacado</h4>
+                            <h3 class="text-2xl font-bold text-white mb-4">Sectorización</h3>
+                            <p class="text-slate-300 mb-6 leading-relaxed">
+                                El corazón operativo del modelo. Cada familia tiene asignado un <strong
+                                    class="text-white">Equipo de Cabecera</strong> estable. Esto garantiza que siempre
+                                te atiendas con los mismos profesionales, fortaleciendo la confianza y el conocimiento
+                                mutuo.
+                            </p>
+                            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-lg border border-white/10">
+                                <div class="size-12 rounded-full bg-primary/20 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary">verified_user</span>
+                                </div>
+                                <p class="text-xs text-slate-400">Tener un equipo que conoce tu historia clínica y
+                                    personal es el beneficio directo de la sectorización.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Sección Calidad -->
+        <section class="py-20">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-3xl p-8 md:p-12 border border-slate-200 dark:border-slate-700 shadow-xl relative overflow-hidden text-center">
+                    <div class="relative z-10">
+                        <div class="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-6">
+                            <span class="material-symbols-outlined text-5xl text-primary">workspace_premium</span>
+                        </div>
+                        <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">Compromiso con la Calidad
+                        </h2>
+                        <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
+                            Cada 3 años, nuestros centros de salud son evaluados por el <span
+                                class="font-bold text-slate-900 dark:text-white">MINSAL (Ministerio de Salud)</span>.
+                            Esta rigurosa certificación nos acredita como <span class="text-primary font-bold">Centros
+                                de Excelencia en el Modelo MAIS</span>, asegurando que cumplimos con los más altos
+                            estándares de atención humana y técnica.
+                        </p>
+                        <div class="flex justify-center items-center gap-8">
+                            <div class="text-center">
+                                <span class="block text-3xl font-black text-primary">100%</span>
+                                <span
+                                    class="text-xs uppercase font-bold text-slate-500 tracking-wider">Acreditación</span>
+                            </div>
+                            <div class="h-10 w-px bg-slate-200 dark:bg-slate-700"></div>
+                            <div class="text-center">
+                                <span class="block text-3xl font-black text-primary">3 Años</span>
+                                <span class="text-xs uppercase font-bold text-slate-500 tracking-wider">Ciclo
+                                    Mejora</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

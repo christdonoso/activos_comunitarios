@@ -16,12 +16,11 @@ Including another URLconf
 """
 
 from django.urls import path
-from apps.comunity_assets import views
+from apps.home import views
 
 
 urlpatterns = [
-    path('add_assets', views.add_assets, name='add_assets'),
-    path('asset_detail/<int:asset_id>', views.asset_detail, name='asset_detail'),
-    path('edit_asset/<int:asset_id>', views.edit_asset, name='edit_asset'),
-    path("dashboard/validate/asset/<int:pk>/", views.asset_detail_validation, name="asset_detail_validation"),
+    path('', views.index, name='index'),
+    path('conoce_mas',views.conoce_mas, name='conoce_mas'),
+    path('asset_info', views.asset_info, name='asset_info')
 ]

@@ -19,7 +19,6 @@ from apps.users import views
 
 
 urlpatterns = [
-    path('', views.index),
     path('profile', views.profile, name='profile'),
     path('create_user', views.create_user, name='create_user'),
     path('edit_user/<int:id>', views.edit_user, name='edit_user'), 

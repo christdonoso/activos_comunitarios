@@ -1,0 +1,128 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<section class="relative overflow-hidden bg-white px-6 py-16 dark:bg-background-dark lg:px-10 lg:py-24">
+    <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
+        <div class="flex flex-col gap-6 lg:max-w-xl">
+            <div class="inline-flex w-fit items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+                <span class="relative flex h-2 w-2">
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+                    <span class="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+                </span>
+                Nuevo Modelo de Salud
+            </div>
+            <h2 class="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl">
+                ¿Qué es el MAIS?
+            </h2>
+            <p class="text-xl font-medium text-primary">Más que salud, es bienestar para ti y tu comunidad.</p>
+            <p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                El Modelo de Atención Integral de Salud Familiar y Comunitaria (MAIS) es nuestra forma de cuidarte. 
+                Ponemos a las personas en el centro, reconociéndote como un actor activo en tu propio bienestar.
+            </p>
+            <div class="flex flex-wrap gap-4 pt-4">
+                <a href="{% url 'conoce_mas' %}" class="rounded-lg bg-primary px-8 py-4 text-base font-bold text-white shadow-xl transition-all hover:bg-primary/90 hover:-translate-y-1 active:scale-95">
+                    Conoce Más
+                </a>
+                <a href="{% url 'asset_info' %}" class="rounded-lg border-2 border-slate-200 bg-transparent px-8 py-4 text-base font-bold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800/50">
+                    Ver Mapa Social
+                </a>
+            </div>
+        </div>
+        <div class="relative">
+            <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/5 blur-3xl"></div>
+            <div class="relative overflow-hidden rounded-2xl shadow-2xl">
+                <img class="aspect-[4/3] w-full object-cover transition-transform duration-700 hover:scale-105" alt="Equipo de salud conversando amablemente con un miembro de la comunidad" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0jUqAr1Hs7eQZYhtjXQDrGw410y6H7052fU7eO2vLVI1_WdMPUiAH1i9PpzvCZr5J4UugFSsxKxTJfIZkdbN4RUORptw_2wgOugoHpMM_9BaWZ7puOUbgGrsQT8k4fuF4TZ6yZPCeNdGmEs45qQADjKBUzhBn6xIZ8o3YDqn1V3ulrZB-fIq69zsfniY3jSF7L0v1eCw8g9I00OWqlfGZXDsTX2kD9291KcpNu7amMhKaMZbGH20K1wBUvgy9FkQxhOKCyEPMH5M" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-background-light px-6 py-20 dark:bg-background-dark/50 lg:px-10">
+    <div class="mx-auto max-w-7xl">
+        <div class="mb-16 text-center">
+            <h3 class="mb-4 text-3xl font-bold text-slate-900 dark:text-white lg:text-4xl">Nuestros 3 Principios Irrenunciables</h3>
+            <div class="mx-auto h-1.5 w-24 rounded-full bg-primary"></div>
+        </div>
+        <div class="grid gap-8 md:grid-cols-3">
+            <div class="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/50 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                    <span class="material-symbols-outlined text-3xl">person_heart</span>
+                </div>
+                <h4 class="mb-3 text-xl font-bold text-slate-900 dark:text-white">Atención Centrada en las Personas</h4>
+                <p class="text-slate-600 dark:text-slate-400">Valoramos tus necesidades y expectativas. Buscamos establecer una relación de confianza y colaboración mutua.</p>
+            </div>
+            <div class="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/50 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                    <span class="material-symbols-outlined text-3xl">all_inclusive</span>
+                </div>
+                <h4 class="mb-3 text-xl font-bold text-slate-900 dark:text-white">Integralidad</h4>
+                <p class="text-slate-600 dark:text-slate-400">Te consideramos como un ser completo que tiene dimensiones biológicas, psicológicas, sociales y espirituales.</p>
+            </div>
+            <div class="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/50 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                    <span class="material-symbols-outlined text-3xl">directions_run</span>
+                </div>
+                <h4 class="mb-3 text-xl font-bold text-slate-900 dark:text-white">Continuidad del Cuidado</h4>
+                <p class="text-slate-600 dark:text-slate-400">Trabajamos para que tu atención sea conectada y coherente a lo largo de toda tu vida, asegurando un acompañamiento constante.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-emerald-50/50 px-6 py-20 dark:bg-emerald-950/10 lg:px-10">
+    <div class="mx-auto max-w-7xl">
+        <div class="flex flex-col gap-12 lg:flex-row lg:items-center">
+            <div class="lg:w-1/2">
+                <h3 class="mb-6 text-3xl font-bold text-slate-900 dark:text-white lg:text-4xl">¿Cómo te beneficia en tu día a día?</h3>
+                <p class="mb-10 text-lg text-slate-600 dark:text-slate-400">
+                    En el día a día, este modelo se traduce en acciones concretas para mejorar tu bienestar y el de tus seres queridos.
+                </p>
+                <ul class="grid gap-6 sm:grid-cols-2">
+                    <li class="flex items-start gap-4">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                            <span class="material-symbols-outlined">assignment_turned_in</span>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-slate-900 dark:text-white">Planes Consensuados</h5>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Acordamos juntos un plan de trabajo según tus realidades.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                            <span class="material-symbols-outlined">family_restroom</span>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-slate-900 dark:text-white">Enfoque Familiar</h5>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Cuidamos de ti conociendo mejor tu entorno familiar.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                            <span class="material-symbols-outlined">school</span>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-slate-900 dark:text-white">Consejería Educativa</h5>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Espacios para resolver dudas y aprender herramientas de salud.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                            <span class="material-symbols-outlined">location_city</span>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-slate-900 dark:text-white">Atención en Comunidad</h5>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Visitas a domicilio y actividades grupales entre vecinos.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="lg:w-1/2">
+                <div class="rounded-2xl border-4 border-white bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900">
+                    <img class="h-full w-full rounded-xl object-cover" alt="Personal de salud trabajando en conjunto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANIsVYhfnPU08_hPiz_RvHad8hJI06UJJBVKp-6yLRw0uBKh7oB76NkbJW9c4Bj4yyqEPKxVS_Zp-rCS6xM-Z16rKJDwW7AGmoxbACYaVV3eQYe09UCWsdk1-HAYAcpk2JHMFwZbS9YVdx2xk0vG9QJi0IB-Ie6sNUf34lIE_yk6z32VUGLF84WPf-7kKNMeMDQ9vInO2P-ZikZW4RaxnP2V5sj5kTYbU1Hhg-RtWnuVzQarGDCeljTTzmyE5FLgP-uMmkGEZH9oo" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

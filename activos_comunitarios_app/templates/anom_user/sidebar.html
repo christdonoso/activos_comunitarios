@@ -1,0 +1,150 @@
+        <aside
+            class="w-[360px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-30 shadow-2xl overflow-hidden">
+
+            <div class="p-8 pb-4">
+                <div class="flex items-center gap-3 mb-8 text-primary">
+                    <div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <span class="material-symbols-outlined filled">health_and_safety</span>
+                    </div>
+                    <h1 class="text-xl font-black tracking-tighter uppercase">MAIS Chile</h1>
+                </div>
+
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-black leading-tight text-slate-800 dark:text-white">
+                        Hola, <span class="text-primary">Vecino/a</span>
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                        Tu salud no solo está en el consultorio, está en cada rincón de tu barrio. <strong>¿Qué tesoro
+                            buscaremos hoy?</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-8 py-4 no-scrollbar space-y-8">
+
+                <section class="space-y-3">
+                    <div class="p-4 bg-primary/5 border-2 border-primary/20 rounded-2xl">
+                        <div class="flex items-center gap-2 mb-2 text-primary">
+                            <span class="material-symbols-outlined filled text-xl">description</span>
+                            <span class="text-xs font-black uppercase tracking-widest">Receta Social</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-400 mb-3 font-medium">
+                            Si tu médico te recomendó una actividad comunitaria, valídala aquí para encontrar tu grupo.
+                        </p>
+                        <button
+                            class="w-full py-2.5 bg-primary text-white text-xs font-black rounded-xl hover:bg-primary/90 transition-all shadow-md">
+                            VALIDAR RECOMENDACIÓN
+                        </button>
+                    </div>
+                </section>
+
+                <section class="space-y-4">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Enfoque MAIS: ¿Cómo te
+                        sientes?</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button
+                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-amber-100 bg-amber-50/30 text-amber-700 hover:bg-amber-100 transition-all group">
+                            <span
+                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">spa</span>
+                            <span class="text-[10px] font-bold uppercase">Estrés</span>
+                        </button>
+                        <button
+                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-blue-100 bg-blue-50/30 text-blue-700 hover:bg-blue-100 transition-all group">
+                            <span
+                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">fitness_center</span>
+                            <span class="text-[10px] font-bold uppercase">Energía</span>
+                        </button>
+                        <button
+                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-purple-100 bg-purple-50/30 text-purple-700 hover:bg-purple-100 transition-all group">
+                            <span
+                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">diversity_3</span>
+                            <span class="text-[10px] font-bold uppercase">Compañía</span>
+                        </button>
+                        <button
+                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-emerald-100 bg-emerald-50/30 text-emerald-700 hover:bg-emerald-100 transition-all group">
+                            <span
+                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">brush</span>
+                            <span class="text-[10px] font-bold uppercase">Aprender</span>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="space-y-4">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Categorías del Barrio
+                    </h3>
+                    <div class="flex flex-col gap-2">
+                        <label class="category-chip cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Espacios Públicos</span>
+                                <span class="material-symbols-outlined text-sm">park</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Organizaciones Sociales</span>
+                                <span class="material-symbols-outlined text-sm">forum</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Salud y Bienestar</span>
+                                <span class="material-symbols-outlined text-sm">local_hospital</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Educación / Colegios</span>
+                                <span class="material-symbols-outlined text-sm">school</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Clubes Deportivos</span>
+                                <span class="material-symbols-outlined text-sm">sports_soccer</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Adulto Mayor</span>
+                                <span class="material-symbols-outlined text-sm">elderly</span>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+            </div>
+
+            <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900">
+                <a href="{% url 'login' %}"
+                    class="w-full group relative flex items-center justify-center gap-3 px-4 py-4 bg-slate-900 dark:bg-primary/10 text-white dark:text-primary rounded-2xl transition-all hover:shadow-lg hover:shadow-primary/20 active:scale-95 overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-primary to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+
+                    <span class="material-symbols-outlined text-[20px] relative z-10 filled">admin_panel_settings</span>
+                    <div class="flex flex-col items-start relative z-10">
+                        <span class="text-[10px] font-black uppercase tracking-[0.15em] leading-none">Acceso
+                            Privado</span>
+                        <span class="text-xs font-medium opacity-80">Portal Profesionales</span>
+                    </div>
+                    <span
+                        class="material-symbols-outlined text-sm relative z-10 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">arrow_forward</span>
+                </a>
+            </div>
+        </aside>

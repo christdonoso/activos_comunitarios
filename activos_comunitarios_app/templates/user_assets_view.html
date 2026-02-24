@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MAIS Chile - Mapa de Bienestar</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                        "emerald-accent": "#10b981",
+                        "amber-accent": "#f59e0b",
+                    },
+                    fontFamily: { "display": ["Public Sans", "sans-serif"] }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .filled {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Estilo personalizado para los checkboxes de categorías */
+        .category-chip input:checked+div {
+            background-color: #137fec;
+            color: white;
+            border-color: #137fec;
+        }
+
+        /* Quitar el estilo por defecto de los popups de Leaflet */
+        .leaflet-popup-content-wrapper {
+            padding: 0 !important;
+            overflow: hidden;
+            border-radius: 1.25rem !important;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+        }
+
+        .leaflet-popup-content {
+            margin: 0 !important;
+            width: auto !important;
+        }
+
+        .leaflet-popup-tip {
+            background: white !important;
+        }
+    </style>
+</head>
+
+<body
+    class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden">
+
+    <div class="flex h-screen w-full">
+        <aside
+            class="w-[360px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-30 shadow-2xl overflow-hidden">
+
+            <div class="p-8 pb-4">
+                <div class="flex items-center gap-3 mb-8 text-primary">
+                    <div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <span class="material-symbols-outlined filled">health_and_safety</span>
+                    </div>
+                    <h1 class="text-xl font-black tracking-tighter uppercase">MAIS Chile</h1>
+                </div>
+
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-black leading-tight text-slate-800 dark:text-white">
+                        Hola, <span class="text-primary">Vecino/a</span>
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                        Tu salud no solo está en el consultorio, está en cada rincón de tu barrio. <strong>¿Qué tesoro
+                            buscaremos hoy?</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-8 py-4 no-scrollbar space-y-8">
+
+                <section class="space-y-3">
+                    <div class="p-4 bg-primary/5 border-2 border-primary/20 rounded-2xl">
+                        <div class="flex items-center gap-2 mb-2 text-primary">
+                            <span class="material-symbols-outlined filled text-xl">description</span>
+                            <span class="text-xs font-black uppercase tracking-widest">Receta Social</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-400 mb-3 font-medium">
+                            Si tu médico te recomendó una actividad comunitaria, valídala aquí para encontrar tu grupo.
+                        </p>
+                        <button
+                            class="w-full py-2.5 bg-primary text-white text-xs font-black rounded-xl hover:bg-primary/90 transition-all shadow-md">
+                            VALIDAR RECOMENDACIÓN
+                        </button>
+                    </div>
+                </section>
+
+                <section class="space-y-4">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Enfoque MAIS: ¿Cómo te
+                        sientes?</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button
+                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-amber-100 bg-amber-50/30 text-amber-700 hover:bg-amber-100 transition-all group">
+                            <span
+                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">spa</span>
+                            <span class="text-[10px] font-bold uppercase">Estrés</span>
+                        </button>
+                        <button
+                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-blue-100 bg-blue-50/30 text-blue-700 hover:bg-blue-100 transition-all group">
+                            <span
+                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">fitness_center</span>
+                            <span class="text-[10px] font-bold uppercase">Energía</span>
+                        </button>
+                        <button
+                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-purple-100 bg-purple-50/30 text-purple-700 hover:bg-purple-100 transition-all group">
+                            <span
+                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">diversity_3</span>
+                            <span class="text-[10px] font-bold uppercase">Compañía</span>
+                        </button>
+                        <button
+                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-emerald-100 bg-emerald-50/30 text-emerald-700 hover:bg-emerald-100 transition-all group">
+                            <span
+                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">brush</span>
+                            <span class="text-[10px] font-bold uppercase">Aprender</span>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="space-y-4">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Categorías del Barrio
+                    </h3>
+                    <div class="flex flex-col gap-2">
+                        <label class="category-chip cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Espacios Públicos</span>
+                                <span class="material-symbols-outlined text-sm">park</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Organizaciones Sociales</span>
+                                <span class="material-symbols-outlined text-sm">forum</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Salud y Bienestar</span>
+                                <span class="material-symbols-outlined text-sm">local_hospital</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Educación / Colegios</span>
+                                <span class="material-symbols-outlined text-sm">school</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Clubes Deportivos</span>
+                                <span class="material-symbols-outlined text-sm">sports_soccer</span>
+                            </div>
+                        </label>
+
+                        <label class="category-chip cursor-pointer">
+                            <input type="checkbox" class="hidden peer">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                                <span class="text-xs font-bold">Adulto Mayor</span>
+                                <span class="material-symbols-outlined text-sm">elderly</span>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+            </div>
+
+            <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900">
+                <a href="{% url 'login' %}"
+                    class="w-full group relative flex items-center justify-center gap-3 px-4 py-4 bg-slate-900 dark:bg-primary/10 text-white dark:text-primary rounded-2xl transition-all hover:shadow-lg hover:shadow-primary/20 active:scale-95 overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-primary to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+
+                    <span class="material-symbols-outlined text-[20px] relative z-10 filled">admin_panel_settings</span>
+                    <div class="flex flex-col items-start relative z-10">
+                        <span class="text-[10px] font-black uppercase tracking-[0.15em] leading-none">Acceso
+                            Privado</span>
+                        <span class="text-xs font-medium opacity-80">Portal Profesionales</span>
+                    </div>
+                    <span
+                        class="material-symbols-outlined text-sm relative z-10 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">arrow_forward</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="relative flex-1 bg-slate-200 overflow-hidden">
+
+            <div class="absolute top-6 left-6 right-6 z-20 flex justify-center pointer-events-none">
+                <div
+                    class="w-full max-w-xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-800/50 px-4 py-1 pointer-events-auto flex items-center">
+                    <span class="material-symbols-outlined text-slate-400">search</span>
+                    <input type="text" placeholder="Buscar por calle o nombre del lugar..."
+                        class="w-full bg-transparent border-none focus:ring-0 text-sm py-3 px-3">
+                    <div class="flex items-center gap-2 border-l border-slate-100 pl-3">
+                        <kbd
+                            class="hidden sm:inline-block px-2 py-1 text-[10px] font-bold text-slate-400 bg-slate-50 rounded">ESC</kbd>
+                    </div>
+                </div>
+            </div>
+
+            <div id="map" class="absolute inset-0 z-0">
+                <div id="map-loader"
+                    class="absolute inset-0 z-[50] bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center transition-all">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="size-12 border-4 border-primary border-t-transparent rounded-full animate-spin">
+                        </div>
+                        <p class="text-xs font-black text-primary uppercase tracking-widest">Cargando Activos...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute right-6 bottom-10 flex flex-col gap-3 z-20 items-end">
+
+                <div class="flex items-center group/item">
+                    <span
+                        class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
+                        Cambiar Vista
+                    </span>
+                    <button id="btn-layer-toggle"
+                        class="size-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl flex items-center justify-center text-slate-600 hover:text-primary transition-all pointer-events-auto">
+                        <span class="material-symbols-outlined">layers</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center group/item">
+                    <span
+                        class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
+                        Mi Ubicación
+                    </span>
+                    <button id="btn-locate"
+                        class="size-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all pointer-events-auto">
+                        <span class="material-symbols-outlined">my_location</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center group/item">
+                    <span
+                        class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
+                        Zoom
+                    </span>
+                    <div
+                        class="flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden pointer-events-auto">
+                        <button id="btn-zoom-in"
+                            class="size-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-slate-50 transition-colors">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                        <button id="btn-zoom-out"
+                            class="size-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-slate-50 transition-colors border-t border-slate-100 dark:border-slate-800">
+                            <span class="material-symbols-outlined">remove</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-10 left-10 z-20">
+                <a href="{% url 'add_assets' %}"
+                    class="flex items-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-2xl shadow-emerald-500/30 transition-all hover:scale-105 group font-bold">
+                    <span
+                        class="material-symbols-outlined group-hover:rotate-90 transition-transform">add_location_alt</span>
+                    <span>Proponer un Activo</span>
+                </a>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+<script>
+    // 1. Configuración de Capas (TileLayers)
+    const tilesLimpio = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; CartoDB'
+    });
+
+    const tilesNormal = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    });
+
+    // 2. Inicialización ÚNICA del Mapa
+    // Nota: Solo llamamos a L.map('map') UNA VEZ en todo el código.
+    var map = L.map('map', {
+        zoomControl: false,
+        layers: [tilesLimpio] // Empezamos con el mapa limpio
+    }).setView([-33.48, -70.55], 13);
+
+    var markersLayer = L.layerGroup().addTo(map);
+
+    // 3. Diccionarios de Estilo
+    const categoryColors = {
+        'espacio_publico': 'bg-emerald-500',
+        'organizacion_social': 'bg-purple-500',
+        'establecimiento_salud': 'bg-rose-500',
+        'organizacion_deportiva': 'bg-blue-500',
+        'centro_cultural': 'bg-amber-500',
+        'otro': 'bg-slate-500'
+    };
+
+    const categoryIcons = {
+        'espacio_publico': 'park',
+        'organizacion_social': 'groups',
+        'establecimiento_salud': 'local_hospital',
+        'establecimiento_educacional': 'school',
+        'organizacion_deportiva': 'sports_soccer',
+        'grupo_apoyo': 'volunteer_activism',
+        'programa_municipal': 'account_balance',
+        'centro_cultural': 'theater_comedy',
+        'organizacion_adulto_mayor': 'elderly',
+        'organizacion_juvenil': 'sentiment_satisfied',
+        'red_vecinal': 'home_work',
+        'otro': 'location_on'
+    };
+
+    // 4. Funciones de Carga y Renderizado
+    async function loadAssets(category = null) {
+        const loader = document.getElementById('map-loader');
+        if (loader) loader.classList.replace('hidden', 'flex');
+
+        try {
+            let url = '/assets_display/get_all_valid_assets';
+            if (category) url = `/assets_display/get_assets_by_category?category=${category}`;
+
+            const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const data = await response.json();
+            renderMarkers(data.assets);
+        } catch (error) {
+            console.error("Error cargando activos:", error);
+        } finally {
+            if (loader) loader.classList.replace('flex', 'hidden');
+        }
+    }
+
+    function renderMarkers(assets) {
+        markersLayer.clearLayers();
+        assets.forEach(asset => {
+            const iconName = categoryIcons[asset.category] || 'location_on';
+            const bgColor = categoryColors[asset.category] || 'bg-primary';
+
+            const customIcon = L.divIcon({
+                className: 'custom-marker',
+                html: `
+                <div class="relative group cursor-pointer marker-anim">
+                    <div class="size-10 ${bgColor} rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white transition-all transform group-hover:scale-110">
+                        <span class="material-symbols-outlined text-[20px] filled">${iconName}</span>
+                    </div>
+                </div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 40]
+            });
+
+            const popupContent = `
+            <div class="w-64 rounded-2xl overflow-hidden font-display">
+                <div class="p-4">
+                    <span class="px-2 py-0.5 ${bgColor}/10 text-${bgColor.replace('bg-', '')} text-[9px] font-black rounded-full uppercase">
+                        ${asset.category.replace('_', ' ')}
+                    </span>
+                    <h5 class="text-sm font-bold mt-2 text-slate-800">${asset.name}</h5>
+                    <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${asset.description}</p>
+                    <a href="/comunity_assets/asset_detail/${asset.asset_id}" 
+                       class="block w-full mt-3 py-2 bg-slate-900 text-white text-center text-[10px] font-black rounded-lg uppercase tracking-widest hover:bg-primary transition-colors">
+                        Ver Detalles
+                    </a>
+                </div>
+            </div>`;
+
+            L.marker([asset.lat, asset.lng], { icon: customIcon })
+                .addTo(markersLayer)
+                .bindPopup(popupContent, { maxWidth: 300 });
+        });
+    }
+
+    // 5. Inicialización de Eventos (DOMContentLoaded)
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- FILTROS SIDEBAR ---
+        document.querySelectorAll('.category-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.querySelectorAll('.category-filter').forEach(c => { if (c !== e.target) c.checked = false; });
+                    loadAssets(e.target.dataset.category);
+                } else {
+                    loadAssets();
+                }
+            });
+        });
+
+        // --- BOTONES DE ZOOM ---
+        document.getElementById('btn-zoom-in').addEventListener('click', () => map.zoomIn());
+        document.getElementById('btn-zoom-out').addEventListener('click', () => map.zoomOut());
+
+        // --- BOTÓN LOCALIZARME ---
+        document.getElementById('btn-locate').addEventListener('click', () => {
+            map.locate({ setView: true, maxZoom: 16 });
+        });
+
+        // --- BOTÓN CAMBIO DE CAPA (CORREGIDO) ---
+        let esMapaLimpio = true;
+        document.getElementById('btn-layer-toggle').addEventListener('click', function () {
+            if (esMapaLimpio) {
+                map.removeLayer(tilesLimpio);
+                map.addLayer(tilesNormal);
+                this.classList.add('bg-primary', 'text-white'); // Activo
+                this.querySelector('span').innerText = 'map'; // Cambia el icono a "mapa"
+            } else {
+                map.removeLayer(tilesNormal);
+                map.addLayer(tilesLimpio);
+                this.classList.remove('bg-primary', 'text-white'); // Inactivo
+                this.querySelector('span').innerText = 'layers'; // Vuelve a "capas"
+            }
+            esMapaLimpio = !esMapaLimpio;
+        });
+
+        // Carga inicial de datos
+        loadAssets();
+
+        // Fix para renderizado de Leaflet
+        setTimeout(() => { map.invalidateSize(); }, 300);
+    });
+
+    // 6. Manejo de Localización
+    map.on('locationfound', (e) => {
+        if (window.userMarker) {
+            window.userMarker.setLatLng(e.latlng);
+        } else {
+            window.userMarker = L.marker(e.latlng, {
+                icon: L.divIcon({
+                    className: 'user-location-marker',
+                    html: `<div class="size-4 bg-primary rounded-full border-2 border-white shadow-lg animate-pulse"></div>`,
+                    iconSize: [16, 16]
+                })
+            }).addTo(map);
+        }
+    });
+
+    // --- BOTÓN CAMBIO DE CAPA (CORREGIDO Y ESTABLE) ---
+    let esMapaLimpio = true;
+    const btnLayer = document.getElementById('btn-layer-toggle');
+
+    btnLayer.addEventListener('click', function () {
+        // Seleccionamos el icono dentro del botón
+        const icono = this.querySelector('span');
+
+        if (esMapaLimpio) {
+            map.removeLayer(tilesLimpio);
+            map.addLayer(tilesNormal);
+
+            // Cambiamos clases: fondo azul, texto blanco
+            this.classList.add('bg-primary', 'text-white');
+            this.classList.remove('bg-white', 'text-slate-600', 'dark:bg-slate-900');
+            icono.innerText = 'map'; // Cambia el dibujo del icono
+        } else {
+            map.removeLayer(tilesNormal);
+            map.addLayer(tilesLimpio);
+
+            // Volvemos al estado original: fondo blanco, texto gris
+            this.classList.remove('bg-primary', 'text-white');
+            this.classList.add('bg-white', 'text-slate-600', 'dark:bg-slate-900');
+            icono.innerText = 'layers'; // Vuelve al icono de capas
+        }
+        esMapaLimpio = !esMapaLimpio;
+    });
+</script>
+
+</html>

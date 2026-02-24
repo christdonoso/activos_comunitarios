@@ -10,9 +10,6 @@ from utilities import tools
 
 # Create your views here.
 
-def index(request):
-    return render(request, 'registration/login.html')
-
 
 def profile(request):
     if request.method == 'GET':

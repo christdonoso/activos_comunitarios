@@ -6,16 +6,26 @@ from .models import ComunityAsset
 
 
 def add_assets(request):
+
+    # 🔹 Definimos el template según autenticación
+    if request.user.is_authenticated:
+        template = 'comunity_assets/add_assets.html'
+    else:
+        template = 'anom_user/add_assets.html'
+
     if request.method == 'POST':
 
         data = request.POST.copy()
         for junk in ['csrfmiddlewaretoken', 'address-search']:
             data.pop(junk, None)
 
-        # 2. Lista de booleanos que esperamos
         bool_fields = [
-            'requiere_inscripcion', 'accesibilidad_silla_ruedas', 'baño_accesible', 
-            'accesibilidad_visual', 'estacionamiento_general', 'estacionamiento_discapacidad'
+            'requiere_inscripcion',
+            'accesibilidad_silla_ruedas',
+            'baño_accesible',
+            'accesibilidad_visual',
+            'estacionamiento_general',
+            'estacionamiento_discapacidad'
         ]
 
         try:
@@ -24,17 +34,23 @@ def add_assets(request):
             for field in bool_fields:
                 setattr(nuevo_activo, field, field in request.POST)
 
-            nuevo_activo.creado_por = getattr(request.user, 'usuario', None)
+            # 🔹 Solo asigna creador si está autenticado
+            if request.user.is_authenticated:
+                nuevo_activo.creado_por = getattr(request.user, 'usuario', None)
+
             nuevo_activo.save()
-            
-            messages.success(request, "¡Activo comunitario propuesto con éxito! tu propuesta aparecera en el mapa una vez sea aceptada por algun administrador!")
+
+            messages.success(
+                request,
+                "¡Activo comunitario propuesto con éxito! Tu propuesta aparecerá en el mapa una vez sea aceptada por un administrador!"
+            )
             return redirect('add_assets')
 
         except Exception as e:
             print(f"DEBUG: {e}")
             messages.error(request, "Error al procesar el formulario.")
 
-    return render(request, 'comunity_assets/add_assets.html', {'ComunityAsset': ComunityAsset})
+    return render(request,template,{'ComunityAsset': ComunityAsset})
 
 
 def asset_detail_validation(request, pk):

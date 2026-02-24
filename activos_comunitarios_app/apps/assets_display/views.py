@@ -9,6 +9,10 @@ def display_assets(request):
     return render(request,'display_assets.html')
 
 
+def users_assets_view(request):
+    return render(request, 'anom_user/user_assets_views.html')
+
+
 def get_all_valid_assets(request):
 
     assets_db = ComunityAsset.objects.filter(estado='aprobado')
