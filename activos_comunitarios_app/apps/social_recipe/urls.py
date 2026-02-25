@@ -16,12 +16,9 @@ Including another URLconf
 """
 
 from django.urls import path
-from apps.api import views
+from apps.social_recipe import views
 
 
 urlpatterns = [
-    path('get_all_valid_assets', views.get_all_valid_assets),
-    path('get_paciente/', views.get_paciente),
-
-    path('get_assets_by_category',views.get_assets_by_category, name='get_assets_by_category'),
+    path('create_recipe', views.create_recipe, name='create_recipe')
 ]

@@ -20,14 +20,16 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin', admin.site.urls),
     path('', include('apps.home.urls')),
     path('api/', include('apps.api.urls')),
-    path('users/', include('apps.users.urls')),
-    path('comunity_assets/', include('apps.comunity_assets.urls')),
-    path('validate_assets/', include('apps.validate_assets.urls')),
     path('assets_display/', include('apps.assets_display.urls')),
+    path('comunity_assets/', include('apps.comunity_assets.urls')),
+    path('social_recipe/', include('apps.social_recipe.urls')),
+    path('validate_assets/', include('apps.validate_assets.urls')),
+    path('users/', include('apps.users.urls')),
 
     path('accounts/', include('django.contrib.auth.urls')),
 ]
