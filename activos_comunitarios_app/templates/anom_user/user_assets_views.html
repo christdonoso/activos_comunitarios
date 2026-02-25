@@ -1,6 +1,9 @@
 {% extends 'anom_user/base.html' %}
 
 {% block content %}
+
+{% load static %}
+
         <main class="relative flex-1 bg-slate-200 overflow-hidden">
 
             <div class="absolute top-6 left-6 right-6 z-20 flex justify-center pointer-events-none">
@@ -80,197 +83,12 @@
 
         </main>
 
-        <script>
-    // 1. Configuración de Capas (TileLayers)
-    const tilesLimpio = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; CartoDB'
-    });
+<script src="{% static 'js/map_handler.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar
+    const miMapa = new CommunityMap('map');
 
-    const tilesNormal = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    });
-
-    // 2. Inicialización ÚNICA del Mapa
-    // Nota: Solo llamamos a L.map('map') UNA VEZ en todo el código.
-    var map = L.map('map', {
-        zoomControl: false,
-        layers: [tilesLimpio] // Empezamos con el mapa limpio
-    }).setView([-33.48, -70.55], 13);
-
-    var markersLayer = L.layerGroup().addTo(map);
-
-    // 3. Diccionarios de Estilo
-    const categoryColors = {
-        'espacio_publico': 'bg-emerald-500',
-        'organizacion_social': 'bg-purple-500',
-        'establecimiento_salud': 'bg-rose-500',
-        'organizacion_deportiva': 'bg-blue-500',
-        'centro_cultural': 'bg-amber-500',
-        'otro': 'bg-slate-500'
-    };
-
-    const categoryIcons = {
-        'espacio_publico': 'park',
-        'organizacion_social': 'groups',
-        'establecimiento_salud': 'local_hospital',
-        'establecimiento_educacional': 'school',
-        'organizacion_deportiva': 'sports_soccer',
-        'grupo_apoyo': 'volunteer_activism',
-        'programa_municipal': 'account_balance',
-        'centro_cultural': 'theater_comedy',
-        'organizacion_adulto_mayor': 'elderly',
-        'organizacion_juvenil': 'sentiment_satisfied',
-        'red_vecinal': 'home_work',
-        'otro': 'location_on'
-    };
-
-    // 4. Funciones de Carga y Renderizado
-    async function loadAssets(category = null) {
-        const loader = document.getElementById('map-loader');
-        if (loader) loader.classList.replace('hidden', 'flex');
-
-        try {
-            let url = '/api/get_all_valid_assets';
-            if (category) url = `/api/get_assets_by_category?category=${category}`;
-
-            const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-            const data = await response.json();
-            renderMarkers(data.assets);
-        } catch (error) {
-            console.error("Error cargando activos:", error);
-        } finally {
-            if (loader) loader.classList.replace('flex', 'hidden');
-        }
-    }
-
-    function renderMarkers(assets) {
-        markersLayer.clearLayers();
-        assets.forEach(asset => {
-            const iconName = categoryIcons[asset.category] || 'location_on';
-            const bgColor = categoryColors[asset.category] || 'bg-primary';
-
-            const customIcon = L.divIcon({
-                className: 'custom-marker',
-                html: `
-                <div class="relative group cursor-pointer marker-anim">
-                    <div class="size-10 ${bgColor} rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white transition-all transform group-hover:scale-110">
-                        <span class="material-symbols-outlined text-[20px] filled">${iconName}</span>
-                    </div>
-                </div>`,
-                iconSize: [40, 40],
-                iconAnchor: [20, 40]
-            });
-
-            const popupContent = `
-            <div class="w-64 rounded-2xl overflow-hidden font-display">
-                <div class="p-4">
-                    <span class="px-2 py-0.5 ${bgColor}/10 text-${bgColor.replace('bg-', '')} text-[9px] font-black rounded-full uppercase">
-                        ${asset.category.replace('_', ' ')}
-                    </span>
-                    <h5 class="text-sm font-bold mt-2 text-slate-800">${asset.name}</h5>
-                    <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${asset.description}</p>
-                    <a href="/comunity_assets/asset_detail/${asset.asset_id}" 
-                       class="block w-full mt-3 py-2 bg-slate-900 text-white text-center text-[10px] font-black rounded-lg uppercase tracking-widest hover:bg-primary transition-colors">
-                        Ver Detalles
-                    </a>
-                </div>
-            </div>`;
-
-            L.marker([asset.lat, asset.lng], { icon: customIcon })
-                .addTo(markersLayer)
-                .bindPopup(popupContent, { maxWidth: 300 });
-        });
-    }
-
-    // 5. Inicialización de Eventos (DOMContentLoaded)
-    document.addEventListener('DOMContentLoaded', () => {
-
-        // --- FILTROS SIDEBAR ---
-        document.querySelectorAll('.category-filter').forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    document.querySelectorAll('.category-filter').forEach(c => { if (c !== e.target) c.checked = false; });
-                    loadAssets(e.target.dataset.category);
-                } else {
-                    loadAssets();
-                }
-            });
-        });
-
-        // --- BOTONES DE ZOOM ---
-        document.getElementById('btn-zoom-in').addEventListener('click', () => map.zoomIn());
-        document.getElementById('btn-zoom-out').addEventListener('click', () => map.zoomOut());
-
-        // --- BOTÓN LOCALIZARME ---
-        document.getElementById('btn-locate').addEventListener('click', () => {
-            map.locate({ setView: true, maxZoom: 16 });
-        });
-
-        // --- BOTÓN CAMBIO DE CAPA (CORREGIDO) ---
-        let esMapaLimpio = true;
-        document.getElementById('btn-layer-toggle').addEventListener('click', function () {
-            if (esMapaLimpio) {
-                map.removeLayer(tilesLimpio);
-                map.addLayer(tilesNormal);
-                this.classList.add('bg-primary', 'text-white'); // Activo
-                this.querySelector('span').innerText = 'map'; // Cambia el icono a "mapa"
-            } else {
-                map.removeLayer(tilesNormal);
-                map.addLayer(tilesLimpio);
-                this.classList.remove('bg-primary', 'text-white'); // Inactivo
-                this.querySelector('span').innerText = 'layers'; // Vuelve a "capas"
-            }
-            esMapaLimpio = !esMapaLimpio;
-        });
-
-        // Carga inicial de datos
-        loadAssets();
-
-        // Fix para renderizado de Leaflet
-        setTimeout(() => { map.invalidateSize(); }, 300);
-    });
-
-    // 6. Manejo de Localización
-    map.on('locationfound', (e) => {
-        if (window.userMarker) {
-            window.userMarker.setLatLng(e.latlng);
-        } else {
-            window.userMarker = L.marker(e.latlng, {
-                icon: L.divIcon({
-                    className: 'user-location-marker',
-                    html: `<div class="size-4 bg-primary rounded-full border-2 border-white shadow-lg animate-pulse"></div>`,
-                    iconSize: [16, 16]
-                })
-            }).addTo(map);
-        }
-    });
-
-    // --- BOTÓN CAMBIO DE CAPA (CORREGIDO Y ESTABLE) ---
-    let esMapaLimpio = true;
-    const btnLayer = document.getElementById('btn-layer-toggle');
-
-    btnLayer.addEventListener('click', function () {
-        // Seleccionamos el icono dentro del botón
-        const icono = this.querySelector('span');
-
-        if (esMapaLimpio) {
-            map.removeLayer(tilesLimpio);
-            map.addLayer(tilesNormal);
-
-            // Cambiamos clases: fondo azul, texto blanco
-            this.classList.add('bg-primary', 'text-white');
-            this.classList.remove('bg-white', 'text-slate-600', 'dark:bg-slate-900');
-            icono.innerText = 'map'; // Cambia el dibujo del icono
-        } else {
-            map.removeLayer(tilesNormal);
-            map.addLayer(tilesLimpio);
-
-            // Volvemos al estado original: fondo blanco, texto gris
-            this.classList.remove('bg-primary', 'text-white');
-            this.classList.add('bg-white', 'text-slate-600', 'dark:bg-slate-900');
-            icono.innerText = 'layers'; // Vuelve al icono de capas
-        }
-        esMapaLimpio = !esMapaLimpio;
-    });
+});
 </script>
 {% endblock %}
