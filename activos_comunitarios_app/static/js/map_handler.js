@@ -129,6 +129,9 @@ class CommunityMap {
         try {
             const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
             const data = await response.json();
+            
+            this.assetsData = data.assets; // Guardamos para el buscador
+            
             this.renderMarkers(data.assets);
         } catch (e) { console.error("Error:", e); }
     }
