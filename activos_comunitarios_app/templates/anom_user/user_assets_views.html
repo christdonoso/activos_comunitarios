@@ -3,104 +3,150 @@
 {% block content %}
 
 {% load static %}
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#137fec",
+                    "background-light": "#f6f7f8",
+                    "background-dark": "#101922",
+                    "stress-amber": "#f59e0b",
+                    "sport-blue": "#137fec",
+                    "social-purple": "#a855f7",
+                    "workshop-green": "#22c55e",
+                },
+                fontFamily: {
+                    "display": ["Public Sans", "sans-serif"]
+                },
+                borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+            },
+        },
+    }
+</script>
 
-        <main class="relative flex-1 bg-slate-200 overflow-hidden">
+<main class="relative flex-1 bg-slate-200 overflow-hidden">
 
-<div class="absolute top-6 left-6 right-6 z-20 flex justify-center pointer-events-none">
-    <div class="w-full max-w-xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-800/50 px-4 py-1 pointer-events-auto flex items-center group">
-        
-        <span class="material-symbols-outlined text-slate-400 transition-colors group-focus-within:text-primary">search</span>
-        
-        <input type="text" 
-               id="search-input"
-               placeholder="Buscar por calle o nombre del lugar..." 
-               class="w-full bg-transparent border-none focus:ring-0 text-sm py-3 px-3 dark:text-slate-200"
-               autocomplete="off">
+    <div class="absolute top-6 left-0 right-0 z-20 flex flex-col items-center gap-4 pointer-events-none">
 
-        <div class="flex items-center gap-2 border-l border-slate-100 dark:border-slate-800 pl-3">
-            <button id="clear-search" class="hidden text-slate-400 hover:text-rose-500 transition-colors">
-                <span class="material-symbols-outlined text-sm">close</span>
+        <div
+            class="w-full max-w-xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-800/50 px-4 py-1 pointer-events-auto flex items-center group">
+            <span
+                class="material-symbols-outlined text-slate-400 transition-colors group-focus-within:text-primary">search</span>
+            <input type="text" id="search-input" placeholder="Buscar por calle o nombre del lugar..."
+                class="w-full bg-transparent border-none focus:ring-0 text-sm py-3 px-3 dark:text-slate-200"
+                autocomplete="off">
+            <div class="flex items-center gap-2 border-l border-slate-100 dark:border-slate-800 pl-3">
+                <button id="clear-search" class="hidden text-slate-400 hover:text-rose-500 transition-colors">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
+                <kbd
+                    class="hidden md:inline-block px-2 py-1 text-[10px] font-bold text-slate-400 bg-slate-50 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 shadow-sm">ESC</kbd>
+            </div>
+        </div>
+         <h3 class="text-[10px] font-black uppercase tracking-[0.2em]">¿Que deseas hacer hoy?</h3>
+        <div id="category-filters"
+            class="w-full max-w-xl flex gap-2 overflow-x-auto no-scrollbar pointer-events-auto px-1">
+            <button
+                data-category="promocion_estres"
+                class="flex items-center gap-2 px-4 py-2 rounded-full bg-stress-amber text-white text-xs font-bold shadow-md hover:brightness-110 transition-all whitespace-nowrap">
+                <span class="material-symbols-outlined text-[14px]">sentiment_satisfied</span>
+                Reducir Estrés
             </button>
-            
-            <kbd class="hidden md:inline-block px-2 py-1 text-[10px] font-bold text-slate-400 bg-slate-50 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 shadow-sm">
-                ESC
-            </kbd>
+            <button
+                data-category="promocion_deporte"
+                class="flex items-center gap-2 px-4 py-2 rounded-full bg-sport-blue text-white text-xs font-bold shadow-md hover:brightness-110 transition-all whitespace-nowrap">
+                <span class="material-symbols-outlined text-[14px]">directions_run</span>
+                Hacer Deporte
+            </button>
+            <button
+                data-category="participacion_social"
+                class="flex items-center gap-2 px-4 py-2 rounded-full bg-social-purple text-white text-xs font-bold shadow-md hover:brightness-110 transition-all whitespace-nowrap">
+                <span class="material-symbols-outlined text-[14px]">diversity_3</span>
+                Apoyo Social
+            </button>
+            <button
+                data-category="promocion_taller"
+                class="flex items-center gap-2 px-4 py-2 rounded-full bg-workshop-green text-white text-xs font-bold shadow-md hover:brightness-110 transition-all whitespace-nowrap">
+                <span class="material-symbols-outlined text-[14px]">brush</span>
+                Talleres
+            </button>
         </div>
     </div>
-</div>
 
-            <div id="map" class="absolute inset-0 z-0">
-                <div id="map-loader"
-                    class="absolute inset-0 z-[50] bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center transition-all">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="size-12 border-4 border-primary border-t-transparent rounded-full animate-spin">
-                        </div>
-                        <p class="text-xs font-black text-primary uppercase tracking-widest">Cargando Activos...</p>
-                    </div>
+    <div id="map" class="absolute inset-0 z-0">
+        <div id="map-loader"
+            class="absolute inset-0 z-[50] bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center transition-all">
+            <div class="flex flex-col items-center gap-3">
+                <div class="size-12 border-4 border-primary border-t-transparent rounded-full animate-spin">
                 </div>
+                <p class="text-xs font-black text-primary uppercase tracking-widest">Cargando Activos...</p>
             </div>
-            <div class="absolute right-6 bottom-10 flex flex-col gap-3 z-20 items-end">
+        </div>
+    </div>
+    <div class="absolute right-6 bottom-10 flex flex-col gap-3 z-20 items-end">
 
-                <div class="flex items-center group/item">
-                    <span
-                        class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
-                        Cambiar Vista
-                    </span>
-                    <button id="btn-layer-toggle"
-                        class="size-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl flex items-center justify-center text-slate-600 hover:text-primary transition-all pointer-events-auto">
-                        <span class="material-symbols-outlined">layers</span>
-                    </button>
-                </div>
+        <div class="flex items-center group/item">
+            <span
+                class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
+                Cambiar Vista
+            </span>
+            <button id="btn-layer-toggle"
+                class="size-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl flex items-center justify-center text-slate-600 hover:text-primary transition-all pointer-events-auto">
+                <span class="material-symbols-outlined">layers</span>
+            </button>
+        </div>
 
-                <div class="flex items-center group/item">
-                    <span
-                        class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
-                        Mi Ubicación
-                    </span>
-                    <button id="btn-locate"
-                        class="size-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all pointer-events-auto">
-                        <span class="material-symbols-outlined">my_location</span>
-                    </button>
-                </div>
+        <div class="flex items-center group/item">
+            <span
+                class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
+                Mi Ubicación
+            </span>
+            <button id="btn-locate"
+                class="size-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all pointer-events-auto">
+                <span class="material-symbols-outlined">my_location</span>
+            </button>
+        </div>
 
-                <div class="flex items-center group/item">
-                    <span
-                        class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
-                        Zoom
-                    </span>
-                    <div
-                        class="flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden pointer-events-auto">
-                        <button id="btn-zoom-in"
-                            class="size-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-slate-50 transition-colors">
-                            <span class="material-symbols-outlined">add</span>
-                        </button>
-                        <button id="btn-zoom-out"
-                            class="size-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-slate-50 transition-colors border-t border-slate-100 dark:border-slate-800">
-                            <span class="material-symbols-outlined">remove</span>
-                        </button>
-                    </div>
-                </div>
+        <div class="flex items-center group/item">
+            <span
+                class="opacity-0 group-hover/item:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg mr-2 pointer-events-none uppercase tracking-widest shadow-xl">
+                Zoom
+            </span>
+            <div
+                class="flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden pointer-events-auto">
+                <button id="btn-zoom-in"
+                    class="size-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-slate-50 transition-colors">
+                    <span class="material-symbols-outlined">add</span>
+                </button>
+                <button id="btn-zoom-out"
+                    class="size-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-slate-50 transition-colors border-t border-slate-100 dark:border-slate-800">
+                    <span class="material-symbols-outlined">remove</span>
+                </button>
             </div>
+        </div>
+    </div>
 
-            <div class="absolute bottom-10 left-10 z-20">
-                <a href="{% url 'add_assets' %}"
-                    class="flex items-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-2xl shadow-emerald-500/30 transition-all hover:scale-105 group font-bold">
-                    <span
-                        class="material-symbols-outlined group-hover:rotate-90 transition-transform">add_location_alt</span>
-                    <span>Proponer un Activo</span>
-                </a>
-            </div>
+    <div class="absolute bottom-10 left-10 z-20">
+        <a href="{% url 'add_assets' %}"
+            class="flex items-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-2xl shadow-emerald-500/30 transition-all hover:scale-105 group font-bold">
+            <span class="material-symbols-outlined group-hover:rotate-90 transition-transform">add_location_alt</span>
+            <span>Proponer un Activo</span>
+        </a>
+    </div>
 
-        </main>
+</main>
 
 <script src="{% static 'js/map_handler.js' %}"></script>
 <script src="{% static 'js/map_search.js' %}"></script>
+<script src="{% static 'js/map_filter.js' %}"></script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
         const miMapa = new CommunityMap('map');
-        // 2. Iniciamos el buscador y le pasamos la instancia del mapa
         const buscador = new MapSearch(miMapa, 'search-input');
 
     });
