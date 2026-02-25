@@ -31,11 +31,11 @@ class ComunityAsset(models.Model):
     ]
 
     CATEGORIA_MAIS_CHOICES = [
-        ('promocion', 'Promoción de la Salud'),
-        ('prevencion', 'Prevención de Enfermedades'),
-        ('recuperacion', 'Recuperación y Rehabilitación'),
-        ('participacion', 'Participación Social'),
-    ]     
+        ('estres', 'Reducir Estrés'),
+        ('deporte', 'Hacer Deporte'),
+        ('social', 'Apoyo Social'),
+        ('taller', 'Talleres'),
+    ]  
 
     FINANCIAMIENTO_CHOICES = [
             ('gratuito', 'Gratuito / Público'),

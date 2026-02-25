@@ -47,11 +47,13 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    'apps.api',
     'apps.users',
     'apps.comunity_assets',
     'apps.assets_display',
     'apps.validate_assets',
-    'apps.home'
+    'apps.home',
+    'apps.social_recipe'
 ]
 
 INSTALLED_APPS = DJAGNGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
