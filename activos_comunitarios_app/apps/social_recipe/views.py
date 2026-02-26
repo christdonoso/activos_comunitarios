@@ -26,11 +26,11 @@ def create_recipe(request):
                 objetivo_salud=request.POST.get('objetivo_salud'),
                 frecuencia=request.POST.get('frecuencia'),
                 duracion=request.POST.get('duracion'),
-                notas=request.POST.get('notas_adicionales')
+                notas_adicionales=request.POST.get('notas_adicionales')
             )
             
-            messages.success(request, f"Receta {nueva_receta.folio} generada con éxito.")
-            return redirect('lista_recetas') # Cambia esto a tu URL de destino
+            messages.success(request, f"Receta {nueva_receta.codigo_seguimiento} generada con éxito.")
+            return redirect('create_recipe') # Cambia esto a tu URL de destino
             
         except Exception as e:
             messages.error(request, f"Error al generar receta: {str(e)}")

@@ -160,3 +160,22 @@ def toggle_user_status(request, user_id):
     messages.success(request, f"El usuario {target_user.usuario.fullname} ha sido {status_text}.")
     
     return redirect('manage_users')
+
+
+def create_paciente(request):
+    if request.method == 'POST':
+        # ... lógica para guardar ...
+        p = Paciente.objects.create(
+            rut=request.POST.get('rut'),
+            nombre=request.POST.get('nombre'),
+            fecha_nacimiento=request.POST.get('fecha_nacimiento'),
+            direccion=request.POST.get('direccion'),
+            sector=request.POST.get('sector'),
+            telefono=request.POST.get('telefono'),
+        )
+        messages.success(request, "Paciente registrado correctamente.")
+        return redirect('create_recipe') # Vuelve a la receta
+
+    # Si es GET, capturamos el RUT de la URL si viene de la búsqueda fallida
+    requested_rut = request.GET.get('rut', '')
+    return render(request, 'user/create_paciente.html', {'requested_rut': requested_rut})

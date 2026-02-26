@@ -61,8 +61,26 @@
 </style>
 
 <main class="max-w-6xl mx-auto px-4 py-8">
+    {% if messages %}
+<div class="max-w-6xl mx-auto px-4 mt-4">
+    {% for message in messages %}
+    <div class="p-4 rounded-xl mb-4 flex items-center justify-between {% if message.tags == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %} shadow-sm animate-fadeIn">
+        <div class="flex items-center gap-3">
+            {% if message.tags == 'success' %}
+                <span class="text-xl">✅</span>
+            {% else %}
+                <span class="text-xl">⚠️</span>
+            {% endif %}
+            <p class="font-medium">{{ message }}</p>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
     <!-- BEGIN: StepperIndicator -->
     <section class="mb-10" data-purpose="progress-tracker">
+
         <div class="relative flex justify-between items-center max-w-2xl mx-auto">
             <!-- Background Line -->
             <div class="absolute top-1/2 left-0 w-full h-1 bg-slate-200 -translate-y-1/2 z-0"></div>
@@ -105,7 +123,7 @@
                         <input
                             class="w-full px-6 py-4 text-xl rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all"
                             id="rut-search" placeholder="12.345.678-9" type="text" />
-                        <button
+                        <button type="button"
                             class="absolute right-3 top-3 bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors"
                             onclick="searchPatient()">Buscar</button>
                     </div>
@@ -138,7 +156,7 @@
                         </div>
                     </div>
                     <div class="flex justify-end pt-4">
-                        <button
+                        <button type="button"
                             class="px-10 py-3 bg-slate-100 text-slate-400 rounded-xl font-bold cursor-not-allowed transition-all"
                             disabled="" id="next-1" onclick="goToStep(2)">Siguiente</button>
                     </div>
@@ -169,7 +187,7 @@
                     <!-- Asset Card 1 -->
                     {% for activo in activos %}
                     <div class="group border border-slate-200 rounded-xl overflow-hidden hover:border-primary transition-all cursor-pointer bg-white"
-                        onclick="selectAsset(this, 'Taller de Yoga Adulto Mayor')">
+                        onclick="selectAsset(this, '{{ activo.nombre }}', '{{ activo.id }}')">
                         <img alt="Yoga"
                             class="w-full h-40 object-cover grayscale group-hover:grayscale-0 transition-all"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2vkSplnlGhsxUzZEKTI-0YnFfehWG0PUzg_VNEGfN8vlUlfcHFl_SipPduIJumNkONPKN0jB77U-qaw807bOjLEOshc2RGAAp5juehoOl04yAQMtHnESyspM3XOReRUEGJ-CxxJay1Gmn7wJZsCkaunXJMRSqILc6eHyMj75bUi5fYxiLwwUO6F2W3ytAlhx3CDmeS8pCoivk0lyQGSOd2a14lPTwvZKpqG3Aga6TpYffNty_23UphEAedlUGfrjudFlLoA642oQ" />
@@ -195,11 +213,14 @@
 
                 </div>
                 <div class="flex justify-between pt-4 border-t border-slate-100">
-                    <button class="px-6 py-2 text-slate-500 font-bold hover:text-slate-800 transition-colors"
-                        onclick="goToStep(1)">← Volver</button>
-                    <button
+                    <button type="button"
+                        class="px-6 py-2 text-slate-500 font-bold hover:text-slate-800 transition-colors"
+                        onclick="goToStep(1) ">← Volver
+                    </button>
+                    <button type="button"
                         class="px-10 py-3 bg-slate-100 text-slate-400 rounded-xl font-bold cursor-not-allowed transition-all"
-                        disabled="" id="next-2" onclick="goToStep(3)">Siguiente</button>
+                        disabled="" id="next-2" onclick="goToStep(3)">Siguiente
+                    </button>
                 </div>
             </section>
             <!-- END: Step2 -->
@@ -212,7 +233,7 @@
                         <div class="space-y-6">
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">Objetivo de Salud</label>
-                                <textarea
+                                <textarea name="objetivo_salud"
                                     class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary"
                                     id="health-goal"
                                     placeholder="Ej: Reducir aislamiento social y mejorar movilidad articular..."
@@ -221,7 +242,7 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-bold text-slate-700 mb-2">Frecuencia</label>
-                                    <select
+                                    <select name="frecuencia"
                                         class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary"
                                         id="frequency">
                                         <option>1 vez por semana</option>
@@ -232,7 +253,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-slate-700 mb-2">Duración sugerida</label>
-                                    <select
+                                    <select name="duracion"
                                         class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary"
                                         id="duration">
                                         <option>3 meses</option>
@@ -244,7 +265,7 @@
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">Recomendaciones
                                     adicionales</label>
-                                <input
+                                <input name="notas_adicionales"
                                     class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary"
                                     id="notes" placeholder="Ej: Llevar botella de agua y ropa cómoda" type="text" />
                             </div>
@@ -252,59 +273,115 @@
                         <div class="flex justify-between mt-12 pt-6 border-t border-slate-100">
                             <button class="px-6 py-2 text-slate-500 font-bold hover:text-slate-800 transition-colors"
                                 onclick="goToStep(2)">← Volver</button>
-                            <button
-                                class="px-10 py-3 bg-primary text-white rounded-xl font-bold hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all"
-                                onclick="alert('Receta Emitida con Éxito')">Emitir Receta Social</button>
+                            <button type="submit"
+                                class="px-10 py-3 bg-primary text-white rounded-xl font-bold hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all" ">Emitir Receta Social</button>
                         </div>
                     </div>
                     <!-- Preview Right -->
-                    <div class="lg:w-80 flex flex-col items-center">
-                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Previsualización en
-                            Vivo</h3>
-                        <!-- BEGIN: Live Preview Card -->
-                        <div class="recipe-preview-card w-full max-w-[300px] p-6 rounded-2xl shadow-xl relative overflow-hidden"
-                            data-purpose="invitation-card">
-                            <div class="absolute top-0 left-0 w-full h-2 bg-primary"></div>
-                            <div class="text-center mb-6">
-                                <p class="text-[10px] font-bold text-primary uppercase mb-1">Receta para el Bienestar
-                                </p>
-                                <h4 class="text-lg font-bold text-slate-900 leading-tight">Invitación de Salud</h4>
-                            </div>
-                            <div class="space-y-4 mb-6">
-                                <div class="border-b border-slate-100 pb-2">
-                                    <p class="text-[9px] text-slate-400 uppercase font-bold">Paciente</p>
-                                    <p class="text-sm font-bold text-slate-800" id="preview-name">Juan Delgado P.</p>
+                    <div class=" lg:w-80 flex flex-col items-center">
+                                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
+                                    Previsualización en
+                                    Vivo</h3>
+                                <!-- BEGIN: Live Preview Card -->
+                                <div class="recipe-preview-card w-full max-w-[300px] p-6 rounded-2xl shadow-xl relative overflow-hidden"
+                                    data-purpose="invitation-card">
+                                    <div class="absolute top-0 left-0 w-full h-2 bg-primary"></div>
+                                    <div class="text-center mb-6">
+                                        <p class="text-[10px] font-bold text-primary uppercase mb-1">Receta para el
+                                            Bienestar
+                                        </p>
+                                        <h4 class="text-lg font-bold text-slate-900 leading-tight">Invitación de Salud
+                                        </h4>
+                                    </div>
+                                    <div class="space-y-4 mb-6">
+                                        <div class="border-b border-slate-100 pb-2">
+                                            <p class="text-[9px] text-slate-400 uppercase font-bold">Paciente</p>
+                                            <p class="text-sm font-bold text-slate-800" id="preview-name">Juan Delgado
+                                                P.</p>
+                                        </div>
+                                        <div class="border-b border-slate-100 pb-2">
+                                            <p class="text-[9px] text-slate-400 uppercase font-bold">Actividad Prescrita
+                                            </p>
+                                            <p class="text-sm font-bold text-primary" id="preview-asset">Seleccione
+                                                activo...
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[9px] text-slate-400 uppercase font-bold">Indicación</p>
+                                            <p class="text-xs text-slate-600 italic" id="preview-goal">Complete el
+                                                objetivo...
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white p-3 rounded-lg border border-slate-200 flex flex-col items-center gap-2">
+                                        <img alt="QR Link" class="w-24 h-24"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtwZvHUfRnk1zEE2tIdQZKvwZXM0uZtAplugUYWlgZXHFwPj7_aZyp8vhg0fIKB7fWMK_mAAdBjURUKboiSilxS_KrAXmCUXawy_ZtlaEpOv72rGdDPWPbCtHmg1NSv3x2yfaW2IW5DD_JwAKDn_Eh-RGnvzgV1E9rnFj0CmO3S0cQwxBtCnvH7PMzTiX2POkxNG0SXOLb3bfw_hNNSJNfIYqEC1ObfbbMF4gkte9m7153XcTELdUWF6MzTZiE66Hj0BDpBay8Wr8" />
+                                        <p
+                                            class="text-[8px] text-slate-400 text-center uppercase leading-tight font-medium">
+                                            Escanee para ver
+                                            dirección y contacto del activo</p>
+                                    </div>
+                                    <div class="mt-6 text-center">
+                                        <p class="text-[10px] text-slate-400">Emitido por: Dr. Ricardo Lagos<br />CESFAM
+                                            Santa
+                                            Julia</p>
+                                    </div>
                                 </div>
-                                <div class="border-b border-slate-100 pb-2">
-                                    <p class="text-[9px] text-slate-400 uppercase font-bold">Actividad Prescrita</p>
-                                    <p class="text-sm font-bold text-primary" id="preview-asset">Seleccione activo...
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="text-[9px] text-slate-400 uppercase font-bold">Indicación</p>
-                                    <p class="text-xs text-slate-600 italic" id="preview-goal">Complete el objetivo...
-                                    </p>
-                                </div>
-                            </div>
-                            <div
-                                class="bg-white p-3 rounded-lg border border-slate-200 flex flex-col items-center gap-2">
-                                <img alt="QR Link" class="w-24 h-24"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtwZvHUfRnk1zEE2tIdQZKvwZXM0uZtAplugUYWlgZXHFwPj7_aZyp8vhg0fIKB7fWMK_mAAdBjURUKboiSilxS_KrAXmCUXawy_ZtlaEpOv72rGdDPWPbCtHmg1NSv3x2yfaW2IW5DD_JwAKDn_Eh-RGnvzgV1E9rnFj0CmO3S0cQwxBtCnvH7PMzTiX2POkxNG0SXOLb3bfw_hNNSJNfIYqEC1ObfbbMF4gkte9m7153XcTELdUWF6MzTZiE66Hj0BDpBay8Wr8" />
-                                <p class="text-[8px] text-slate-400 text-center uppercase leading-tight font-medium">
-                                    Escanee para ver
-                                    dirección y contacto del activo</p>
-                            </div>
-                            <div class="mt-6 text-center">
-                                <p class="text-[10px] text-slate-400">Emitido por: Dr. Ricardo Lagos<br />CESFAM Santa
-                                    Julia</p>
-                            </div>
+                                <!-- END: Live Preview Card -->
                         </div>
-                        <!-- END: Live Preview Card -->
                     </div>
-                </div>
             </section>
             <!-- END: Step3 -->
     </div>
+
+    <div id="modal-paciente" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-fadeIn">
+        <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-slate-900">Nuevo Registro de Paciente</h3>
+            <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+        </div>
+        
+        <form id="form-registro-rapido" class="p-6 space-y-4">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">RUT</label>
+                    <input type="text" name="rut" id="modal-rut" class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre Completo</label>
+                    <input type="text" name="nombre" class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary" placeholder="Ej: Juan Pérez" required>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">F. Nacimiento</label>
+                        <input type="date" name="fecha_nacimiento" class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Sector</label>
+                        <select name="sector" class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary">
+                            <option value="Santa Julia">Santa Julia</option>
+                            <option value="Achupallas">Achupallas</option>
+                            <option value="Miraflores">Miraflores</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Dirección</label>
+                    <input type="text" name="direccion" class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary" placeholder="Calle #123" required>
+                </div>
+            </div>
+            
+            <div class="pt-4 flex gap-3">
+                <button type="button" onclick="closeModal()" class="flex-1 px-4 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition-all">Cancelar</button>
+                <button type="submit" class="flex-1 px-4 py-3 bg-primary text-white rounded-xl font-bold hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all">
+                    Guardar y Seleccionar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 </main>
 <!-- BEGIN: Logic Scripts -->
 <script data-purpose="stepper-logic">
@@ -351,32 +428,76 @@
     }
 
     // 1. Búsqueda de paciente (Aún requiere un pequeño fetch para no recargar la página en el paso 1)
-    async function searchPatient() {
-        const rut = document.getElementById('rut-search').value;
-        if (!rut) return;
+// Funciones del Modal
+function openModal(rut) {
+    document.getElementById('modal-rut').value = rut;
+    document.getElementById('modal-paciente').classList.remove('hidden');
+}
 
-        try {
-            const response = await fetch(`/api/get_paciente/?rut=${rut}`); // Necesitas esta mini-view que retorne JSON
-            const data = await response.json();
+function closeModal() {
+    document.getElementById('modal-paciente').classList.add('hidden');
+}
 
-            if (data.id) {
-                document.getElementById('patient-card').classList.remove('hidden');
-                document.getElementById('hidden-paciente-id').value = data.id; // ID para Django
-                document.getElementById('preview-name').innerText = data.nombre;
+// Modificar tu función searchPatient existente
+async function searchPatient() {
+    const rut = document.getElementById('rut-search').value;
+    if (!rut) return;
 
-                // Actualizar textos del card
-                document.querySelector('#patient-card h3').innerText = data.nombre;
+    try {
+        const response = await fetch(`/api/get_paciente/?rut=${rut}`);
+        const data = await response.json();
 
-                const nextBtn = document.getElementById('next-1');
-                nextBtn.disabled = false;
-                nextBtn.classList.replace('bg-slate-100', 'bg-primary');
-                nextBtn.classList.replace('text-slate-400', 'text-white');
-                nextBtn.classList.remove('cursor-not-allowed');
+        if (response.ok && data.id) {
+            actualizarUIConPaciente(data);
+        } else {
+            // Si el backend responde 404
+            if(confirm("Paciente no encontrado. ¿Deseas registrarlo ahora?")) {
+                openModal(rut);
             }
-        } catch (e) {
-            alert("Paciente no encontrado");
         }
+    } catch (e) {
+        console.error("Error:", e);
     }
+}
+
+// Nueva función para guardar el paciente vía AJAX
+document.getElementById('form-registro-rapido').onsubmit = async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    try {
+        const response = await fetch('/api/crear_paciente_ajax/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            closeModal();
+            actualizarUIConPaciente(data.paciente); // Selecciona al paciente recién creado
+            alert("Paciente creado y seleccionado");
+        }
+    } catch (error) {
+        alert("Error al crear paciente");
+    }
+};
+
+function actualizarUIConPaciente(paciente) {
+    document.getElementById('patient-card').classList.remove('hidden');
+    document.getElementById('hidden-paciente-id').value = paciente.id;
+    document.getElementById('preview-name').innerText = paciente.nombre;
+    document.querySelector('#patient-card h3').innerText = paciente.nombre;
+    
+    // Activar botón siguiente
+    const nextBtn = document.getElementById('next-1');
+    nextBtn.disabled = false;
+    nextBtn.classList.replace('bg-slate-100', 'bg-primary');
+    nextBtn.classList.replace('text-slate-400', 'text-white');
+    nextBtn.classList.remove('cursor-not-allowed');
+}
 
     // 2. Selección de Activo
     function selectAsset(element, name, id) {
@@ -388,7 +509,7 @@
         // Marcar seleccionado
         element.classList.add('ring-4', 'ring-primary', 'border-primary');
 
-        // Guardar datos en campos ocultos y preview
+        // IMPORTANTE: Guardar el ID real en el input oculto
         document.getElementById('hidden-activo-id').value = id;
         document.getElementById('preview-asset').innerText = name;
 

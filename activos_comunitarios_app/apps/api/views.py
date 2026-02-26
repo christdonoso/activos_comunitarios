@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from ..comunity_assets.models import ComunityAsset
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from ..social_recipe.models import Paciente
 # Create your views here.
 
@@ -50,7 +50,7 @@ def get_assets_by_category(request):
 
 def get_paciente(request):
     rut = request.GET.get('rut')
-    print(rut)
+    print(request.path)
     try:
         p = Paciente.objects.get(rut=rut)
         return JsonResponse({

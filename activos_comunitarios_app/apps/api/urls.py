@@ -20,8 +20,7 @@ from apps.api import views
 
 
 urlpatterns = [
-    path('get_all_valid_assets', views.get_all_valid_assets),
     path('get_paciente/', views.get_paciente),
-
+    path('get_all_valid_assets', views.get_all_valid_assets),
     path('get_assets_by_category',views.get_assets_by_category, name='get_assets_by_category'),
 ]
