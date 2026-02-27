@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<style>
+    .leaflet-draw-tooltip {
+        background: rgba(30, 41, 59, 0.9) !important;
+        /* Slate 800 */
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        font-family: 'Public Sans', sans-serif !important;
+        border-radius: 8px !important;
+        padding: 4px 10px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+    }
+
+    .leaflet-draw-tooltip-subtext {
+        color: #cbd5e1 !important;
+        /* Slate 300 */
+    }
+
+    .leaflet-draw-tooltip:before {
+        border-right-color: rgba(30, 41, 59, 0.9) !important;
+    }
+</style>
+
+<main class="relative w-full h-screen bg-slate-100 overflow-hidden font-sans">
+
+    <div id="map-editor" class="absolute inset-0 z-0"></div>
+
+    <div class="absolute top-6 left-6 z-[1000] flex items-center gap-4">
+        <div
+            class="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-white flex items-center gap-3">
+            <div
+                class="size-10 bg-mais-blue rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                <span class="material-symbols-outlined">map</span>
+            </div>
+            <div>
+                <h1 class="text-sm font-black text-slate-800 uppercase tracking-tighter">Territorialización</h1>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Gestión de Sectores MAIS</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="absolute top-6 right-6 z-[1000] w-72 flex flex-col gap-4">
+
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-slate-100 p-5 space-y-5">
+            <div>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">1. Color del
+                    Sector</label>
+                <div class="grid grid-cols-5 gap-2" id="color-palette">
+                    <button onclick="setSectorColor('#3b82f6', this)"
+                        class="size-8 rounded-full bg-blue-500 ring-offset-2 transition-all hover:scale-110 active-color-ring"></button>
+                    <button onclick="setSectorColor('#ef4444', this)"
+                        class="size-8 rounded-full bg-red-500 ring-offset-2 transition-all hover:scale-110"></button>
+                    <button onclick="setSectorColor('#10b981', this)"
+                        class="size-8 rounded-full bg-emerald-500 ring-offset-2 transition-all hover:scale-110"></button>
+                    <button onclick="setSectorColor('#f59e0b', this)"
+                        class="size-8 rounded-full bg-amber-500 ring-offset-2 transition-all hover:scale-110"></button>
+                    <div class="relative size-8 rounded-full overflow-hidden border border-slate-200">
+                        <input type="color" id="custom-color" class="absolute inset-[-5px] cursor-pointer">
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">2. Datos del
+                    Territorio</label>
+                <input type="text" id="sector-name" placeholder="Nombre (Ej: Sector Azul)"
+                    class="w-full px-4 py-2.5 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-mais-blue transition-all">
+                <input type="number" id="poblacion" placeholder="Población estimada"
+                    class="w-full px-4 py-2.5 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-mais-blue transition-all">
+            </div>
+
+            <div class="pt-2">
+                <button id="btn-draw" onclick="startDrawing()"
+                    class="w-full py-3 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-mais-blue transition-all shadow-xl shadow-slate-200">
+                    <span class="material-symbols-outlined text-sm">edit_square</span>
+                    Dibujar en Mapa
+                </button>
+                
+
+                <button id="btn-save" onclick="saveSector()" disabled
+                    class="w-full py-3 mt-2 bg-emerald-500 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hidden items-center justify-center gap-2 shadow-xl shadow-emerald-100">
+                    <span class="material-symbols-outlined text-sm">save</span>
+                    Guardar Sector
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-slate-100 p-5">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Sectores Guardados</h3>
+            <div class="space-y-2 max-h-48 overflow-y-auto pr-2" id="sectors-list">
+                <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="size-3 rounded-full bg-blue-500"></div>
+                        <span class="text-xs font-bold text-slate-700">Sector Azul</span>
+                    </div>
+                    <button class="text-slate-300 hover:text-red-500 transition-colors">
+                        <span class="material-symbols-outlined text-sm">delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
+        <div id="status-hint"
+            class="bg-slate-900/80 backdrop-blur px-6 py-2.5 rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center gap-3 shadow-2xl border border-white/10">
+            <span class="relative flex h-2 w-2">
+                <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            Listo para territorializar
+        </div>
+    </div>
+
+</main>
+
+<style>
+    .active-color-ring {
+        ring-width: 2px;
+        --tw-ring-color: #137fec;
+        transform: scale(1.1);
+    }
+
+    #map-editor {
+        cursor: crosshair !important;
+    }
+
+    /* Estilo personalizado para el dibujo en Leaflet */
+    .leaflet-draw-guides {
+        display: none;
+    }
+</style>
+
+<script>
+    // Configuración de textos en español para Leaflet.draw
+    L.drawLocal.draw.toolbar.buttons.polygon = 'Dibujar un sector territorial';
+    L.drawLocal.draw.toolbar.actions.title = 'Cancelar dibujo';
+    L.drawLocal.draw.toolbar.actions.text = 'Cancelar';
+    L.drawLocal.draw.toolbar.undo.title = 'Borrar último punto';
+    L.drawLocal.draw.toolbar.undo.text = 'Borrar último punto';
+
+    L.drawLocal.draw.handlers.polygon.tooltip.start = 'Haz clic para empezar a delimitar el sector.';
+    L.drawLocal.draw.handlers.polygon.tooltip.cont = 'Haz clic para continuar dibujando el área.';
+    L.drawLocal.draw.handlers.polygon.tooltip.end = 'Haz clic en el primer punto para cerrar el sector.';
+    class TerritoryDesigner {
+        constructor(mapId) {
+            // Verificamos que Leaflet esté cargado
+            if (typeof L === 'undefined') {
+                console.error("Leaflet no está cargado");
+                return;
+            }
+
+            this.map = L.map(mapId).setView([-33.012, -71.543], 14);
+            this.drawnItems = new L.FeatureGroup().addTo(this.map);
+            this.selectedColor = '#3b82f6';
+            this.activePolygon = null;
+
+            this.initMap();
+            this.initDrawControl();
+            // Se eliminó setupEventListeners() porque no estaba definido
+        }
+
+        initMap() {
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(this.map);
+        }
+
+        initDrawControl() {
+            // 1. Configuramos el modo edición para los polígonos dibujados
+            this.editHandler = new L.EditToolbar.Edit(this.map, {
+                featureGroup: this.drawnItems,
+                selectedPathOptions: {
+                    dashArray: '10, 10',
+                    fillOpacity: 0.1
+                }
+            });
+
+            this.drawHandler = new L.Draw.Polygon(this.map, {
+                // ... (tu configuración anterior)
+            });
+
+            this.map.on(L.Draw.Event.CREATED, (e) => {
+                const layer = e.layer;
+                this.drawnItems.addLayer(layer);
+                this.activePolygon = layer;
+
+                // Al terminar de dibujar, habilitamos los botones de acción
+                document.getElementById('btn-save').classList.replace('hidden', 'flex');
+                document.getElementById('btn-save').disabled = false;
+
+                // Agregamos un botón de "Editar" dinámicamente o lo habilitamos
+                this.updateStatus('Sector creado. Puedes arrastrar los puntos para moverlos.');
+            });
+        }
+
+        // Nueva función para habilitar el modo "Mover puntos"
+        toggleEdit() {
+            if (this.editHandler.enabled()) {
+                this.editHandler.disable();
+                this.updateStatus('Edición finalizada.');
+            } else {
+                this.editHandler.enable();
+                this.updateStatus('Arrastra los puntos blancos para moverlos.');
+            }
+        }
+
+        setColor(color, element) {
+            this.selectedColor = color;
+            document.querySelectorAll('#color-palette button').forEach(btn =>
+                btn.classList.remove('active-color-ring')
+            );
+            if (element) element.classList.add('active-color-ring');
+
+            this.drawHandler.setOptions({
+                shapeOptions: { color: this.selectedColor }
+            });
+
+            if (this.activePolygon) {
+                this.activePolygon.setStyle({ color: this.selectedColor, fillColor: this.selectedColor });
+            }
+        }
+
+        startDrawing() {
+            this.drawnItems.clearLayers();
+            this.activePolygon = null;
+            this.drawHandler.enable();
+            this.updateStatus('Haz clic en el mapa para empezar a dibujar...');
+        }
+
+        updateStatus(text) {
+            const hint = document.getElementById('status-hint');
+            hint.innerHTML = `<span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span></span> ${text}`;
+        }
+
+        async saveSector() {
+            if (!this.activePolygon) return;
+            const name = document.getElementById('sector-name').value;
+            const poblacion = document.getElementById('poblacion').value;
+            const coordinates = this.activePolygon.getLatLngs()[0].map(p => [p.lat, p.lng]);
+
+            const payload = {
+                nombre: name || 'Sector sin nombre',
+                poblacion: poblacion || 0,
+                color: this.selectedColor,
+                geojson: coordinates
+            };
+
+            console.log('Datos listos para enviar:', payload);
+            this.updateStatus('Sector guardado (simulado)');
+            alert("Sector '" + payload.nombre + "' capturado con éxito. Revisa la consola (F12).");
+        }
+    }
+
+    // Inicialización segura
+    document.addEventListener('DOMContentLoaded', () => {
+        window.designer = new TerritoryDesigner('map-editor');
+    });
+
+    // Puentes para los botones
+    function setSectorColor(color, el) { window.designer.setColor(color, el); }
+    function startDrawing() { window.designer.startDrawing(); }
+    function saveSector() { window.designer.saveSector(); }
+    function toggleEditMode() { window.designer.toggleEdit(); }
+</script>
+{% endblock %}

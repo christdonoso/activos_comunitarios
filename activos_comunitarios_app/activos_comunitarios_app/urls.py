@@ -28,6 +28,7 @@ urlpatterns = [
     path('assets_display/', include('apps.assets_display.urls')),
     path('comunity_assets/', include('apps.comunity_assets.urls')),
     path('social_recipe/', include('apps.social_recipe.urls')),
+    path('sectorization/', include('apps.sectorization.urls')),
     path('validate_assets/', include('apps.validate_assets.urls')),
     path('users/', include('apps.users.urls')),
 

@@ -63,6 +63,13 @@
                     <p class="text-sm font-medium">Validar Activo Comunitario</p>
                 </a>
 
+                <a href="{% url 'create_sector' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'create_sector' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
+                    <span class="material-symbols-outlined">approval</span>
+                    <p class="text-sm font-medium">Crear Sectorizacion</p>
+                </a>
+
                 <a href="{% url 'manage_users' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
                {% if current == 'manage_users' %} active-nav-item
                {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">

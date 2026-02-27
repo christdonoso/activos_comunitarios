@@ -53,7 +53,8 @@ LOCAL_APPS = [
     'apps.assets_display',
     'apps.validate_assets',
     'apps.home',
-    'apps.social_recipe'
+    'apps.social_recipe',
+    'apps.sectorization'
 ]
 
 INSTALLED_APPS = DJAGNGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
