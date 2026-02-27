@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 from apps.users.models import Usuario
+from apps.social_recipe.models import Paciente
 
 from utilities import tools
 

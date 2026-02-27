@@ -1,7 +1,8 @@
-from django.shortcuts import render
 from ..comunity_assets.models import ComunityAsset
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from ..social_recipe.models import Paciente
+
+from utilities import tools
 # Create your views here.
 
 
@@ -19,7 +20,6 @@ def get_all_valid_assets(request):
         }
         for asset in assets_db
     ]
-    print(assets_list)
     return JsonResponse({'assets': assets_list})
 
 
@@ -47,18 +47,16 @@ def get_assets_by_category(request):
     return JsonResponse({'assets': assets_list})
 
 
-
 def get_paciente(request):
-    rut = request.GET.get('rut')
-    print(request.path)
     try:
+        rut = request.GET.get('rut')
         p = Paciente.objects.get(rut=rut)
         return JsonResponse({
             'success': True,
             'id': p.id,
             'nombre': p.nombre,
             'rut': p.rut,
-            'edad': 67, # Aquí podrías calcular la edad real con la fecha de nacimiento
+            'edad': tools.calcular_edad(p.fecha_nacimiento), # Aquí podrías calcular la edad real con la fecha de nacimiento
             'sector': p.sector,
             'direccion': p.direccion
         })
