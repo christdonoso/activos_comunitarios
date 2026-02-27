@@ -29,6 +29,22 @@
     }
 </script>
 <style data-purpose="custom-transitions">
+    /* Quitar los bordes redondeados feos de Leaflet y usar los de MAIS */
+    .custom-mais-popup .leaflet-popup-content-wrapper {
+        border-radius: 1rem !important;
+        padding: 0 !important;
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+    }
+
+    .custom-mais-popup .leaflet-popup-content {
+        margin: 12px !important;
+        width: 240px !important;
+    }
+
+    .custom-mais-popup .leaflet-popup-tip {
+        background: white;
+    }
+
     .step-content {
         display: none;
         animation: fadeIn 0.4s ease-out;
@@ -64,28 +80,31 @@
     {% if messages %}
     <div class="">
         {% for message in messages %}
-        <div
-            class="group relative overflow-hidden p-4 rounded-2xl mb-4 flex items-center justify-between border shadow-sm transition-all duration-300 animate-fadeIn
+        <div class="group relative overflow-hidden p-4 rounded-2xl mb-4 flex items-center justify-between border shadow-sm transition-all duration-300 animate-fadeIn
             {% if message.tags == 'success' %}
                 bg-emerald-50/50 text-emerald-800 border-emerald-100 border-l-4 border-l-emerald-500
             {% else %}
                 bg-rose-50/50 text-rose-800 border-rose-100 border-l-4 border-l-rose-500
             {% endif %}">
-            
+
             <div class="flex items-center gap-4">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center 
+                <div
+                    class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center 
                     {% if message.tags == 'success' %} bg-emerald-100 text-emerald-600 {% else %} bg-rose-100 text-rose-600 {% endif %}">
                     {% if message.tags == 'success' %}
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
                     {% else %}
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
                     {% endif %}
                 </div>
-                
+
                 <div>
                     <p class="text-sm font-semibold leading-none mb-1 capitalize">
                         {% if message.tags == 'success' %}¡Éxito!{% else %}Atención{% endif %}
@@ -94,11 +113,13 @@
                 </div>
             </div>
 
-            <button onclick="this.closest('.animate-fadeIn').style.opacity='0'; setTimeout(() => this.closest('.animate-fadeIn').remove(), 300)"
+            <button
+                onclick="this.closest('.animate-fadeIn').style.opacity='0'; setTimeout(() => this.closest('.animate-fadeIn').remove(), 300)"
                 class="p-2 rounded-lg transition-colors 
                 {% if message.tags == 'success' %} hover:bg-emerald-100 text-emerald-400 hover:text-emerald-600 
                 {% else %} hover:bg-rose-100 text-rose-400 hover:text-rose-600 {% endif %}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -342,13 +363,40 @@
                                         </div>
                                     </div>
                                     <div
-                                        class="bg-white p-3 rounded-lg border border-slate-200 flex flex-col items-center gap-2">
-                                        <img alt="QR Link" class="w-24 h-24"
-                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtwZvHUfRnk1zEE2tIdQZKvwZXM0uZtAplugUYWlgZXHFwPj7_aZyp8vhg0fIKB7fWMK_mAAdBjURUKboiSilxS_KrAXmCUXawy_ZtlaEpOv72rGdDPWPbCtHmg1NSv3x2yfaW2IW5DD_JwAKDn_Eh-RGnvzgV1E9rnFj0CmO3S0cQwxBtCnvH7PMzTiX2POkxNG0SXOLb3bfw_hNNSJNfIYqEC1ObfbbMF4gkte9m7153XcTELdUWF6MzTZiE66Hj0BDpBay8Wr8" />
-                                        <p
-                                            class="text-[8px] text-slate-400 text-center uppercase leading-tight font-medium">
-                                            Escanee para ver
-                                            dirección y contacto del activo</p>
+                                        class="mt-4 p-4 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 group/pdf relative">
+                                        <div class="flex flex-col items-center gap-2">
+                                            <div
+                                                class="relative w-16 h-20 bg-white shadow-sm border border-slate-200 rounded-sm flex flex-col p-2 overflow-hidden group-hover/pdf:shadow-md transition-shadow">
+                                                <div class="w-full h-1.5 bg-primary/20 rounded-full mb-1"></div>
+                                                <div class="w-3/4 h-1 bg-slate-100 rounded-full mb-1"></div>
+                                                <div class="w-full h-1 bg-slate-100 rounded-full mb-3"></div>
+
+                                                <div class="w-full h-1 bg-slate-50 rounded-full mb-1"></div>
+                                                <div class="w-full h-1 bg-slate-50 rounded-full mb-1"></div>
+
+                                                <div
+                                                    class="absolute bottom-1 right-1 bg-rose-500 text-[6px] text-white px-1 py-0.5 rounded font-black">
+                                                    PDF
+                                                </div>
+
+                                                <div
+                                                    class="absolute inset-0 bg-primary/5 opacity-0 group-hover/pdf:opacity-100 transition-opacity">
+                                                </div>
+                                            </div>
+
+                                            <div class="text-center">
+                                                <p
+                                                    class="text-[9px] font-black text-slate-500 uppercase tracking-tighter">
+                                                    Formato de Impresión</p>
+                                                <p class="text-[8px] text-slate-400 leading-tight">Documento oficial A4
+                                                    con<br>timbre y firma digital</p>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="absolute -top-2 -right-2 bg-emerald-500 text-white rounded-full p-1 shadow-lg opacity-0 group-hover/pdf:opacity-100 transition-all transform translate-y-2 group-hover/pdf:translate-y-0">
+                                            <span class="material-symbols-outlined text-xs">download</span>
+                                        </div>
                                     </div>
                                     <div class="mt-6 text-center">
                                         <p class="text-[10px] text-slate-400">Emitido por: Dr. Ricardo Lagos<br />CESFAM
@@ -364,83 +412,93 @@
         </form>
     </div>
 
-<div id="modal-paciente"
-    class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6">
-    <div class="p-5 bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden transform transition-all animate-fadeIn">
+    <div id="modal-paciente"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6">
+        <div
+            class="p-5 bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden transform transition-all animate-fadeIn">
 
-        <div class="bg-white ">
-            
-            <div class="px-8 py-6 border-b border-slate-100 bg-white flex justify-between items-center ">
-                <div>
-                    <h3 class="text-2xl font-extrabold text-slate-800 tracking-tight">Nuevo Paciente</h3>
-                    <p class="text-sm text-slate-500">Ingresa los datos básicos para el registro.</p>
+            <div class="bg-white ">
+
+                <div class="px-8 py-6 border-b border-slate-100 bg-white flex justify-between items-center ">
+                    <div>
+                        <h3 class="text-2xl font-extrabold text-slate-800 tracking-tight">Nuevo Paciente</h3>
+                        <p class="text-sm text-slate-500">Ingresa los datos básicos para el registro.</p>
+                    </div>
+                    <button onclick="closeModal()"
+                        class="p-2 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
-                <button onclick="closeModal()" 
-                    class="p-2 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+
+                <form id="form-registro-rapido" class="p-8 space-y-6">
+                    {% csrf_token %}
+
+                    <div class="space-y-5">
+                        <div class="group">
+                            <label
+                                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">RUT</label>
+                            <input type="text" name="rut" id="modal-rut"
+                                class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
+                                placeholder="12.345.678-9" required>
+                        </div>
+
+                        <div class="group">
+                            <label
+                                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Nombre
+                                Completo</label>
+                            <input type="text" name="nombre"
+                                class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
+                                placeholder="Ej: Juan Pérez" required>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="group">
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">F.
+                                    Nacimiento</label>
+                                <input type="date" name="fecha_nacimiento"
+                                    class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none text-slate-600"
+                                    required>
+                            </div>
+                            <div class="group">
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Sector</label>
+                                <select name="sector"
+                                    class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none text-slate-600 appearance-none">
+                                    <option value="Santa Julia">Santa Julia</option>
+                                    <option value="Achupallas">Achupallas</option>
+                                    <option value="Miraflores">Miraflores</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <label
+                                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Dirección</label>
+                            <input type="text" name="direccion"
+                                class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
+                                placeholder="Calle #123" required>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 flex flex-col sm:flex-row gap-3">
+                        <button type="button" onclick="closeModal()"
+                            class="order-2 sm:order-1 flex-1 px-6 py-3.5 text-slate-500 font-semibold hover:bg-slate-100 rounded-2xl transition-all">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                            class="order-1 sm:order-2 flex-[1.5] px-6 py-3.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
+                            Guardar y Seleccionar
+                        </button>
+                    </div>
+                </form>
             </div>
-    
-            <form id="form-registro-rapido" class="p-8 space-y-6">
-                {% csrf_token %}
-                
-                <div class="space-y-5">
-                    <div class="group">
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">RUT</label>
-                        <input type="text" name="rut" id="modal-rut"
-                            class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none" 
-                            placeholder="12.345.678-9" required>
-                    </div>
-    
-                    <div class="group">
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Nombre Completo</label>
-                        <input type="text" name="nombre"
-                            class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
-                            placeholder="Ej: Juan Pérez" required>
-                    </div>
-    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">F. Nacimiento</label>
-                            <input type="date" name="fecha_nacimiento"
-                                class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none text-slate-600"
-                                required>
-                        </div>
-                        <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Sector</label>
-                            <select name="sector"
-                                class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none text-slate-600 appearance-none">
-                                <option value="Santa Julia">Santa Julia</option>
-                                <option value="Achupallas">Achupallas</option>
-                                <option value="Miraflores">Miraflores</option>
-                            </select>
-                        </div>
-                    </div>
-    
-                    <div class="group">
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Dirección</label>
-                        <input type="text" name="direccion"
-                            class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
-                            placeholder="Calle #123" required>
-                    </div>
-                </div>
-    
-                <div class="pt-6 flex flex-col sm:flex-row gap-3">
-                    <button type="button" onclick="closeModal()"
-                        class="order-2 sm:order-1 flex-1 px-6 py-3.5 text-slate-500 font-semibold hover:bg-slate-100 rounded-2xl transition-all">
-                        Cancelar
-                    </button>
-                    <button type="submit"
-                        class="order-1 sm:order-2 flex-[1.5] px-6 py-3.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
-                        Guardar y Seleccionar
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
 
 </main>
 <script data-purpose="stepper-logic">
@@ -506,16 +564,16 @@
     function actualizarUIConPaciente(paciente) {
         const card = document.getElementById('patient-card');
         card.classList.remove('hidden');
-        
+
         // Llenar datos en la tarjeta visual
         document.getElementById('hidden-paciente-id').value = paciente.id;
         document.getElementById('preview-name').innerText = paciente.nombre;
         card.querySelector('h3').innerText = paciente.nombre;
         card.querySelector('p').innerText = `RUT: ${paciente.rut}`;
-        
+
         // Llenar detalles (Edad, Sector, Dirección)
         const details = card.querySelectorAll('.text-slate-700');
-        if(details.length >= 3) {
+        if (details.length >= 3) {
             details[0].innerText = (paciente.edad || '??') + " años";
             details[1].innerText = paciente.sector || "No asignado";
             details[2].innerText = paciente.direccion || "Sin dirección";

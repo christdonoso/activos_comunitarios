@@ -4,6 +4,7 @@ from ..social_recipe.models import SocialRecipe, Paciente
 from ..users.models import Usuario
 from ..comunity_assets.models import ComunityAsset
 
+
 # Create your views here.
 
 def create_recipe(request):
@@ -40,3 +41,4 @@ def create_recipe(request):
     activos = ComunityAsset.objects.filter(estado='aprobado')
 
     return render(request, 'social_recipe/create_recipe.html', {'activos': activos })
+

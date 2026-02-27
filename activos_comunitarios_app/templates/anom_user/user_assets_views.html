@@ -25,6 +25,22 @@
         },
     }
 </script>
+<style>
+    /* Efecto de pulso para el resaltado de la receta */
+@keyframes map-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.animate-pulse {
+    animation: map-pulse 2s infinite ease-out;
+}
+
+/* Evitar que el marcador de la receta sea tapado por otros */
+.z-\[1000\] {
+    z-index: 1000 !important;
+}
+</style>
 
 <main class="relative flex-1 bg-slate-200 overflow-hidden">
 
@@ -147,6 +163,8 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         const miMapa = new CommunityMap('map');
+
+        window.miMapa = miMapa; // Refuerzo para acceso global
         const buscador = new MapSearch(miMapa, 'search-input');
 
     });

@@ -12,11 +12,11 @@ class CommunityMap {
 
         //botones de control del mapa 
         this.controls = {
-                    btnZoomIn: options.btnZoomIn || 'btn-zoom-in',
-                    btnZoomOut: options.btnZoomOut || 'btn-zoom-out',
-                    btnLocate: options.btnLocate || 'btn-locate',
-                    btnLayer: options.btnLayer || 'btn-layer-toggle'
-                };
+            btnZoomIn: options.btnZoomIn || 'btn-zoom-in',
+            btnZoomOut: options.btnZoomOut || 'btn-zoom-out',
+            btnLocate: options.btnLocate || 'btn-locate',
+            btnLayer: options.btnLayer || 'btn-layer-toggle'
+        };
         // Diccionarios internos para que siempre funcionen los iconos
         this.categoryColors = {
             'espacio_publico': 'bg-emerald-500',
@@ -41,7 +41,7 @@ class CommunityMap {
         this.markersLayer = L.layerGroup();
         this.tilesLimpio = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CartoDB' });
         this.tilesNormal = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' });
-        
+
         this.init();
     }
 
@@ -55,7 +55,7 @@ class CommunityMap {
         }).setView(this.config.center, this.config.zoom);
 
         this.markersLayer.addTo(this.map);
-        
+
         this._bindControls();
         this._setupLocationEvents();
 
@@ -73,7 +73,7 @@ class CommunityMap {
         if (bIn) bIn.onclick = () => this.map.zoomIn();
         if (bOut) bOut.onclick = () => this.map.zoomOut();
         if (bLoc) bLoc.onclick = () => this.map.locate({ setView: true, maxZoom: 16 });
-        
+
         if (bLay) {
             bLay.onclick = () => {
                 const esLimpio = this.toggleLayer();
@@ -98,12 +98,12 @@ class CommunityMap {
     zoomIn() { this.map.zoomIn(); }
     zoomOut() { this.map.zoomOut(); }
     locate() {
-            this.map.locate({ 
-                setView: true, 
-                maxZoom: 16,
-                enableHighAccuracy: true 
-            });
-        }
+        this.map.locate({
+            setView: true,
+            maxZoom: 16,
+            enableHighAccuracy: true
+        });
+    }
     //cambio de capa
     toggleLayer() {
         // 1. Invertimos el estado inmediatamente
@@ -129,9 +129,9 @@ class CommunityMap {
         try {
             const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
             const data = await response.json();
-            
+
             this.assetsData = data.assets; // Guardamos para el buscador
-            
+
             this.renderMarkers(data.assets);
         } catch (e) { console.error("Error:", e); }
     }
@@ -141,17 +141,61 @@ class CommunityMap {
         assets.forEach(asset => {
             const iconName = this.categoryIcons[asset.category] || 'location_on';
             const bgColor = this.categoryColors[asset.category] || 'bg-primary';
+            // Dentro de renderMarkers en CommunityMap.js
+            const accessibilityIcons = `
+                <div class="flex gap-1 mt-2 border-t pt-2">
+                    ${asset.accesible_silla ? '<span class="material-symbols-outlined text-sm text-emerald-600">accessible</span>' : ''}
+                    ${asset.baño_accesible ? '<span class="material-symbols-outlined text-sm text-emerald-600">wc</span>' : ''}
+                    ${asset.estacionamiento ? '<span class="material-symbols-outlined text-sm text-emerald-600">local_parking</span>' : ''}
+                </div>
+            `;
 
             const customIcon = L.divIcon({
                 className: 'custom-marker',
                 html: `<div class="size-10 ${bgColor} rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white"><span class="material-symbols-outlined">${iconName}</span></div>`,
                 iconSize: [40, 40],
                 iconAnchor: [20, 40],
+                popupAnchor: [0, -45]
             });
+
+            // DISEÑO ATRACTIVO DEL POPUP
+            const popupContent = `
+            <div class="p-1 max-w-[240px] font-display">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="size-8 ${bgColor} rounded-lg flex items-center justify-center text-white shadow-sm">
+                        <span class="material-symbols-outlined text-sm">${iconName}</span>
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">${asset.type_display || 'Activo Comunitario'}</span>
+                </div>
+                
+                <h3 class="text-sm font-black text-slate-800 mb-1 leading-tight">${asset.name}</h3>
+                <p class="text-[11px] text-slate-600 leading-relaxed mb-3">${asset.description || 'Sin descripción disponible.'}</p>
+                
+                <div class="flex flex-col gap-1.5 border-t border-slate-100 pt-3">
+                    <div class="flex items-center gap-2 text-[10px] font-bold text-slate-500">
+                        <span class="material-symbols-outlined text-[14px]">schedule</span>
+                        ${asset.horario || 'Horario a consultar'}
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] font-bold text-slate-500">
+                        <span class="material-symbols-outlined text-[14px]">near_me</span>
+                        ${asset.direccion}
+                    </div>
+                </div>
+
+                <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${asset.lat},${asset.lng}')" 
+                    class="w-full mt-3 py-2 bg-slate-900 text-white text-[10px] font-black rounded-lg hover:bg-primary transition-all flex items-center justify-center gap-2">
+                    CÓMO LLEGAR
+                    <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                </button>
+            </div>
+        `;
 
             L.marker([asset.lat, asset.lng], { icon: customIcon })
                 .addTo(this.markersLayer)
-                .bindPopup(`<b>${asset.name}</b><br>${asset.description}`);
+                .bindPopup(popupContent, {
+                    maxWidth: 280,
+                    className: 'custom-mais-popup'
+                });
         });
     }
 
@@ -186,13 +230,54 @@ class CommunityMap {
                         popupAnchor: [0, -15]
                     })
                 }).addTo(this.map);
-                
+
                 this.userMarker.bindPopup("Estás aquí").openPopup();
             }
         });
 
         this.map.on('locationerror', (e) => {
             alert("No pudimos obtener tu ubicación. Revisa los permisos de tu navegador.");
+        });
+    }
+    // Método para enfocar un activo específico (Receta Social)
+    // En js/map_handler.js, dentro de la clase CommunityMap
+
+    focusOnAsset(lat, lng, name) {
+        if (!this.map) return;
+
+        // 1. Zoom suave
+        this.map.flyTo([lat, lng], 16, { animate: true, duration: 1.5 });
+
+        // 2. --- NUEVA ESTRATEGIA: CÍRCULO DE BIENVENIDA ---
+        // Limpiamos círculos anteriores si existen
+        if (this.welcomeCircle) {
+            this.map.removeLayer(this.welcomeCircle);
+        }
+
+        // Dibujamos el nuevo círculo
+        this.welcomeCircle = L.circle([lat, lng], {
+            color: '#137fec',      // Color Primary
+            fillColor: '#137fec',  // Relleno Primary
+            fillOpacity: 0.15,     // Muy suave
+            radius: 150            // Radio en metros
+        }).addTo(this.map);
+
+        // 3. Abrir Popup del marcador (Lógica que ya teníamos)
+        this.markersLayer.eachLayer((layer) => {
+            if (layer instanceof L.Marker) {
+                const latLng = layer.getLatLng();
+                if (Math.abs(latLng.lat - lat) < 0.0001 && Math.abs(latLng.lng - lng) < 0.0001) {
+                    layer.openPopup();
+                }
+            }
+        });
+
+        // Limpiar el círculo si se cancela la receta o se recarga
+        this.map.once('movestart', () => {
+            if (this.welcomeCircle) {
+                this.map.removeLayer(this.welcomeCircle);
+                this.welcomeCircle = null;
+            }
         });
     }
 }
