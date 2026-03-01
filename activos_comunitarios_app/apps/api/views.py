@@ -1,6 +1,7 @@
 from ..comunity_assets.models import ComunityAsset
 from django.http import JsonResponse
 from ..social_recipe.models import Paciente, SocialRecipe
+from ..sectorization.models import SectorTerritorial
 
 from utilities import tools
 # Create your views here.
@@ -127,3 +128,11 @@ def get_social_recipe(request):
             "success": False, 
             "message": "Error interno del servidor al procesar la solicitud."
         }, status=500)
+
+
+
+def get_all_sectors(request):
+    # Esta vista servirá para cargar los sectores al iniciar el mapa
+    perfil = request.user.usuario
+    sectores = SectorTerritorial.objects.filter(cesfam=perfil.cesfam).values('id', 'nombre', 'poblacion', 'color', 'geojson')
+    return JsonResponse(list(sectores), safe=False)

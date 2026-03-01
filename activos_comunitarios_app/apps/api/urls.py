@@ -24,4 +24,6 @@ urlpatterns = [
     path('get_all_valid_assets', views.get_all_valid_assets),
     path('get_social_recipe', views.get_social_recipe, name='get_social_recipe'),
     path('get_assets_by_category',views.get_assets_by_category, name='get_assets_by_category'),
+    path('get_all_sectors',views.get_all_sectors, name='get_all_sectors'),
+
 ]

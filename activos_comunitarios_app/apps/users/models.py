@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ..sectorization.models import Cesfam
 # Create your models here.
 
 
@@ -13,6 +14,7 @@ class Usuario(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cesfam = models.ForeignKey(Cesfam, on_delete=models.CASCADE, related_name='funcionarios', blank=True, null=True)
     fullname = models.CharField(max_length=50)
     rut = models.CharField(max_length=50)
     sexo = models.CharField(max_length=1, choices=[('F', 'Femenino'), ('M', 'Masculino'), ('O', 'Otro')], null=True, blank=True)
