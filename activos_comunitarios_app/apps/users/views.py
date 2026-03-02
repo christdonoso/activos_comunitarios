@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction, IntegrityError
+from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib import messages
 
 from apps.users.models import Usuario
 from apps.social_recipe.models import Paciente
+from apps.sectorization.models import SectorTerritorial
 
 from utilities import tools
 
@@ -35,7 +37,6 @@ def create_user(request):
             try:
                 with transaction.atomic():
                     # --- VALIDACIONES DE SERVIDOR ---
-                    
                     if not tools.validar_rut_chileno(rut):
                         raise ValueError("El RUT ingresado no es válido.")
 
@@ -48,7 +49,6 @@ def create_user(request):
                     if User.objects.filter(email=email).exists():
                         raise ValueError("Este correo electrónico ya está registrado.")
 
-                    # --- INSERCIÓN DE DATOS ---
                     nuevo_user = User.objects.create_user(
                         username=username,
                         password=password,
@@ -165,18 +165,48 @@ def toggle_user_status(request, user_id):
 
 def create_paciente(request):
     if request.method == 'POST':
-        # ... lógica para guardar ...
+
+        lat = request.POST.get('latitud')
+        lng = request.POST.get('longitud')
+
+        sector_detectado = "Fuera de Rango"
+
+        try:
+            cesfam_funcionario = request.user.usuario.cesfam
+        except AttributeError:
+            return JsonResponse({'success': False, 'message': 'Usuario no vinculado a un CESFAM'})
+
+        if lat and lng:
+            lat, lng = float(lat), float(lng)
+                    
+                    # 3. Traer solo los sectores de ESTE CESFAM
+            sectores = SectorTerritorial.objects.filter(cesfam=cesfam_funcionario)
+                    
+            for s in sectores:
+                        # El campo geojson ya es un objeto gracias a JSONField
+                poligono = s.geojson 
+                        
+                if poligono and tools.is_point_in_polygon(lat, lng, poligono):
+                    sector_detectado = s.nombre
+                    break
+
         p = Paciente.objects.create(
             rut=request.POST.get('rut'),
             nombre=request.POST.get('nombre'),
             fecha_nacimiento=request.POST.get('fecha_nacimiento'),
             direccion=request.POST.get('direccion'),
-            sector=request.POST.get('sector'),
+            sector=sector_detectado,
             telefono=request.POST.get('telefono'),
+            latitude=lat,  
+            longitude=lng,
         )
-        messages.success(request, "Paciente registrado correctamente.")
-        return redirect('create_recipe') # Vuelve a la receta
-
+        return JsonResponse({
+            'success': True,
+            'sector': sector_detectado,
+            'paciente_nombre': p.nombre,
+            'id': p.id
+        })
+    
     # Si es GET, capturamos el RUT de la URL si viene de la búsqueda fallida
     requested_rut = request.GET.get('rut', '')
     return render(request, 'user/create_paciente.html', {'requested_rut': requested_rut})

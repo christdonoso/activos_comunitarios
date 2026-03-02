@@ -74,6 +74,16 @@
         background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
         border: 2px dashed #cbd5e1;
     }
+
+    #mini-map {
+        cursor: crosshair;
+        z-index: 10;
+    }
+
+    /* Estilo para que el marcador de Leaflet combine con tu UI */
+    .custom-marker {
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    }
 </style>
 
 <main class="max-w-6xl mx-auto px-4 py-8">
@@ -179,6 +189,7 @@
                     <!-- Patient Card (Hidden initially) -->
                     <div class="hidden text-left bg-slate-50 border border-slate-200 rounded-xl p-6 mb-8 animate-fadeIn"
                         id="patient-card">
+
                         <div class="flex items-start gap-4">
                             <div
                                 class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 text-2xl font-bold">
@@ -320,7 +331,8 @@
                             </div>
                         </div>
                         <div class="flex justify-between mt-12 pt-6 border-t border-slate-100">
-                            <button class="px-6 py-2 text-slate-500 font-bold hover:text-slate-800 transition-colors"
+                            <button type="button"
+                                class="px-6 py-2 text-slate-500 font-bold hover:text-slate-800 transition-colors"
                                 onclick="goToStep(2)">← Volver</button>
                             <button type="submit"
                                 class="px-10 py-3 bg-primary text-white rounded-xl font-bold hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all" ">Emitir Receta Social</button>
@@ -413,29 +425,28 @@
     </div>
 
     <div id="modal-paciente"
-        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6">
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[1001] flex items-center justify-center p-4">
         <div
-            class="p-5 bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden transform transition-all animate-fadeIn">
+            class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden transform transition-all animate-fadeIn">
 
-            <div class="bg-white ">
-
-                <div class="px-8 py-6 border-b border-slate-100 bg-white flex justify-between items-center ">
-                    <div>
-                        <h3 class="text-2xl font-extrabold text-slate-800 tracking-tight">Nuevo Paciente</h3>
-                        <p class="text-sm text-slate-500">Ingresa los datos básicos para el registro.</p>
-                    </div>
-                    <button onclick="closeModal()"
-                        class="p-2 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+            <div class="px-8 py-4 border-b border-slate-100 flex justify-between items-center shrink-0">
+                <div>
+                    <h3 id="modal-title" class="text-xl font-extrabold text-slate-800 tracking-tight">Nuevo Paciente
+                    </h3>
                 </div>
+                <button type="button" onclick="closeModal()" class="p-2 rounded-full hover:bg-slate-100 text-slate-400">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
 
-                <form id="form-registro-rapido" class="p-8 space-y-6">
+            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+                <form id="form-registro-rapido" class="space-y-6">
                     {% csrf_token %}
+
+                    <input type="hidden" name="paciente_id" id="modal-paciente-id">
+
+                    <input type="hidden" name="latitud" id="modal-latitud">
+                    <input type="hidden" name="longitud" id="modal-longitud">
 
                     <div class="space-y-5">
                         <div class="group">
@@ -450,7 +461,7 @@
                             <label
                                 class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Nombre
                                 Completo</label>
-                            <input type="text" name="nombre"
+                            <input type="text" name="nombre" id="modal-nombre"
                                 class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
                                 placeholder="Ej: Juan Pérez" required>
                         </div>
@@ -460,15 +471,16 @@
                                 <label
                                     class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">F.
                                     Nacimiento</label>
-                                <input type="date" name="fecha_nacimiento"
+                                <input type="date" name="fecha_nacimiento" id="modal-fecha-nacimiento"
                                     class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none text-slate-600"
                                     required>
                             </div>
                             <div class="group">
                                 <label
                                     class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Sector</label>
-                                <select name="sector"
-                                    class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none text-slate-600 appearance-none">
+                                <select name="sector" id="modal-sector-select"
+                                    class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none text-slate-600 appearance-none pointer-events-none opacity-70">
+                                    <option value="">Auto-detectado...</option>
                                     <option value="Santa Julia">Santa Julia</option>
                                     <option value="Achupallas">Achupallas</option>
                                     <option value="Miraflores">Miraflores</option>
@@ -478,30 +490,187 @@
 
                         <div class="group">
                             <label
-                                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">Dirección</label>
-                            <input type="text" name="direccion"
-                                class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
-                                placeholder="Calle #123" required>
-                        </div>
-                    </div>
+                                class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Dirección
+                                y Ubicación</label>
+                            <div class="relative flex gap-2 mb-3">
+                                <input type="text" name="direccion" id="modal-direccion"
+                                    class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 text-sm outline-none focus:ring-2 focus:ring-blue-500/20"
+                                    placeholder="Calle #123">
+                                <button type="button" onclick="getCurrentLocation()"
+                                    class="px-4 bg-slate-100 rounded-2xl hover:bg-blue-50 text-slate-500 hover:text-blue-600 transition-colors">
+                                    <span class="material-symbols-outlined">my_location</span>
+                                </button>
+                            </div>
 
-                    <div class="pt-6 flex flex-col sm:flex-row gap-3">
-                        <button type="button" onclick="closeModal()"
-                            class="order-2 sm:order-1 flex-1 px-6 py-3.5 text-slate-500 font-semibold hover:bg-slate-100 rounded-2xl transition-all">
-                            Cancelar
-                        </button>
-                        <button type="submit"
-                            class="order-1 sm:order-2 flex-[1.5] px-6 py-3.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
-                            Guardar y Seleccionar
-                        </button>
+                            <div id="mini-map-container"
+                                class="rounded-2xl border border-slate-100 overflow-hidden h-44 w-full bg-slate-100 relative shadow-inner">
+                                <div id="mini-map" class="h-full w-full"></div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
+
+            <div class="px-8 py-4 bg-slate-50/50 border-t border-slate-100 flex gap-3 shrink-0">
+                <button type="button" onclick="closeModal()"
+                    class="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-100 rounded-2xl transition-all">Cancelar</button>
+                <button type="submit" form="form-registro-rapido" id="modal-submit-btn"
+                    class="flex-[1.5] py-3 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all">Guardar
+                    Paciente</button>
+            </div>
         </div>
     </div>
-
 </main>
+
 <script data-purpose="stepper-logic">
+
+    // --- VARIABLES GLOBALES DEL MAPA ---
+    let miniMap = null;
+    let miniMarker = null;
+
+    function initMiniMap() {
+        const mapContainer = document.getElementById('mini-map');
+        if (!mapContainer) return;
+
+        if (miniMap) {
+            setTimeout(() => { miniMap.invalidateSize(); }, 100);
+            return;
+        }
+
+        const coords = [-33.045, -71.443];
+
+        miniMap = L.map('mini-map', {
+            zoomControl: true,
+            attributionControl: false
+        }).setView(coords, 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(miniMap);
+
+        miniMarker = L.marker(coords, {
+            draggable: true
+        }).addTo(miniMap);
+
+        // --- NUEVO: Evento de Clic en el Mapa ---
+        miniMap.on('click', function (e) {
+            const newPos = e.latlng;
+
+            // Movemos el marcador al lugar del clic
+            miniMarker.setLatLng(newPos);
+
+            // Centramos suavemente el mapa en el nuevo punto
+            miniMap.panTo(newPos);
+
+            // Disparamos manualmente la actualización de dirección y coordenadas
+            updateLocationData(newPos.lat, newPos.lng);
+        });
+
+        // Evento al terminar de arrastrar (se mantiene)
+        miniMarker.on('dragend', function () {
+            const position = miniMarker.getLatLng();
+            updateLocationData(position.lat, position.lng);
+        });
+    }
+
+
+    async function updateLocationData(lat, lng) {
+        // 1. Guardar en los campos ocultos para Django
+        document.getElementById('modal-latitud').value = lat;
+        document.getElementById('modal-longitud').value = lng;
+
+        // 2. Buscar la dirección (Geocodificación Inversa)
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const data = await response.json();
+
+            if (data && data.address) {
+                const road = data.address.road || '';
+                const houseNumber = data.address.house_number || '';
+                const completeAddress = `${road} ${houseNumber}`.trim();
+
+                // Actualizar el input de texto del modal
+                if (completeAddress) {
+                    document.getElementById('modal-direccion').value = completeAddress;
+                }
+            }
+        } catch (error) {
+            console.error("Error al obtener la dirección:", error);
+        }
+    }
+
+    // --- GEOLOCALIZACIÓN ACTUAL ---
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                const newPos = [lat, lng];
+
+                miniMap.flyTo(newPos, 17);
+                miniMarker.setLatLng(newPos);
+                document.getElementById('modal-latitud').value = lat;
+                document.getElementById('modal-longitud').value = lng;
+            }, () => {
+                alert("No se pudo obtener la ubicación actual.");
+            });
+        }
+    }
+
+    // --- MANEJO DEL MODAL (UNIFICADO) ---
+    function openModal(rut = '') {
+        const modal = document.getElementById('modal-paciente');
+        const rutInput = document.getElementById('modal-rut');
+
+        if (rut) rutInput.value = rut;
+
+        modal.classList.remove('hidden');
+
+        // IMPORTANTE: Esperar a que el modal sea visible para iniciar el mapa
+        setTimeout(() => {
+            initMiniMap();
+            miniMap.invalidateSize();
+        }, 300);
+    }
+
+    function closeModal() {
+        document.getElementById('modal-paciente').classList.add('hidden');
+    }
+
+    document.getElementById('form-registro-rapido').onsubmit = async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const btnSubmit = document.getElementById('modal-submit-btn');
+        btnSubmit.disabled = true;
+
+        try {
+            const response = await fetch("{% url 'create_paciente' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                closeModal();
+                // Limpiamos el buscador y ejecutamos la búsqueda para que aparezca la card
+                document.getElementById('rut-search').value = formData.get('rut');
+                await searchPatient();
+
+                // Opcional: mostrar alerta de éxito
+                alert("Paciente " + data.paciente_nombre + " registrado en el sector " + data.sector);
+            } else {
+                alert("Error del servidor: " + data.message);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error de red al procesar el registro");
+        } finally {
+            btnSubmit.disabled = false;
+        }
+    };
+
     let currentStep = 1;
 
     // Navegación entre pasos
@@ -586,41 +755,6 @@
         nextBtn.classList.add('bg-primary', 'text-white');
     }
 
-    // --- REGISTRO DE PACIENTE (MODAL) ---
-    function openModal(rut) {
-        document.getElementById('modal-rut').value = rut;
-        document.getElementById('modal-paciente').classList.remove('hidden');
-    }
-
-    function closeModal() {
-        document.getElementById('modal-paciente').classList.add('hidden');
-    }
-
-    document.getElementById('form-registro-rapido').onsubmit = async function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-
-        try {
-            // Usamos la vista de creación que ya tienes
-            const response = await fetch("{% url 'create_paciente' %}", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            });
-
-            // Si tu vista actual redirige, lo ideal es que devuelva JSON. 
-            // Pero para que funcione con lo que tienes:
-            if (response.ok) {
-                // Forzamos una nueva búsqueda para obtener el ID recién creado
-                closeModal();
-                await searchPatient();
-            }
-        } catch (error) {
-            alert("Error al procesar el registro");
-        }
-    };
 
     // --- PASO 2: SELECCIÓN DE ACTIVO ---
     function selectAsset(element, name, id) {

@@ -13,9 +13,13 @@ class Paciente(models.Model):
     direccion = models.CharField(max_length=255)
     sector = models.CharField(max_length=100, blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(max_length=50, blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return self.nombre
+
 
 class SocialRecipe(models.Model):
     # Relaciones

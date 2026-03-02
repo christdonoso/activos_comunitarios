@@ -68,7 +68,6 @@ class ComunityAsset(models.Model):
     contacto_email = models.CharField(max_length=255, blank=True, null=True)
     contacto_fono = models.CharField(max_length=255, blank=True, null=True)
 
-
     # --- UBICACIÓN ---
     latitude = models.FloatField()
     longitude = models.FloatField()
