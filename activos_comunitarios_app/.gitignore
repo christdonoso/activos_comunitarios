@@ -28,6 +28,8 @@ secrets.json
 *.swp
 *.swo
 .DS_Store
+..DS_Store
+
 
 # --- Node/Frontend (Si llegas a usar Tailwind o NPM) ---
 node_modules/
