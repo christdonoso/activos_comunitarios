@@ -22,6 +22,7 @@ from apps.sectorization import views
 urlpatterns = [
     path('create_sector', views.create_sector, name='create_sector'),
     path('save_sector', views.save_sector, name='save_sector'),
+    path('create_cesfam', views.create_cesfam, name='create_cesfam'),
     path('update_sector/<int:id>', views.update_sector, name='update_sector'),
     path('delete_sector/<int:id>', views.delete_sector, name='delete_sector')
 ]

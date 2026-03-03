@@ -748,6 +748,20 @@
             details[2].innerText = paciente.direccion || "Sin dirección";
         }
 
+         if (paciente.sector_id) {
+            if (parseInt(paciente.sector_id) === parseInt(SECTOR_USUARIO_ID)) {
+                showSectorMessage(
+                    'success',
+                    `El paciente pertenece al mismo sector (${SECTOR_USUARIO_NOMBRE}).`
+                );
+            } else {
+                showSectorMessage(
+                    'warning',
+                    `El paciente pertenece al sector ${paciente.sector}, distinto al tuyo (${SECTOR_USUARIO_NOMBRE}).`
+                );
+            }
+        }
+
         // Habilitar botón "Siguiente"
         const nextBtn = document.getElementById('next-1');
         nextBtn.disabled = false;
@@ -776,6 +790,71 @@
     document.getElementById('health-goal').addEventListener('input', (e) => {
         document.getElementById('preview-goal').innerText = e.target.value || "Complete el objetivo...";
     });
+
+
+
+        // Pasamos el ID del sector del usuario logueado a una constante de JS
+    const SECTOR_USUARIO_ID = "{{ request.user.usuario.sector.id }}";
+    const SECTOR_USUARIO_NOMBRE = "{{ request.user.usuario.sector.nombre }}";
+
+// 1. Asegúrate de que esta función esté FUERA de cualquier DOMContentLoaded para que sea global
+window.closeAlert = function(button) {
+    const alertBox = button.closest('.animate-fadeIn');
+    if (!alertBox) return;
+
+    alertBox.style.transition = "all 0.3s ease";
+    alertBox.style.opacity = "0";
+    alertBox.style.transform = "translateY(-10px)";
+
+    setTimeout(() => {
+        alertBox.remove();
+    }, 300);
+};
+
+// 2. Tu función de mostrar mensaje corregida
+function showSectorMessage(tipo, mensaje) {
+    // Cambiamos el nombre de 'container' a 'alertContainer' para evitar el error de redeclaración
+    const alertContainer = document.querySelector('main > div'); 
+    if (!alertContainer) return;
+
+    const bgClass = tipo === 'success'
+        ? 'bg-emerald-50/50 text-emerald-800 border-emerald-100 border-l-emerald-500'
+        : 'bg-amber-50/50 text-amber-800 border-amber-100 border-l-amber-500';
+
+    const iconBg = tipo === 'success'
+        ? 'bg-emerald-100 text-emerald-600'
+        : 'bg-amber-100 text-amber-600';
+
+    const alertHTML = `
+        <div class="relative overflow-hidden p-4 rounded-2xl mb-4 flex items-center justify-between border border-l-4 shadow-sm animate-fadeIn ${bgClass}">
+            <div class="flex items-center gap-4">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${iconBg}">
+                    ${tipo === 'success'
+                        ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`
+                        : `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`
+                    }
+                </div>
+                <div>
+                    <p class="text-sm font-semibold mb-1">
+                        ${tipo === 'success' ? '¡Sector Coincidente!' : 'Atención'}
+                    </p>
+                    <p class="text-sm">${mensaje}</p>
+                </div>
+            </div>
+            <button 
+                type="button"
+                onclick="closeAlert(this)"
+                class="ml-6 p-2 rounded-lg transition-colors ${tipo === 'success' ? 'hover:bg-emerald-100 text-emerald-500' : 'hover:bg-amber-100 text-amber-500'}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    `;
+
+    // Insertar la alerta al principio del contenedor
+    alertContainer.insertAdjacentHTML('afterbegin', alertHTML);
+}
 </script>
 <!-- END: Logic Scripts -->
 </body>

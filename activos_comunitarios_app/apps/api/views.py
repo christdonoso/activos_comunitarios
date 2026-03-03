@@ -1,7 +1,7 @@
 from ..comunity_assets.models import ComunityAsset
 from django.http import JsonResponse
 from ..social_recipe.models import Paciente, SocialRecipe
-from ..sectorization.models import SectorTerritorial
+from ..sectorization.models import SectorTerritorial,Cesfam
 
 from utilities import tools
 # Create your views here.
@@ -58,7 +58,8 @@ def get_paciente(request):
             'nombre': p.nombre,
             'rut': p.rut,
             'edad': tools.calcular_edad(p.fecha_nacimiento), # Aquí podrías calcular la edad real con la fecha de nacimiento
-            'sector': p.sector,
+            'sector': p.sector.nombre,
+            'sector_id':p.sector.id,
             'direccion': p.direccion
         })
     except Paciente.DoesNotExist:
@@ -94,7 +95,7 @@ def get_social_recipe(request):
             "success": True,
             "paciente": {
                 "nombre": paciente.nombre,
-                "sector": paciente.sector or "No asignado",
+                "sector": paciente.sector.nombre or "No asignado",
             },
             "receta": {
                 "codigo": receta.codigo_seguimiento,
@@ -136,3 +137,20 @@ def get_all_sectors(request):
     perfil = request.user.usuario
     sectores = SectorTerritorial.objects.filter(cesfam=perfil.cesfam).values('id', 'nombre', 'poblacion', 'color', 'geojson')
     return JsonResponse(list(sectores), safe=False)
+
+
+def get_sectors_by_cesfam(request,cesfam_id):
+
+    sectores = SectorTerritorial.objects.filter(cesfam_id=cesfam_id).values('id', 'nombre')
+    
+    # Convertimos el QuerySet a una lista y la enviamos como JSON
+    return JsonResponse(list(sectores), safe=False)
+
+
+def get_cesfams_by_city(request):
+    city = request.GET.get('city', None)
+    if city:
+        # Filtramos y devolvemos solo ID y Nombre para el select
+        centros = Cesfam.objects.filter(city__iexact=city).values('id', 'nombre')
+        return JsonResponse(list(centros), safe=False)
+    return JsonResponse([], safe=False)

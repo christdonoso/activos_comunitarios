@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import json
 from django.http import JsonResponse
-from .models import SectorTerritorial
+from .models import SectorTerritorial, Cesfam
 # Create your views here.
 
 
@@ -35,8 +35,6 @@ def save_sector(request):
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
 
-# views.py
-
 def delete_sector(request, id):
     if request.method == 'DELETE':
         try:
@@ -56,3 +54,30 @@ def update_sector(request, id):
         sector.geojson = data.get('geojson')
         sector.save()
         return JsonResponse({'status': 'updated'})
+
+
+def create_cesfam(request):
+    if request.method == "POST":
+        nombre = request.POST.get('nombre')
+        codigo_deis = request.POST.get('codigo_deis')
+        city = request.POST.get('city')
+        direccion = request.POST.get('direccion')
+        region = request.POST.get('region')
+
+        try:
+            nuevo_cesfam = Cesfam.objects.create(
+                nombre=nombre,
+                codigo_deis=codigo_deis,
+                city=city,
+                direccion=direccion,
+                region=region
+            )
+            return JsonResponse({
+                "success": True, 
+                "id": nuevo_cesfam.id, 
+                "nombre": nuevo_cesfam.nombre,
+                "city": nuevo_cesfam.city
+            })
+        except Exception as e:
+            return JsonResponse({"success": False, "errors": str(e)}, status=400)
+    return JsonResponse({"success": False}, status=405)

@@ -3,6 +3,7 @@ import uuid
 
 from apps.comunity_assets.models import ComunityAsset
 from apps.users.models import Usuario
+from apps.sectorization.models import SectorTerritorial
 # Create your models here.
 
 
@@ -11,7 +12,7 @@ class Paciente(models.Model):
     nombre = models.CharField(max_length=255)
     fecha_nacimiento = models.DateField()
     direccion = models.CharField(max_length=255)
-    sector = models.CharField(max_length=100, blank=True, null=True)
+    sector = models.ForeignKey( SectorTerritorial, on_delete=models.SET_NULL,  null=True, blank=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(max_length=50, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)

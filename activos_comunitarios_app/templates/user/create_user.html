@@ -75,7 +75,7 @@
         </div>
 
         <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Información Personal</h3>
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Información Usuario</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-2 space-y-2">
                     <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Nombre Completo</label>
@@ -102,7 +102,8 @@
                     <select name="user_type"
                         class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
                         {% for value, label in user_types %}
-                        <option value="{{ value }}" {% if request.POST.user_type|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                        <option value="{{ value }}" 
+                        {% if request.POST.user_type|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
                             {{ label }}
                         </option>
                         {% endfor %}
@@ -114,60 +115,70 @@
                         class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Teléfono</label>
-                    <input name="phone" type="tel" value="{{ request.POST.phone|default:'' }}"
-                        class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
-                </div>
-            </div>
-        </div>
-
-   <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
-    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Ubicación y Geolocalización</h3>
-    <div class="space-y-6">
-        <div class="space-y-2">
-            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Buscar Dirección</label>
-            <div class="relative">
-                <div class="flex gap-2">
-                    <div class="relative flex-1">
-                        <span class="material-symbols-outlined absolute left-3 top-3 text-slate-400">location_on</span>
-                        <input id="address_input" name="address" type="text"
-                            value="{{ request.POST.address|default:'' }}"
-                            class="w-full px-4 py-3 pl-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all">
-                        
-                        <div id="search-loader" class="absolute right-3 top-3 hidden">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Sexo</label>
+                    <div class="relative">
+                        <select name="sexo" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all appearance-none">
+                            <option value="" disabled {% if not request.POST.sexo %}selected{% endif %}>Seleccione...</option>
+                            <option value="M" {% if request.POST.sexo == "M" %}selected{% endif %}>Masculino</option>
+                            <option value="F" {% if request.POST.sexo == "F" %}selected{% endif %}>Femenino</option>
+                            <option value="O" {% if request.POST.sexo == "O" %}selected{% endif %}>Otro / No binario</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                            <span class="material-symbols-outlined text-sm">expand_more</span>
                         </div>
                     </div>
-                    <button type="button" onclick="buscarDireccion()"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-xl transition-all flex items-center shadow-md active:scale-95">
-                        <span class="material-symbols-outlined">search</span>
-                    </button>
-                </div>
-                <div id="results"
-                    class="absolute z-[1000] left-0 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl mt-1 hidden max-h-60 overflow-y-auto">
                 </div>
             </div>
-        </div>
+            <div class="md:col-span-3 space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">CESFAM Asignado</label>
+                        <div class="flex gap-2">
+                            <div class="relative flex-1">
+                                <span class="material-symbols-outlined absolute left-3 top-3 text-slate-400">local_hospital</span>
+                                <select name="cesfam" id="id_cesfam_select" onchange="actualizarSectores(this.value)"
+                                    class="w-full px-4 py-3 pl-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all appearance-none">
+                                    <option value="">Seleccione un centro o cree uno nuevo --></option>
+                                    {% for c in cesfams %}
+                                    <option value="{{ c.id }}" {% if request.POST.cesfam == c.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ c.nombre }} ({{ c.city }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                                    <span class="material-symbols-outlined">expand_more</span>
+                                </div>
+                            </div>
+                            <button type="button" onclick="openCesfamModal()"
+                                class="px-3 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-100 dark:border-emerald-500/20 hover:bg-emerald-100 transition-all flex items-center justify-center group"
+                                title="Crear nuevo CESFAM">
+                                <span class="material-symbols-outlined group-hover:rotate-90 transition-transform">add</span>
+                            </button>
+                        </div>
+                    </div>
 
-        <div id="map" class="w-full h-80 rounded-xl border border-slate-200 dark:border-slate-700 z-10 shadow-inner"></div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Sector</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-3 text-slate-400">map</span>
+                            <select name="sector" id="id_sector_select" disabled
+                                class="w-full px-4 py-3 pl-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 dark:text-white focus:border-primary focus:ring-primary/20 text-sm transition-all appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
+                                <option value="">--</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                                <span class="material-symbols-outlined">expand_more</span>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-2">
-                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Región</label>
-                <input id="region" name="region" type="text" readonly value="{{ request.POST.region|default:'' }}"
-                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:text-white text-sm outline-none">
-            </div>
-            <div class="space-y-2">
-                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Ciudad/Comuna</label>
-                <input id="city" name="city" type="text" readonly value="{{ request.POST.city|default:'' }}"
-                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:text-white text-sm outline-none">
+                </div>
+                <p class="text-[10px] text-slate-400 font-medium">
+                    Si el centro no aparece, usa el botón verde para registrar uno nuevo.
+                </p>
             </div>
         </div>
-    </div>
-</div>
 
         <div class="flex justify-end gap-4 pt-4">
             <a href="{% url 'profile' %}"
@@ -179,20 +190,154 @@
         </div>
     </form>
 </div>
+
+<div id="modal-cesfam"
+    class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[1002] flex items-center justify-center p-4">
+    <div
+        class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden transform transition-all animate-fadeIn">
+
+        <div class="px-8 py-4 border-b border-slate-100 flex justify-between items-center shrink-0">
+            <div>
+                <h3 class="text-xl font-extrabold text-slate-800 tracking-tight">Nuevo Centro (CESFAM)</h3>
+                <p class="text-xs text-slate-400 font-medium">Registra una nueva sede en el sistema</p>
+            </div>
+            <button type="button" onclick="closeCesfamModal()"
+                class="p-2 rounded-full hover:bg-slate-100 text-slate-400">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            <form id="form-crear-cesfam" class="space-y-6">
+                {% csrf_token %}
+
+                <div class="space-y-5">
+                    <div class="group">
+                        <label
+                            class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">
+                            Nombre del Establecimiento
+                        </label>
+                        <input type="text" name="nombre"
+                            class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
+                            placeholder="Ej: CESFAM Villa Alemana" required>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="group">
+                            <label
+                                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">
+                                Código DEIS
+                            </label>
+                            <input type="text" name="codigo_deis"
+                                class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
+                                placeholder="12-345">
+                        </div>
+                        <div class="group">
+                            <label
+                                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">
+                                Comuna
+                            </label>
+                            <input type="text" name="city" id="id_city" 
+                                class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
+                                placeholder="Ej: Quilpué" required>
+                        </div>
+                    </div>
+
+                    <div class="group">
+                        <label
+                            class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">
+                            Dirección
+                        </label>
+                        <input type="text" name="direccion"
+                            class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
+                            placeholder="Calle, Número, Sector">
+                    </div>
+
+                    <div class="group">
+                        <label
+                            class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within:text-blue-500 transition-colors">
+                            Región
+                        </label>
+                        <select name="region"
+                            class="w-full px-4 py-3 rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none text-slate-600 appearance-none">
+                            <option value="Valparaíso">Región de Valparaíso</option>
+                            <option value="Metropolitana">Región Metropolitana</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="px-8 py-4 bg-slate-50/50 border-t border-slate-100 flex gap-3 shrink-0">
+            <button type="button" onclick="closeCesfamModal()"
+                class="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-100 rounded-2xl transition-all">
+                Cancelar
+            </button>
+            <button type="submit" form="form-crear-cesfam" id="btn-crear-cesfam"
+                class="flex-[1.5] py-3 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-600 shadow-lg shadow-emerald-100 transition-all">
+                Registrar CESFAM
+            </button>
+        </div>
+    </div>
+</div>
 <script>
-    // 1. Inicialización de Mapa
-    var map = L.map('map').setView([-33.4489, -70.6693], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    var marker = L.marker([-33.4489, -70.6693], { draggable: true }).addTo(map);
+    // Funciones Control Modal
+    function openCesfamModal() {
+        document.getElementById('modal-cesfam').classList.remove('hidden');
+    }
+
+    function closeCesfamModal() {
+        document.getElementById('modal-cesfam').classList.add('hidden');
+        document.getElementById('form-crear-cesfam').reset();
+    }
+
+    // Envío de CESFAM por AJAX
+    document.getElementById('form-crear-cesfam').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const submitBtn = document.getElementById('btn-crear-cesfam');
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Guardando...";
+
+        fetch("{% url 'create_cesfam' %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const select = document.getElementById('id_cesfam_select');
+                const newOption = new Option(`${data.nombre} (${data.city})`, data.id);
+                select.add(newOption);
+                select.value = data.id;
+
+                closeCesfamModal();
+                alert("CESFAM creado correctamente");
+            } else {
+                alert("Error: " + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => console.error('Error:', error))
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Registrar CESFAM";
+        });
+    });
 
     // 2. Elementos del DOM
     const rutInput = document.getElementById('rut');
     const password = document.getElementById('password');
     const confirm_password = document.getElementById('confirm_password');
     const btnSubmit = document.querySelector('button[type="submit"]');
-    const allInputs = document.querySelectorAll('input[required], select[name="user_type"]');
+    const requiredInputs = [
+            'username', 'password', 'fullname', 'rut', 
+            'email', 'sexo', 'user_type', 'cesfam', 'sector'
+        ];
 
     // 3. Función Maestra de Validación
     function validarFormulario() {
@@ -210,11 +355,19 @@
 
         // Validar Campos Requeridos
         let allFieldsFilled = true;
-        allInputs.forEach(input => {
-            if (!input.value.trim()) allFieldsFilled = false;
+        requiredInputs.forEach(name => {
+            const el = document.querySelector(`[name="${name}"]`);
+            if (el) {
+                if (!el.value || el.value.trim() === "") {
+                    allFieldsFilled = false;
+                }
+            }
         });
 
-        // Lógica del Botón
+        // D. Actualizar UI Visual de requisitos de pass (opcional si tienes la función)
+        actualizarUIPasswords(isPassLengthValid, doPassMatch);
+
+        // E. Lógica Final del Botón
         if (isRutValid && isPassLengthValid && doPassMatch && allFieldsFilled) {
             btnSubmit.disabled = false;
             btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -359,5 +512,81 @@
         btnSubmit.disabled = true;
         btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
     };
+
+    // --- Lógica de Filtrado Dinámico de CESFAM ---
+
+    const cityInput = document.getElementById('id_city'); // El campo ciudad del formulario de usuario
+    const cesfamSelect = document.getElementById('id_cesfam_select');
+
+    // Función para cargar CESFAMs por comuna
+    async function cargarCesfams(comuna) {
+        if (!comuna) return;
+
+        // Feedback visual opcional: "Cargando..."
+        cesfamSelect.innerHTML = '<option value="">Cargando centros...</option>';
+
+        try {
+            const response = await fetch(`/api/get_cesfams_by_city/?city=${encodeURIComponent(comuna)}`);
+            const data = await response.json();
+
+            // Limpiar y llenar el select
+            cesfamSelect.innerHTML = '<option value="">Seleccione un centro...</option>';
+
+            if (data.length > 0) {
+                data.forEach(centro => {
+                    const option = new Option(centro.nombre, centro.id);
+                    cesfamSelect.add(option);
+                });
+            } else {
+                cesfamSelect.innerHTML = '<option value="">No hay centros en esta comuna</option>';
+            }
+        } catch (error) {
+            console.error("Error cargando CESFAMs:", error);
+        }
+    }
+
+    // Escuchar cambios en el input de ciudad (por si el admin escribe o selecciona en el mapa)
+    cityInput.addEventListener('change', (e) => {
+        cargarCesfams(e.target.value);
+    });
+
+    // --- CARGA INICIAL (Basada en el Admin) ---
+    window.addEventListener('DOMContentLoaded', () => {
+        // Si el campo ciudad ya viene con la comuna del admin (por defecto en el back)
+        if (cityInput.value) {
+            cargarCesfams(cityInput.value);
+        }
+    });
+
+    
+
+    function actualizarSectores(cesfamId) {
+    const sectorSelect = document.getElementById('id_sector_select');
+    
+    if (!cesfamId) {
+        sectorSelect.disabled = true;
+        sectorSelect.innerHTML = '<option value="">Primero seleccione CESFAM</option>';
+        return;
+    }
+
+    // 1. Habilitar y mostrar carga
+    sectorSelect.disabled = false;
+    sectorSelect.innerHTML = '<option value="">Cargando sectores...</option>';
+
+    // 2. Fetch a tu backend (ajusta la URL según tu urls.py)
+    fetch(`/api/get_sectors_by_cesfam/${cesfamId}/`)
+        .then(response => response.json())
+        .then(data => {
+            sectorSelect.innerHTML = '<option value="">Seleccione un sector</option>';
+            data.forEach(sector => {
+                const option = `<option value="${sector.id}">${sector.nombre}</option>`;
+                sectorSelect.insertAdjacentHTML('beforeend', option);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            sectorSelect.innerHTML = '<option value="">Error al cargar</option>';
+        });
+    }
 </script>
 {% endblock %}
