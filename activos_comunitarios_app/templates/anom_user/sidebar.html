@@ -1,150 +1,497 @@
-        <aside
-            class="w-[360px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-30 shadow-2xl overflow-hidden">
+<aside
+    class="w-[360px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-30 shadow-2xl overflow-hidden">
 
-            <div class="p-8 pb-4">
-                <div class="flex items-center gap-3 mb-8 text-primary">
-                    <div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
-                        <span class="material-symbols-outlined filled">health_and_safety</span>
-                    </div>
-                    <h1 class="text-xl font-black tracking-tighter uppercase">MAIS Chile</h1>
+    <div class="p-8 pb-4">
+        <div class="flex items-center gap-3 mb-8 text-primary">
+            <div class="size-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
+                <span class="material-symbols-outlined filled">health_and_safety</span>
+            </div>
+            <h1 class="text-xl font-black tracking-tighter uppercase">MAIS Chile</h1>
+        </div>
+
+        <div class="space-y-2">
+            <h2 class="text-3xl font-black leading-tight text-slate-800 dark:text-white">
+                Hola, <span class="text-primary">Vecino/a</span>
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                Tu salud no solo está en el consultorio, está en cada rincón de tu barrio. <strong>¿Qué tesoro
+                    buscaremos hoy?</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto px-8 py-4 no-scrollbar space-y-8">
+
+        <section class="space-y-3">
+            <div id="receta-container" class="p-4 bg-primary/5 border-2 border-primary/20 rounded-2xl transition-all">
+                <div class="flex items-center gap-2 mb-2 text-primary">
+                    <span class="material-symbols-outlined filled text-xl">description</span>
+                    <span class="text-xs font-black uppercase tracking-widest">Receta Social</span>
                 </div>
 
-                <div class="space-y-2">
-                    <h2 class="text-3xl font-black leading-tight text-slate-800 dark:text-white">
-                        Hola, <span class="text-primary">Vecino/a</span>
-                    </h2>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                        Tu salud no solo está en el consultorio, está en cada rincón de tu barrio. <strong>¿Qué tesoro
-                            buscaremos hoy?</strong>
+                <div id="receta-init-view">
+                    <p class="text-[11px] text-slate-600 dark:text-slate-400 mb-3 font-medium">
+                        Si tu médico te recomendó una actividad comunitaria, valídala aquí para encontrar tu grupo.
                     </p>
+                    <button onclick="showRutInput()"
+                        class="w-full py-2.5 bg-primary text-white text-xs font-black rounded-xl hover:bg-primary/90 transition-all shadow-md">
+                        VALIDAR RECOMENDACIÓN
+                    </button>
+                </div>
+
+                <div id="receta-input-view" class="hidden space-y-3">
+
+                    <input type="text" id="user-rut" oninput="formatearRut(this)" placeholder="12345678-K"
+                        class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                    <div class="flex gap-2">
+                        <button onclick="cancelRutInput()"
+                            class="flex-1 py-2 text-[10px] font-bold text-slate-500 uppercase">Cancelar</button>
+                        <button id="btn-fetch-receta" onclick="fetchRecetaSocial()"
+                            class="flex-[2] py-2 bg-emerald-500 text-white text-[10px] font-black rounded-lg hover:bg-emerald-600 transition-all">
+                            CONSULTAR
+                        </button>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="flex-1 overflow-y-auto px-8 py-4 no-scrollbar space-y-8">
-
-                <section class="space-y-3">
-                    <div class="p-4 bg-primary/5 border-2 border-primary/20 rounded-2xl">
-                        <div class="flex items-center gap-2 mb-2 text-primary">
-                            <span class="material-symbols-outlined filled text-xl">description</span>
-                            <span class="text-xs font-black uppercase tracking-widest">Receta Social</span>
-                        </div>
-                        <p class="text-[11px] text-slate-600 dark:text-slate-400 mb-3 font-medium">
-                            Si tu médico te recomendó una actividad comunitaria, valídala aquí para encontrar tu grupo.
-                        </p>
-                        <button
-                            class="w-full py-2.5 bg-primary text-white text-xs font-black rounded-xl hover:bg-primary/90 transition-all shadow-md">
-                            VALIDAR RECOMENDACIÓN
-                        </button>
-                    </div>
-                </section>
-
-                <section class="space-y-4">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Enfoque MAIS: ¿Cómo te
-                        sientes?</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button
-                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-amber-100 bg-amber-50/30 text-amber-700 hover:bg-amber-100 transition-all group">
-                            <span
-                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">spa</span>
-                            <span class="text-[10px] font-bold uppercase">Estrés</span>
-                        </button>
-                        <button
-                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-blue-100 bg-blue-50/30 text-blue-700 hover:bg-blue-100 transition-all group">
-                            <span
-                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">fitness_center</span>
-                            <span class="text-[10px] font-bold uppercase">Energía</span>
-                        </button>
-                        <button
-                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-purple-100 bg-purple-50/30 text-purple-700 hover:bg-purple-100 transition-all group">
-                            <span
-                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">diversity_3</span>
-                            <span class="text-[10px] font-bold uppercase">Compañía</span>
-                        </button>
-                        <button
-                            class="flex flex-col items-center p-3 rounded-2xl border-2 border-emerald-100 bg-emerald-50/30 text-emerald-700 hover:bg-emerald-100 transition-all group">
-                            <span
-                                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">brush</span>
-                            <span class="text-[10px] font-bold uppercase">Aprender</span>
-                        </button>
-                    </div>
-                </section>
-
-                <section class="space-y-4">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Categorías del Barrio
-                    </h3>
-                    <div class="flex flex-col gap-2">
-                        <label class="category-chip cursor-pointer group">
-                            <input type="checkbox" class="hidden peer">
-                            <div
-                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
-                                <span class="text-xs font-bold">Espacios Públicos</span>
-                                <span class="material-symbols-outlined text-sm">park</span>
-                            </div>
-                        </label>
-
-                        <label class="category-chip cursor-pointer">
-                            <input type="checkbox" class="hidden peer">
-                            <div
-                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
-                                <span class="text-xs font-bold">Organizaciones Sociales</span>
-                                <span class="material-symbols-outlined text-sm">forum</span>
-                            </div>
-                        </label>
-
-                        <label class="category-chip cursor-pointer">
-                            <input type="checkbox" class="hidden peer">
-                            <div
-                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
-                                <span class="text-xs font-bold">Salud y Bienestar</span>
-                                <span class="material-symbols-outlined text-sm">local_hospital</span>
-                            </div>
-                        </label>
-
-                        <label class="category-chip cursor-pointer">
-                            <input type="checkbox" class="hidden peer">
-                            <div
-                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
-                                <span class="text-xs font-bold">Educación / Colegios</span>
-                                <span class="material-symbols-outlined text-sm">school</span>
-                            </div>
-                        </label>
-
-                        <label class="category-chip cursor-pointer">
-                            <input type="checkbox" class="hidden peer">
-                            <div
-                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
-                                <span class="text-xs font-bold">Clubes Deportivos</span>
-                                <span class="material-symbols-outlined text-sm">sports_soccer</span>
-                            </div>
-                        </label>
-
-                        <label class="category-chip cursor-pointer">
-                            <input type="checkbox" class="hidden peer">
-                            <div
-                                class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
-                                <span class="text-xs font-bold">Adulto Mayor</span>
-                                <span class="material-symbols-outlined text-sm">elderly</span>
-                            </div>
-                        </label>
-                    </div>
-                </section>
-            </div>
-
-            <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900">
-                <a href="{% url 'login' %}"
-                    class="w-full group relative flex items-center justify-center gap-3 px-4 py-4 bg-slate-900 dark:bg-primary/10 text-white dark:text-primary rounded-2xl transition-all hover:shadow-lg hover:shadow-primary/20 active:scale-95 overflow-hidden">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-r from-primary to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-
-                    <span class="material-symbols-outlined text-[20px] relative z-10 filled">admin_panel_settings</span>
-                    <div class="flex flex-col items-start relative z-10">
-                        <span class="text-[10px] font-black uppercase tracking-[0.15em] leading-none">Acceso
-                            Privado</span>
-                        <span class="text-xs font-medium opacity-80">Portal Profesionales</span>
-                    </div>
+        <section class="space-y-4">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Enfoque MAIS: ¿Cómo te
+                sientes?</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button
+                    class="flex flex-col items-center p-3 rounded-2xl border-2 border-amber-100 bg-amber-50/30 text-amber-700 hover:bg-amber-100 transition-all group">
+                    <span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">spa</span>
+                    <span class="text-[10px] font-bold uppercase">Estrés</span>
+                </button>
+                <button
+                    class="flex flex-col items-center p-3 rounded-2xl border-2 border-blue-100 bg-blue-50/30 text-blue-700 hover:bg-blue-100 transition-all group">
                     <span
-                        class="material-symbols-outlined text-sm relative z-10 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">arrow_forward</span>
-                </a>
+                        class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">fitness_center</span>
+                    <span class="text-[10px] font-bold uppercase">Energía</span>
+                </button>
+                <button
+                    class="flex flex-col items-center p-3 rounded-2xl border-2 border-purple-100 bg-purple-50/30 text-purple-700 hover:bg-purple-100 transition-all group">
+                    <span
+                        class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">diversity_3</span>
+                    <span class="text-[10px] font-bold uppercase">Compañía</span>
+                </button>
+                <button
+                    class="flex flex-col items-center p-3 rounded-2xl border-2 border-emerald-100 bg-emerald-50/30 text-emerald-700 hover:bg-emerald-100 transition-all group">
+                    <span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">brush</span>
+                    <span class="text-[10px] font-bold uppercase">Aprender</span>
+                </button>
             </div>
-        </aside>
+        </section>
+
+        <section class="space-y-4">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Categorías del Barrio
+            </h3>
+            <div class="flex flex-col gap-2">
+                <label class="category-chip cursor-pointer group">
+                    <input type="checkbox" class="hidden peer">
+                    <div
+                        class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                        <span class="text-xs font-bold">Espacios Públicos</span>
+                        <span class="material-symbols-outlined text-sm">park</span>
+                    </div>
+                </label>
+
+                <label class="category-chip cursor-pointer">
+                    <input type="checkbox" class="hidden peer">
+                    <div
+                        class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                        <span class="text-xs font-bold">Organizaciones Sociales</span>
+                        <span class="material-symbols-outlined text-sm">forum</span>
+                    </div>
+                </label>
+
+                <label class="category-chip cursor-pointer">
+                    <input type="checkbox" class="hidden peer">
+                    <div
+                        class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                        <span class="text-xs font-bold">Salud y Bienestar</span>
+                        <span class="material-symbols-outlined text-sm">local_hospital</span>
+                    </div>
+                </label>
+
+                <label class="category-chip cursor-pointer">
+                    <input type="checkbox" class="hidden peer">
+                    <div
+                        class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                        <span class="text-xs font-bold">Educación / Colegios</span>
+                        <span class="material-symbols-outlined text-sm">school</span>
+                    </div>
+                </label>
+
+                <label class="category-chip cursor-pointer">
+                    <input type="checkbox" class="hidden peer">
+                    <div
+                        class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                        <span class="text-xs font-bold">Clubes Deportivos</span>
+                        <span class="material-symbols-outlined text-sm">sports_soccer</span>
+                    </div>
+                </label>
+
+                <label class="category-chip cursor-pointer">
+                    <input type="checkbox" class="hidden peer">
+                    <div
+                        class="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 peer-checked:bg-primary peer-checked:text-white transition-all">
+                        <span class="text-xs font-bold">Adulto Mayor</span>
+                        <span class="material-symbols-outlined text-sm">elderly</span>
+                    </div>
+                </label>
+            </div>
+        </section>
+    </div>
+
+    <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900">
+        <a href="{% url 'login' %}"
+            class="w-full group relative flex items-center justify-center gap-3 px-4 py-4 bg-slate-900 dark:bg-primary/10 text-white dark:text-primary rounded-2xl transition-all hover:shadow-lg hover:shadow-primary/20 active:scale-95 overflow-hidden">
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-primary to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+
+            <span class="material-symbols-outlined text-[20px] relative z-10 filled">admin_panel_settings</span>
+            <div class="flex flex-col items-start relative z-10">
+                <span class="text-[10px] font-black uppercase tracking-[0.15em] leading-none">Acceso
+                    Privado</span>
+                <span class="text-xs font-medium opacity-80">Portal Profesionales</span>
+            </div>
+            <span
+                class="material-symbols-outlined text-sm relative z-10 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">arrow_forward</span>
+        </a>
+    </div>
+</aside>
+
+<script>
+    function showRutInput() {
+        const initView = document.getElementById('receta-init-view');
+        const inputView = document.getElementById('receta-input-view');
+
+        if (initView && inputView) {
+            initView.classList.add('hidden');
+            inputView.classList.remove('hidden');
+            document.getElementById('user-rut').focus();
+        }
+    }
+
+    function cancelRutInput() {
+        // 1. Ocultar vista de input y mostrar botones originales
+        document.getElementById('receta-input-view').classList.add('hidden');
+        document.getElementById('receta-init-view').classList.remove('hidden');
+
+        // 2. Restaurar el contenedor de la receta a su estado original (HTML que ya tenías)
+        const container = document.getElementById('receta-container');
+        container.innerHTML = `
+        <div class="flex items-center gap-2 mb-2 text-primary">
+            <span class="material-symbols-outlined filled text-xl">description</span>
+            <span class="text-xs font-black uppercase tracking-widest">Receta Social</span>
+        </div>
+        <div id="receta-init-view">
+            <p class="text-[11px] text-slate-600 dark:text-slate-400 mb-3 font-medium">
+                Si tu médico te recomendó una actividad comunitaria, valídala aquí para encontrar tu grupo.
+            </p>
+            <button onclick="showRutInput()"
+                class="w-full py-2.5 bg-primary text-white text-xs font-black rounded-xl hover:bg-primary/90 transition-all shadow-md">
+                VALIDAR RECOMENDACIÓN
+            </button>
+        </div>
+        <div id="receta-input-view" class="hidden space-y-3">
+             </div>
+    `;
+
+        // 3. Opcional: Refrescar el mapa para quitar filtros de la receta
+        location.reload(); // O simplemente miMapa.loadAssets();
+    }
+
+    async function fetchRecetaSocial() {
+        const rutInput = document.getElementById('user-rut').value;
+        if (!rutInput) return alert("Por favor ingresa tu RUT");
+
+        // Limpiar el RUT para la URL (opcional, el backend también lo hace)
+        const rutParaUrl = rutInput.trim();
+
+        const btn = document.getElementById('btn-fetch-receta');
+        btn.innerText = "BUSCANDO...";
+        btn.disabled = true;
+
+        try {
+            // Llamada real a Django
+            const response = await fetch(`/api/get_social_recipe?rut=${rutParaUrl}`);
+            const data = await response.json();
+
+            if (data.success) {
+                handleRecetaFound(data);
+                // Guardar en el navegador para que no tenga que loguearse de nuevo
+                localStorage.setItem('mais_user_rut', rutParaUrl);
+                localStorage.setItem('mais_user_name', data.nombre);
+            } else {
+                alert(data.message);
+            }
+
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Hubo un problema al consultar la receta. Intenta más tarde.");
+        } finally {
+            btn.innerText = "CONSULTAR";
+            btn.disabled = false;
+        }
+    }
+    function handleRecetaFound(data) {
+        const container = document.getElementById('receta-container');
+
+        // 1. Lógica de Iniciales (Placeholder)
+        const iniciales = data.receta.nombre_activo
+            .split(' ')
+            .map(n => n[0])
+            .join('')
+            .slice(0, 2)
+            .toUpperCase();
+
+        // 2. Helper para colores de accesibilidad
+        const checkAcc = (val) => val ? 'text-emerald-500' : 'text-slate-200 dark:text-slate-700';
+
+        // 3. Renderizado Minimalista
+        container.innerHTML = `
+        <div class="flex flex-col gap-6 animate-fade-in">
+            <button onclick="restaurarSidebarReceta()" 
+                class="flex items-center gap-2 text-[10px] font-bold text-slate-400 hover:text-primary transition-colors uppercase tracking-[0.2em] w-fit">
+                <span class="material-symbols-outlined text-sm">arrow_back_ios</span>
+                Nueva Consulta
+            </button>
+
+            <div class="space-y-6">
+                <div class="flex items-center gap-4">
+                    ${data.receta.imagen_url ?
+                `<img src="${data.receta.imagen_url}" class="size-16 rounded-2xl object-cover shadow-sm">` :
+                `<div class="size-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-black text-xl border border-slate-200/50 dark:border-slate-700/50">
+                            ${iniciales}
+                        </div>`
+            }
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1.5 text-primary mb-1">
+                            <span class="material-symbols-outlined text-[14px] filled">verified</span>
+                            <span class="text-[9px] font-black uppercase tracking-widest">Receta Social</span>
+                        </div>
+                        <h4 class="text-lg font-black text-slate-800 dark:text-white leading-tight">
+                            ${data.receta.nombre_activo}
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Objetivo de Salud</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                            "${data.receta.objetivo}"
+                        </p>
+                    </div>
+
+                    <div class="flex gap-8 py-4 border-y border-slate-100 dark:border-slate-800/50">
+                        <div class="space-y-1">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Frecuencia</span>
+                            <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                                <span class="material-symbols-outlined text-sm text-primary">event</span>
+                                <span class="text-xs font-bold">${data.receta.frecuencia}</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Duración</span>
+                            <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                                <span class="material-symbols-outlined text-sm text-primary">schedule</span>
+                                <span class="text-xs font-bold">${data.receta.duracion}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex gap-3">
+                            <span class="material-symbols-outlined text-xl ${checkAcc(data.receta.acc_silla)}" title="Silla de Ruedas">accessible</span>
+                            <span class="material-symbols-outlined text-xl ${checkAcc(data.receta.baño_acc)}" title="Baño Adaptado">wc</span>
+                            <span class="material-symbols-outlined text-xl ${checkAcc(data.receta.parking)}" title="Estacionamiento">local_parking</span>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-300 dark:text-slate-600 tracking-widest uppercase">ID: ${data.receta.codigo}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+        // --- LÓGICA DEL MAPA ---
+        if (window.miMapa) {
+            // 1. Filtrar categoría
+            const categoria = data.receta.categoria_front;
+            const filterBtn = document.querySelector(`button[data-category="${categoria}"]`);
+            if (filterBtn) filterBtn.click();
+
+            // 2. Volar al activo y abrir popup
+            window.miMapa.focusOnAsset(data.receta.lat, data.receta.lng, data.receta.nombre_activo);
+        }
+    }
+    const container = document.getElementById('receta-container');
+
+    // Generar iniciales para el avatar (Ej: "Plaza Central" -> "PC")
+    const iniciales = data.receta.nombre_activo
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
+
+    container.innerHTML = `
+        <div class="flex flex-col gap-4 animate-fade-in-up">
+            <button onclick="cancelRutInput()" 
+                class="flex items-center gap-2 text-[10px] font-black text-slate-400 hover:text-primary transition-colors uppercase tracking-widest group">
+                <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                Volver a consultar
+            </button>
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-2xl shadow-primary/10 overflow-hidden">
+                <div class="relative h-32 bg-slate-100 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+                    ${data.receta.imagen_url ?
+            `<img src="${data.receta.imagen_url}" class="w-full h-full object-cover">` :
+            `<div class="flex flex-col items-center gap-2">
+                            <div class="size-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-black text-xl">
+                                ${iniciales}
+                            </div>
+                            <span class="text-[9px] font-black uppercase tracking-tighter text-slate-400">Sin foto del lugar</span>
+                        </div>`
+        }
+                    <div class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded-lg shadow-sm">
+                        <span class="text-[9px] font-black text-primary uppercase">${data.receta.codigo}</span>
+                    </div>
+                </div>
+
+                <div class="p-5">
+                    <div class="mb-4">
+                        <h4 class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">
+                            ${data.receta.nombre_activo}
+                        </h4>
+                        <div class="flex items-center gap-1 text-primary">
+                            <span class="material-symbols-outlined text-xs filled">verified</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest">Recomendación Médica</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl mb-4 border border-dashed border-slate-200 dark:border-slate-700">
+                        <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed italic">
+                            "${data.receta.objetivo}"
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[9px] font-black text-slate-400 uppercase italic">Frecuencia</span>
+                            <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200">
+                                <span class="material-symbols-outlined text-sm text-primary">event_repeat</span>
+                                <span class="text-[10px] font-bold">${data.receta.frecuencia}</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[9px] font-black text-slate-400 uppercase italic">Duración</span>
+                            <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200">
+                                <span class="material-symbols-outlined text-sm text-primary">timer</span>
+                                <span class="text-[10px] font-bold">${data.receta.duracion}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 py-3 border-t border-slate-100 dark:border-slate-700">
+                        <span class="material-symbols-outlined text-lg ${data.receta.accesible ? 'text-emerald-500' : 'text-slate-300'}" title="Accesible">accessible</span>
+                        <span class="material-symbols-outlined text-lg text-slate-300">vision_low</span>
+                        <span class="material-symbols-outlined text-lg text-slate-300">local_parking</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Ejecutar el vuelo del mapa
+    window.miMapa.focusOnAsset(data.receta.lat, data.receta.lng, data.receta.nombre_activo);
+
+
+    // --- ACCIÓN EN EL MAPA ---
+
+    // Activar el filtro visual en el mapa
+    const categoriaParaFiltrar = data.receta.categoria_front;
+    const filterBtn = document.querySelector(`button[data-category="${categoriaParaFiltrar}"]`);
+
+    if (filterBtn) {
+        filterBtn.click(); // Esto dispara tu lógica de map_filter.js
+    }
+
+    // Mover el mapa al lugar recomendado
+    if (window.miMapa && data.receta.lat && data.receta.lng) {
+        // Asumiendo que Leaflet o Google Maps está detrás de 'miMapa'
+        // Esto centra el mapa en las coordenadas del activo de la receta
+        miMapa.map.flyTo([data.receta.lat, data.receta.lng], 16);
+    }
+
+
+    // Opcional: Formateador de RUT automático mientras escriben
+    document.getElementById('user-rut')?.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\./g, '').replace(/-/g, '');
+        if (value.length > 1) {
+            value = value.slice(0, -1) + '-' + value.slice(-1);
+        }
+        e.target.value = value.toUpperCase();
+    });
+
+    function restaurarSidebarReceta() {
+        const container = document.getElementById('receta-container');
+
+        // Limpiamos y restauramos la estructura original exacta
+        container.innerHTML = `
+        <div class="flex items-center gap-2 mb-2 text-primary">
+            <span class="material-symbols-outlined filled text-xl">description</span>
+            <span class="text-xs font-black uppercase tracking-widest">Receta Social</span>
+        </div>
+        
+        <div id="receta-init-view">
+            <p class="text-[11px] text-slate-600 dark:text-slate-400 mb-3 font-medium">
+                Si tu médico te recomendó una actividad comunitaria, valídala aquí para encontrar tu grupo.
+            </p>
+            <button onclick="showRutInput()"
+                class="w-full py-2.5 bg-primary text-white text-xs font-black rounded-xl hover:bg-primary/90 transition-all shadow-md">
+                VALIDAR RECOMENDACIÓN
+            </button>
+        </div>
+
+        <div id="receta-input-view" class="hidden space-y-3">
+            <input type="text" id="user-rut" placeholder="Ingrese su RUT" 
+            oninput="formatearRut(this)"
+                class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+            <div class="flex gap-2">
+                <button onclick="restaurarSidebarReceta()" class="flex-1 py-2 text-[10px] font-bold text-slate-500 uppercase">Cancelar</button>
+                <button id="btn-fetch-receta" onclick="fetchRecetaSocial()" 
+                    class="flex-[2] py-2 bg-emerald-500 text-white text-[10px] font-black rounded-lg hover:bg-emerald-600 transition-all">
+                    CONSULTAR
+                </button>
+            </div>
+        </div>
+    `;
+
+        // Si tenías algún filtro aplicado en el mapa, lo limpiamos para volver al estado global
+        if (window.miMapa) {
+            window.miMapa.loadAssets(); // Recarga todos los activos
+        }
+    }
+
+    function formatearRut(input) {
+        // 1. Limpiar puntos y guiones previos
+        let valor = input.value.replace(/\./g, '').replace(/-/g, '');
+
+        // 2. Limitar largo máximo (8 o 9 dígitos + guion)
+        valor = valor.slice(0, 10);
+
+        // 3. Formatear: si hay más de un carácter, poner guion antes del último
+        if (valor.length > 1) {
+            const cuerpo = valor.slice(0, -1);
+            const dv = valor.slice(-1);
+            input.value = cuerpo + '-' + dv.toUpperCase();
+        } else {
+            input.value = valor.toUpperCase();
+        }
+    }
+</script>

@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction, IntegrityError
+from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib import messages
 
 from apps.users.models import Usuario
+from apps.social_recipe.models import Paciente
+from apps.sectorization.models import SectorTerritorial, Cesfam
 
 from utilities import tools
 
@@ -14,81 +17,87 @@ from utilities import tools
 def profile(request):
     if request.method == 'GET':
         usuario = Usuario.get_usuario(request)
-        return render(request, 'profile.html', context={'usuario':usuario})
+        cesfams = Cesfam.objects.filter(city=request.user.usuario.city)
+        return render(request, 'user/profile.html', context={'usuario':usuario,'cesfams': cesfams})
     else:
         usuario = Usuario.filter_usuario(request)
         
-        return render(request, 'profile.html', context={'usuario':usuario})
+        return render(request, 'user/profile.html', context={'usuario':usuario})
     
 
 def create_user(request):
-    
     if request.method == 'POST':
+        print(request.POST)
+        data = request.POST
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email')
+        rut = data.get('rut')
+        
+        # Capturamos los IDs de las relaciones
+        cesfam_id = data.get('cesfam')
+        sector_id = data.get('sector')
 
-            data = request.POST
-            username = data.get('username')
-            password = data.get('password')
-            email = data.get('email')
-            rut = data.get('rut')
+        try:
+            with transaction.atomic():
+                # --- VALIDACIONES DE SERVIDOR ---
+                if not tools.validar_rut_chileno(rut):
+                    raise ValueError("El RUT ingresado no es válido.")
 
-            try:
-                with transaction.atomic():
-                    # --- VALIDACIONES DE SERVIDOR ---
-                    
-                    # 1. Validar RUT (Algoritmo)
-                    if not tools.validar_rut_chileno(rut):
-                        raise ValueError("El RUT ingresado no es válido.")
+                if Usuario.objects.filter(rut=rut).exists():
+                    raise ValueError("Este RUT ya se encuentra registrado.")
 
-                    # 2. Validar Unicidad de RUT (En el modelo Usuario)
-                    if Usuario.objects.filter(rut=rut).exists():
-                        raise ValueError("Este RUT ya se encuentra registrado.")
+                if User.objects.filter(username=username).exists():
+                    raise ValueError("El nombre de usuario ya está en uso.")
 
-                    # 3. Validar Unicidad de Username
-                    if User.objects.filter(username=username).exists():
-                        raise ValueError("El nombre de usuario ya está en uso.")
+                if User.objects.filter(email=email).exists():
+                    raise ValueError("Este correo electrónico ya está registrado.")
 
-                    # 4. Validar Unicidad de Email
-                    if User.objects.filter(email=email).exists():
-                        raise ValueError("Este correo electrónico ya está registrado.")
+                # 1. Crear el usuario de autenticación de Django
+                nuevo_user = User.objects.create_user(
+                    username=username,
+                    password=password,
+                    email=email
+                )
 
-                    # --- INSERCIÓN DE DATOS ---
-                    nuevo_user = User.objects.create_user(
-                        username=username,
-                        password=password,
-                        email=email
-                    )
+                # 2. Crear el perfil de Usuario con los campos nuevos
+                Usuario.objects.create(
+                    user=nuevo_user,
+                    fullname=data.get('fullname'),
+                    rut=rut,
+                    sexo=data.get('sexo'), 
+                    email=email,
+                    city= request.user.usuario.cesfam.city,
+                    user_type=data.get('user_type'),
+                    # Asignamos las instancias de los modelos relacionados
+                    cesfam_id=cesfam_id if cesfam_id else None,
+                    sector_id=sector_id if sector_id else None
+                )
 
-                    Usuario.objects.create(
-                        user=nuevo_user,
-                        fullname=data.get('fullname'),
-                        rut=rut,
-                        email=email,
-                        phone=data.get('phone'),
-                        address=data.get('address'),
-                        region=data.get('region'),
-                        city=data.get('city'),
-                        user_type=data.get('user_type')
-                    )
+                messages.success(request, f"Usuario {username} creado exitosamente.")
+                return redirect('create_user')
 
-                    messages.success(request, f"Usuario {username} creado exitosamente.")
-                    return redirect('create_user')
+        except ValueError as e:
+            messages.error(request, str(e))
 
-            except ValueError as e:
-                messages.error(request, str(e))
+        except IntegrityError as e:
+            messages.error(request, "Error de integridad: Posible dato duplicado.")
+            print(f"IntegrityError: {e}")
 
-            except IntegrityError:
-                messages.error(request, "Error de integridad: Posible dato duplicado.")
+        except Exception as e:
+            messages.error(request, "Ocurrió un error inesperado al procesar el registro.")
+            print(f"Error: {e}")
 
-            except Exception as e:
-                # Errores inesperados
-                messages.error(request, "Ocurrió un error inesperado al procesar el registro.")
-                print(f"Error: {e}") 
-
-    # Si es GET o hubo error, volvemos al formulario
+    # Carga de datos para el formulario
+    # Filtramos CESFAMs por la ciudad del administrador que crea el usuario
+    cesfams = Cesfam.objects.filter(city=request.user.usuario.city)
+    
     context = {
-        'user_types': Usuario.USER_TYPE
+        'user_types': Usuario.USER_TYPE,
+        'comuna_admin': request.user.usuario.city,
+        'cesfams': cesfams
     }
-    return render(request, 'create_user.html', context)
+    return render(request, 'user/create_user.html', context)
 
 
 def edit_user(request, id):
@@ -110,11 +119,13 @@ def edit_user(request, id):
         usuario.save()
         
         messages.success(request, f"Usuario {usuario.fullname} actualizado correctamente.")
-        return redirect('manage_users')
-
-    return render(request, 'edit_user.html', {
+        return redirect('user/manage_users')
+    
+    cesfams = Cesfam.objects.filter(city=request.user.usuario.city)
+    return render(request, 'user/edit_user.html', context={
         'usuario': usuario,
-        'user_types': Usuario.USER_TYPE 
+        'user_types': Usuario.USER_TYPE ,
+        'cesfams': cesfams
     })
 
 
@@ -146,7 +157,7 @@ def manage_users(request):
             'admins': Usuario.objects.filter(user_type='ADMIN').count(), # Ajusta según tus tipos
         }
     }
-    return render(request, 'manage_users.html', context)
+    return render(request, 'user/manage_users.html', context)
 
 
 def toggle_user_status(request, user_id):
@@ -166,3 +177,53 @@ def toggle_user_status(request, user_id):
     messages.success(request, f"El usuario {target_user.usuario.fullname} ha sido {status_text}.")
     
     return redirect('manage_users')
+
+
+def create_paciente(request):
+    if request.method == 'POST':
+
+        lat = request.POST.get('latitud')
+        lng = request.POST.get('longitud')
+
+        sector_detectado = "Fuera de Rango"
+
+        try:
+            cesfam_funcionario = request.user.usuario.cesfam
+        except AttributeError:
+            return JsonResponse({'success': False, 'message': 'Usuario no vinculado a un CESFAM'})
+
+        if lat and lng:
+            lat, lng = float(lat), float(lng)
+                    
+                    # 3. Traer solo los sectores de ESTE CESFAM
+            sectores = SectorTerritorial.objects.filter(cesfam=cesfam_funcionario)
+                    
+            for s in sectores:
+                        # El campo geojson ya es un objeto gracias a JSONField
+                poligono = s.geojson 
+                        
+                if poligono and tools.is_point_in_polygon(lat, lng, poligono):
+                    sector_detectado = s
+                    sector_nombre = s.nombre
+                    break
+
+        p = Paciente.objects.create(
+            rut=request.POST.get('rut'),
+            nombre=request.POST.get('nombre'),
+            fecha_nacimiento=request.POST.get('fecha_nacimiento'),
+            direccion=request.POST.get('direccion'),
+            sector=sector_detectado,
+            telefono=request.POST.get('telefono'),
+            latitude=lat,  
+            longitude=lng,
+        )
+        return JsonResponse({
+            'success': True,
+            'sector': sector_nombre,
+            'paciente_nombre': p.nombre,
+            'id': p.id
+        })
+    
+    # Si es GET, capturamos el RUT de la URL si viene de la búsqueda fallida
+    requested_rut = request.GET.get('rut', '')
+    return render(request, 'user/create_paciente.html', {'requested_rut': requested_rut})

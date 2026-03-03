@@ -31,11 +31,11 @@ class ComunityAsset(models.Model):
     ]
 
     CATEGORIA_MAIS_CHOICES = [
-        ('promocion', 'Promoción de la Salud'),
-        ('prevencion', 'Prevención de Enfermedades'),
-        ('recuperacion', 'Recuperación y Rehabilitación'),
-        ('participacion', 'Participación Social'),
-    ]     
+        ('estres', 'Reducir Estrés'),
+        ('deporte', 'Hacer Deporte'),
+        ('social', 'Apoyo Social'),
+        ('taller', 'Talleres'),
+    ]  
 
     FINANCIAMIENTO_CHOICES = [
             ('gratuito', 'Gratuito / Público'),
@@ -67,7 +67,6 @@ class ComunityAsset(models.Model):
     contacto_nombre = models.CharField(max_length=255, blank=True, null=True)
     contacto_email = models.CharField(max_length=255, blank=True, null=True)
     contacto_fono = models.CharField(max_length=255, blank=True, null=True)
-
 
     # --- UBICACIÓN ---
     latitude = models.FloatField()
