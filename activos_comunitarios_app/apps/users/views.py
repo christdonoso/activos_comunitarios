@@ -105,24 +105,27 @@ def edit_user(request, id):
     usuario = get_object_or_404(Usuario, id=id)
     
     if request.method == 'POST':
-
+        cesfam = Cesfam.objects.get(id=request.POST['cesfam'])
         data = request.POST.copy()
-        for junk in ['csrfmiddlewaretoken']:
+        for junk in ['csrfmiddlewaretoken','cesfam','sector']:
             data.pop(junk, None)
 
         for k,v in data.items():
             setattr(usuario,k, v)
         
         usuario.user.email = request.POST.get('email')
+        usuario.cesfam = cesfam
+        usuario.sector = usuario.cesfam.sectores.get(id=request.POST['sector'])
+
         
         usuario.user.save()
         usuario.save()
         
         messages.success(request, f"Usuario {usuario.fullname} actualizado correctamente.")
-        return redirect('user/manage_users')
+        return redirect('manage_users')
     
     cesfams = Cesfam.objects.filter(city=request.user.usuario.city)
-    return render(request, 'user/edit_user.html', context={
+    return render(request, 'user/edit_user2.html', context={
         'usuario': usuario,
         'user_types': Usuario.USER_TYPE ,
         'cesfams': cesfams
