@@ -14,16 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.urls import path
-from apps.users import views
+from apps.sectorization import views
 
 
 urlpatterns = [
-    path('profile', views.profile, name='profile'),
-    path('create_user', views.create_user, name='create_user'),
-    path('create_paciente', views.create_paciente, name='create_paciente'),
-
-    path('edit_user/<int:id>', views.edit_user, name='edit_user'), 
-    path('manage_users', views.manage_users, name='manage_users'),
-    path('toggle-status/<int:user_id>/', views.toggle_user_status, name='toggle_user_status'),
+    path('create_sector', views.create_sector, name='create_sector'),
+    path('save_sector', views.save_sector, name='save_sector'),
+    path('create_cesfam', views.create_cesfam, name='create_cesfam'),
+    path('update_sector/<int:id>', views.update_sector, name='update_sector'),
+    path('delete_sector/<int:id>', views.delete_sector, name='delete_sector')
 ]

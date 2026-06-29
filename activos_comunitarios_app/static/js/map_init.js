@@ -43,9 +43,9 @@ function hideLoader() {
 async function loadAssets(category = null) {
     showLoader();
     try {
-        let url = '/assets_display/get_all_valid_assets';
+        let url = '/api/get_all_valid_assets';
         if (category) {
-            url = `/assets_display/get_assets_by_category?category=${category}`;
+            url = `/api/get_assets_by_category?category=${category}`;
         }
 
         const response = await fetch(url, {

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <style>
+        @page {
+            size: a4;
+            margin: 1.5cm;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.4;
+        }
+        .header { border-bottom: 2px solid #eef6ff; padding-bottom: 10px; margin-bottom: 20px; }
+        .logo-box { background-color: #137fec; color: white; padding: 10px; border-radius: 5px; font-weight: bold; width: 30px; text-align: center; float: left; margin-right: 10px; }
+        .title { color: #137fec; font-size: 24pt; text-transform: uppercase; text-align: center; margin-bottom: 0; }
+        .subtitle { text-align: center; color: #666; font-style: italic; margin-top: 0; margin-bottom: 30px; }
+        
+        .patient-box { background-color: #eef6ff; padding: 15px; border-radius: 10px; margin-bottom: 25px; }
+        .label { font-size: 8pt; color: #137fec; font-weight: bold; text-transform: uppercase; margin-bottom: 2px; }
+        .value { font-size: 11pt; font-weight: bold; margin-bottom: 10px; }
+        
+        .section-title { font-size: 8pt; color: #137fec; font-weight: bold; text-transform: uppercase; border-left: 4px solid #137fec; padding-left: 10px; margin: 20px 0 10px 0; }
+        .content-text { font-size: 11pt; color: #444; margin-bottom: 15px; }
+        
+        .grid { width: 100%; }
+        .grid td { width: 50%; vertical-align: top; }
+        
+        .footer { margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; }
+        .signature-line { border-bottom: 1px solid #999; width: 250px; margin-bottom: 10px; margin-top: 60px; }
+        .qr-box { border: 2px dashed #eef6ff; padding: 15px; border-radius: 10px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-box">M</div>
+        <div style="float: left;">
+            <span style="color: #137fec; font-size: 16pt; font-weight: bold;">MAIS Chile</span><br>
+            <span style="font-size: 9pt; color: #666;">CESFAM Providencia | Unidad de Promoción</span>
+        </div>
+        <div style="float: right; text-align: right;">
+            <span class="label">Fecha de Emisión</span><br>
+            <span class="value">{{ recipe.fecha_creacion|date:"d F, Y" }}</span>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <h1 class="title">Receta Social</h1>
+    <p class="subtitle">Invitación a la Comunidad</p>
+
+    <div class="patient-box">
+        <table class="grid">
+            <tr>
+                <td>
+                    <div class="label">Nombre del Usuario/a</div>
+                    <div class="value">{{ recipe.paciente.nombre }}</div>
+                </td>
+                <td>
+                    <div class="label">RUT</div>
+                    <div class="value">{{ recipe.paciente.rut }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label">Edad</div>
+                    <div class="value">{{ recipe.paciente.edad }} años</div>
+                </td>
+                <td>
+                    <div class="label">Sector / Territorio</div>
+                    <div class="value">{{ recipe.paciente.sector }}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section-title">Actividad o Recurso Comunitario</div>
+    <div class="content-text" style="font-size: 14pt; font-weight: bold; color: #000;">
+        {{ recipe.activo.nombre }}
+    </div>
+
+    <table class="grid">
+        <tr>
+            <td>
+                <div class="section-title">Objetivo de Salud</div>
+                <div class="content-text">{{ recipe.objetivo_salud }}</div>
+            </td>
+            <td>
+                <div class="section-title">Frecuencia Recomendada</div>
+                <div class="content-text">{{ recipe.frecuencia }}</div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-title">Lugar y Dirección</div>
+    <div class="content-text">{{ recipe.activo.direccion }}</div>
+
+    <div class="section-title">Indicaciones Adicionales</div>
+    <div class="content-text" style="font-style: italic; background-color: #f9f9f9; padding: 10px;">
+        "{{ recipe.notas_adicionales }}"
+    </div>
+
+    <div class="qr-box">
+        <table width="100%">
+            <tr>
+                <td width="100">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ request.build_absolute_uri }}" width="80" height="80">
+                </td>
+                <td>
+                    <div style="color: #137fec; font-weight: bold;">Acceso Digital</div>
+                    <div style="font-size: 9pt; color: #666;">Escanea este código para ver la ubicación exacta y horarios actualizados en el mapa comunitario de MAIS.</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="footer">
+        <div class="signature-line"></div>
+        <div class="label">Profesional Responsable</div>
+        <div class="value" style="margin-bottom: 2px;">{{ request.user.get_full_name|default:"Dr. Médico de Familia" }}</div>
+        <div style="font-size: 8pt; color: #888;">Emitido por el Modelo de Atención Integral de Salud (MAIS)</div>
+    </div>
+</body>
+</html>

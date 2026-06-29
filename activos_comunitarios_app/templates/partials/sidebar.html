@@ -15,15 +15,10 @@
         <!-- CTA BUTTON -->
         <div class="px-4 mb-3">
 
-            <a href="{% url 'add_assets' %}"
+            <a href="{% url 'create_recipe' %}"
                 class="flex items-center justify-center gap-2 bg-primary text-white py-2.5 rounded-lg hover:bg-primary/90 transition">
-
-                <span class="material-symbols-outlined text-sm">
-                    add
-                </span>
-
-                Nuevo Activo
-
+                <span class="material-symbols-outlined text-sm">add</span>
+                Nueva Receta Social
             </a>
 
         </div>
@@ -66,6 +61,13 @@
                {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
                     <span class="material-symbols-outlined">approval</span>
                     <p class="text-sm font-medium">Validar Activo Comunitario</p>
+                </a>
+
+                <a href="{% url 'create_sector' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors
+               {% if current == 'create_sector' %} active-nav-item
+               {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 text-[#4c739a] dark:text-slate-400 {% endif %}">
+                    <span class="material-symbols-outlined">layers</span>
+                    <p class="text-sm font-medium">Crear Sectorizacion</p>
                 </a>
 
                 <a href="{% url 'manage_users' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors

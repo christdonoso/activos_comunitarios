@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+<style>
+    
+    /* Ajuste de altura dinámica para evitar que el mapa se pierda bajo el navbar */
+    .map-container {
+        height: calc(100vh - 73px); /* Ajusta 73px según el alto real de tu navbar */
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    #map-editor {
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        cursor: crosshair !important;
+    }
+
+    /* Estilo MAIS para el tooltip del mouse */
+    .leaflet-draw-tooltip {
+        background: rgba(30, 41, 59, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+    }
+
+    .active-color-ring {
+        outline: 3px solid #137fec;
+        outline-offset: 2px;
+        transform: scale(1.1);
+    }
+    /* Clase que se puede añadir al item activo en la lista */
+/* Efecto de resaltado para el sector que se está editando en la lista */
+    .editing-active {
+        border: 2px solid #3b82f6 !important;
+        background-color: #eff6ff !important; /* Azul muy claro */
+        transform: translateX(4px); /* Pequeño desplazamiento a la derecha */
+        transition: all 0.2s ease;
+    }
+</style>
+
+<div class="map-container">
+    <div id="map-editor"></div>
+
+    <div class="absolute top-6 right-6 z-[1000] w-72 flex flex-col gap-4 pointer-events-none">
+        
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-slate-100 p-5 space-y-5 pointer-events-auto">
+            <div>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">1. Color del Sector</label>
+                <div class="grid grid-cols-5 gap-2" id="color-palette">
+                    <button onclick="setSectorColor('#3b82f6', this)" class="size-8 rounded-full bg-blue-500 transition-all hover:scale-110 active-color-ring"></button>
+                    <button onclick="setSectorColor('#ef4444', this)" class="size-8 rounded-full bg-red-500 transition-all hover:scale-110"></button>
+                    <button onclick="setSectorColor('#10b981', this)" class="size-8 rounded-full bg-emerald-500 transition-all hover:scale-110"></button>
+                    <button onclick="setSectorColor('#f59e0b', this)" class="size-8 rounded-full bg-amber-500 transition-all hover:scale-110"></button>
+                    <div class="relative size-8 rounded-full overflow-hidden border border-slate-200">
+                        <input type="color" id="custom-color" class="absolute inset-[-5px] cursor-pointer">
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <input type="text" id="sector-name" placeholder="Nombre del Sector" class="w-full px-4 py-2.5 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-mais-blue transition-all">
+                <input type="number" id="poblacion" placeholder="Población estimada" class="w-full px-4 py-2.5 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-mais-blue transition-all">
+            </div>
+
+            <div class="pt-4 space-y-3 border-t border-slate-100">
+                <button id="btn-draw" onclick="startDrawing()" class="w-full py-3.5 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-mais-blue transition-all shadow-lg active:scale-95">
+                    <span class="material-symbols-outlined text-sm">edit_square</span>
+                    Iniciar Trazado
+                </button>
+
+                <button id="btn-save" onclick="saveSector()" disabled class="w-full py-3.5 bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hidden items-center justify-center gap-2 shadow-xl shadow-emerald-100 animate-bounce-in">
+                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                    Confirmar y Guardar
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-slate-100 p-5 pointer-events-auto">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Sectores Guardados</h3>
+            <div id="sectors-list" class="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                </div>
+        </div>
+    </div>
+
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
+        <div id="status-hint" class="bg-slate-900/90 backdrop-blur-md px-5 py-2.5 rounded-full text-white text-[9px] font-bold uppercase tracking-[0.15em] flex items-center gap-3 shadow-2xl border border-white/20">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span id="status-text">Modo: Visualización</span>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/sector_draw.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => { window.designer = new TerritoryDesigner('map-editor', SectorService); });
+    function setSectorColor(c, el) { window.designer.setColor(c, el); }
+    function startDrawing() { window.designer.startDrawing(); }
+    function saveSector() { window.designer.saveSector(); }
+
+</script>
+{% endblock %}
+

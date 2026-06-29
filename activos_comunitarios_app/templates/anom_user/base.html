@@ -52,25 +52,44 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
-
+        /* Clase global para activar la animación de apertura del menú lateral */
+        .sidebar-open {
+            transform: translateX(0) !important;
+        }
     </style>
 </head>
 
-    {% if request.resolver_match.url_name == 'user_assets_view' %}
-        <body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden">
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden h-screen w-full">
 
-            <div class="flex h-screen w-full">
-    {% else %}
-        <body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
-            <div class="flex min-h-screen w-full">
-    {% endif %}
-    
+    <div class="flex h-full w-full relative overflow-hidden">
+        
+        <!-- BACKDROP OVERLAY: Capa oscura que bloquea el mapa al abrir el sidebar en móvil -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden md:hidden transition-opacity duration-300"></div>
+
         {% include "anom_user/sidebar.html" %}
 
         {% block content %}
         {% endblock %}
 
-</div>
+    </div>
+
+    <!-- Script Global de Control de Interfaz Móvil -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const openBtn = document.getElementById('btn-open-sidebar');
+            const closeBtn = document.getElementById('btn-close-sidebar');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('sidebar-open');
+                overlay.classList.toggle('hidden');
+            }
+
+            if(openBtn) openBtn.addEventListener('click', toggleSidebar);
+            if(closeBtn) closeBtn.addEventListener('click', toggleSidebar);
+            if(overlay) overlay.addEventListener('click', toggleSidebar);
+        });
+    </script>
 </body>
 </html>

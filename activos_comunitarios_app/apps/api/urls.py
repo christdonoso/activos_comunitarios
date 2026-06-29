@@ -14,16 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.urls import path
-from apps.users import views
+from apps.api import views
 
 
 urlpatterns = [
-    path('profile', views.profile, name='profile'),
-    path('create_user', views.create_user, name='create_user'),
-    path('create_paciente', views.create_paciente, name='create_paciente'),
-
-    path('edit_user/<int:id>', views.edit_user, name='edit_user'), 
-    path('manage_users', views.manage_users, name='manage_users'),
-    path('toggle-status/<int:user_id>/', views.toggle_user_status, name='toggle_user_status'),
+    path('get_paciente/', views.get_paciente, name='get_paciente'),
+    path('get_all_valid_assets', views.get_all_valid_assets),
+    path('get_social_recipe', views.get_social_recipe, name='get_social_recipe'),
+    path('get_assets_by_category',views.get_assets_by_category, name='get_assets_by_category'),
+    path('get_all_sectors',views.get_all_sectors, name='get_all_sectors'),
+    path('get_sectors_by_cesfam/<int:cesfam_id>/', views.get_sectors_by_cesfam, name='get_sectors_by_cesfam'),
+    path('get_cesfams_by_city/', views.get_cesfams_by_city, name='get_cesfams_by_city')
 ]

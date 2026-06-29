@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -47,11 +47,14 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    'apps.api',
     'apps.users',
     'apps.comunity_assets',
     'apps.assets_display',
     'apps.validate_assets',
-    'apps.home'
+    'apps.home',
+    'apps.social_recipe',
+    'apps.sectorization'
 ]
 
 INSTALLED_APPS = DJAGNGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

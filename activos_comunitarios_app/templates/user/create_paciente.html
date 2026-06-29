@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="max-w-4xl mx-auto px-4 py-8">
+    <div class="mb-8">
+        <a href="{% url 'create_recipe' %}" class="text-primary font-bold flex items-center gap-2 hover:underline">
+            ← Volver a la receta
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-8 border-b border-slate-100 bg-slate-50/50">
+            <h2 class="text-2xl font-bold text-slate-900">Registrar Nuevo Paciente</h2>
+            <p class="text-slate-500">Complete los datos básicos para habilitar la prescripción social.</p>
+        </div>
+
+        <form method="POST" class="p-8 space-y-6">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-slate-700">RUT</label>
+                    <input type="text" name="rut" value="{{ requested_rut|default:'' }}" 
+                        class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary"
+                        placeholder="12.345.678-9" required>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-slate-700">Nombre Completo</label>
+                    <input type="text" name="nombre" 
+                        class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary"
+                        placeholder="Ej: María González Pérez" required>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-slate-700">Fecha de Nacimiento</label>
+                    <input type="date" name="fecha_nacimiento" 
+                        class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary" required>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-slate-700">Teléfono de contacto</label>
+                    <input type="tel" name="telefono" 
+                        class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary"
+                        placeholder="+56 9 1234 5678">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-slate-700">Sector / Territorio</label>
+                    <select name="sector" class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary">
+                        <option value="Santa Julia">Santa Julia</option>
+                        <option value="Achupallas">Achupallas</option>
+                        <option value="Miraflores">Miraflores</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="space-y-2 md:col-span-2">
+                    <label class="block text-sm font-bold text-slate-700">Dirección Domiciliaria</label>
+                    <input type="text" name="direccion" 
+                        class="w-full rounded-xl border-slate-200 focus:ring-primary focus:border-primary"
+                        placeholder="Calle, Número, Departamento..." required>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-100 flex justify-end gap-4">
+                <button type="reset" class="px-6 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition-all">
+                    Limpiar
+                </button>
+                <button type="submit" class="px-10 py-3 bg-primary text-white rounded-xl font-bold hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all">
+                    Guardar Paciente
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
