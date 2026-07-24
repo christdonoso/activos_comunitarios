@@ -184,49 +184,61 @@ def toggle_user_status(request, user_id):
 
 def create_paciente(request):
     if request.method == 'POST':
-
         lat = request.POST.get('latitud')
         lng = request.POST.get('longitud')
 
-        sector_detectado = "Fuera de Rango"
+        # Variables por defecto claras
+        sector_detectado = None
+        sector_nombre = "Fuera de Rango / Sin Sector"
 
         try:
             cesfam_funcionario = request.user.usuario.cesfam
         except AttributeError:
-            return JsonResponse({'success': False, 'message': 'Usuario no vinculado a un CESFAM'})
+            return JsonResponse({'success': False, 'message': 'El usuario no tiene un CESFAM asignado.'}, status=400)
 
         if lat and lng:
-            lat, lng = float(lat), float(lng)
-                    
-                    # 3. Traer solo los sectores de ESTE CESFAM
-            sectores = SectorTerritorial.objects.filter(cesfam=cesfam_funcionario)
-                    
-            for s in sectores:
-                        # El campo geojson ya es un objeto gracias a JSONField
-                poligono = s.geojson 
-                        
-                if poligono and tools.is_point_in_polygon(lat, lng, poligono):
-                    sector_detectado = s
-                    sector_nombre = s.nombre
-                    break
+            try:
+                lat, lng = float(lat), float(lng)
+                sectores = SectorTerritorial.objects.filter(cesfam=cesfam_funcionario)
+                
+                for s in sectores:
+                    poligono = s.geojson 
+                    if poligono and tools.is_point_in_polygon(lat, lng, poligono):
+                        sector_detectado = s
+                        sector_nombre = s.nombre
+                        break
+            except (ValueError, TypeError):
+                return JsonResponse({'success': False, 'message': 'Las coordenadas enviadas no son válidas.'}, status=400)
 
-        p = Paciente.objects.create(
-            rut=request.POST.get('rut'),
-            nombre=request.POST.get('nombre'),
-            fecha_nacimiento=request.POST.get('fecha_nacimiento'),
-            direccion=request.POST.get('direccion'),
-            sector=sector_detectado,
-            telefono=request.POST.get('telefono'),
-            latitude=lat,  
-            longitude=lng,
-        )
-        return JsonResponse({
-            'success': True,
-            'sector': sector_nombre,
-            'paciente_nombre': p.nombre,
-            'id': p.id
-        })
+        # Si requieres obligatoriamente que el paciente quede en un sector territorial:
+        if sector_detectado is None:
+            return JsonResponse({
+                'success': False, 
+                'message': 'La ubicación del paciente no pertenece a ningún sector registrado en tu CESFAM.'
+            }, status=400)
+
+        try:
+            p = Paciente.objects.create(
+                rut=request.POST.get('rut'),
+                nombre=request.POST.get('nombre'),
+                fecha_nacimiento=request.POST.get('fecha_nacimiento'),
+                direccion=request.POST.get('direccion'),
+                sector=sector_detectado,  # Ahora es el objeto SectorTerritorial o None
+                telefono=request.POST.get('telefono'),
+                latitude=lat,  
+                longitude=lng,
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'sector': sector_nombre,
+                'paciente_nombre': p.nombre,
+                'id': p.id
+            })
+
+        except Exception as e:
+            # Captura de errores al guardar en la base de datos
+            return JsonResponse({'success': False, 'message': f'Error al guardar en base de datos: {str(e)}'}, status=500)
     
-    # Si es GET, capturamos el RUT de la URL si viene de la búsqueda fallida
     requested_rut = request.GET.get('rut', '')
     return render(request, 'user/create_paciente.html', {'requested_rut': requested_rut})
