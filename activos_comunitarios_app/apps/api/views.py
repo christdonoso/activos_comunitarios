@@ -25,9 +25,7 @@ def get_all_valid_assets(request):
 
 
 def get_assets_by_category(request):
-
     category = request.GET.get('category')
-
     assets_db = ComunityAsset.objects.filter(
         estado='aprobado',
         tipo_activo=category
@@ -50,20 +48,28 @@ def get_assets_by_category(request):
 
 def get_paciente(request):
     try:
-        rut = request.GET.get('rut')
-        p = Paciente.objects.get(rut=rut)
+        rut = request.GET.get('rut', '').strip()
+        if not rut:
+            return JsonResponse({'success': False, 'message': 'Debe proporcionar un RUT'}, status=400)
+            
+        p = Paciente.objects.select_related('sector').get(rut=rut)
+        
         return JsonResponse({
             'success': True,
             'id': p.id,
             'nombre': p.nombre,
             'rut': p.rut,
-            'edad': tools.calcular_edad(p.fecha_nacimiento), # Aquí podrías calcular la edad real con la fecha de nacimiento
-            'sector': p.sector.nombre,
-            'sector_id':p.sector.id,
+            'edad': tools.calcular_edad(p.fecha_nacimiento),
+            
+            # Validamos si p.sector existe antes de acceder a sus propiedades
+            'sector': p.sector.nombre if p.sector else 'Sin sector asignado',
+            'sector_id': p.sector.id if p.sector else None,
             'direccion': p.direccion
         })
     except Paciente.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Paciente no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': f'Error interno: {str(e)}'}, status=500)
     
 
 def get_social_recipe(request):
@@ -129,7 +135,6 @@ def get_social_recipe(request):
             "success": False, 
             "message": "Error interno del servidor al procesar la solicitud."
         }, status=500)
-
 
 
 def get_all_sectors(request):
